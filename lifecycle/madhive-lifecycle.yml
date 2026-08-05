@@ -1,0 +1,70 @@
+generated: '2026-08-04'
+method: searched
+source: https://developer.madhive.com/scheduled-updates + https://madhive.checkly-status-page.com/ + openapi/madhive-api-openapi-original.yml
+versioning:
+  scheme: uri-path
+  current: v1
+  spec_version: 1.0.0
+  docs: https://developer.madhive.com/get-started
+deprecation:
+  policy_url: https://developer.madhive.com/scheduled-updates
+  policy_name: API Change Schedule
+  description: >-
+    Madhive publishes an "API Change Schedule" page that details the timeline for upcoming
+    changes and offers support guidelines for upgrading to new features or incompatible API
+    updates. Each entry carries an effective date, the affected feature, the update type,
+    the impact, and the action required of integrators.
+  sunset_header: false
+  deprecation_header: false
+  advance_notice_documented: true
+  note: >-
+    The change schedule announces breaking moves ahead of their effective date, but Madhive
+    does not document RFC 8594 Sunset / Deprecation response headers, and the published
+    OpenAPI marks no operation `deprecated: true`.
+status_page:
+  url: https://madhive.checkly-status-page.com/
+  provider: Checkly
+  linked_from: https://developer.madhive.com/ (main navigation, "System Status")
+  components:
+  - name: Campaign Management (Production)
+    uptime_90d: '99.946%'
+  - name: Audiences (Production)
+    uptime_90d: '99.978%'
+  subscribe: true
+  observed_state: All systems operational
+  observed: '2026-08-04'
+sla:
+  published: false
+  note: no public uptime SLA or service credit schedule found; the status page publishes observed 90-day uptime only
+support:
+  faq: https://developer.madhive.com/faq
+  channel: Account Manager
+  note: >-
+    API access and MCP onboarding both route through a Madhive Account Manager rather
+    than public self-service signup
+terms:
+  url: https://developer.madhive.com/files/API_Terms_of_Use_Nov_21.pdf
+  name: Developer API Terms of Use
+  last_updated: November 2025
+deprecated_operations: []
+changes:
+- effective: '2025-02'
+  period: February - March 2025
+  feature: Line Items
+  update_type: Endpoint Update
+  detail: New patch endpoints for editing impressions and budgets, aligned with Madhive naming conventions
+  action_required: >-
+    Immediate action required to move to the new PATCH /v1/lineitems/{id}/impression-goal
+    and PATCH /v1/lineitems/{id}/budget-goal endpoints if the old ones were in use
+  breaking: true
+x-evidence:
+- fetched: '2026-08-04'
+  url: https://developer.madhive.com/portals/api/sites/mad-master-mozart/liveportal/page/scheduled-updates
+  http_status: 200
+- fetched: '2026-08-04'
+  url: https://madhive.checkly-status-page.com/
+  http_status: 200
+- fetched: '2026-08-04'
+  url: https://developer.madhive.com/files/API_Terms_of_Use_Nov_21.pdf
+  http_status: 200
+  content_type: application/pdf

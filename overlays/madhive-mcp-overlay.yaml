@@ -1,0 +1,31 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Madhive MCP API
+  version: 1.0.0
+extends: openapi/madhive-mcp-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apis.io/providers/madhive/
+    x-apievangelist-enriched: '2026-08-04'
+    x-apievangelist-source: https://developer.madhive.com/
+    x-apievangelist-operations: 3
+- target: $.info
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/madhive-authentication.yml
+      conventions: conventions/madhive-conventions.yml
+      errors: errors/madhive-problem-types.yml
+      lifecycle: lifecycle/madhive-lifecycle.yml
+      rate_limits: rate-limits/madhive-rate-limits.yml
+      conformance: conformance/madhive-conformance.yml
+      data_model: data-model/madhive-data-model.yml
+      mcp: mcp/madhive-mcp.yml
+      tool_crosswalk: mcp/madhive-tool-crosswalk.yml
+- target: $.info
+  update:
+    x-apievangelist-observations:
+      idempotency: not supported — no Idempotency-Key header or parameter is documented
+      error_format: proprietary JSON envelope (error/errors/status/transaction); not RFC 9457 application/problem+json
+      rate_limit_headers: not documented — per-tier limits are published in the FAQ only
+      operations_missing_operation_id: null

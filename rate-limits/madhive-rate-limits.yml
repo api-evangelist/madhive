@@ -1,0 +1,43 @@
+generated: '2026-08-04'
+method: searched
+source: https://developer.madhive.com/faq
+note: >-
+  Madhive publishes per-tier request-rate limits in the "Further API Information" section
+  of the developer-portal FAQ. The limits are tier-based, not per-endpoint. The published
+  OpenAPI declares no 429 response and no RateLimit-* response headers, so no rate-limit
+  signalling contract is documented on the wire.
+scope: account (API tier)
+window: second
+rate_limits:
+- plan: Basic
+  limit_count: 2
+  limit_period: second
+  description: 2 requests per second
+- plan: Starter
+  limit_count: 5
+  limit_period: second
+  description: 5 requests per second
+- plan: Medium
+  limit_count: 8
+  limit_period: second
+  description: 8 requests per second
+- plan: Advanced
+  limit_count: 12
+  limit_period: second
+  description: 12 requests per second
+- plan: Premium
+  limit_count: 15
+  limit_period: second
+  description: 15 requests per second
+exceeded:
+  status: 429
+  title: Too Many Requests
+  description: Too many requests are being sent to the API
+  source: https://developer.madhive.com/faq
+headers:
+  documented: false
+  note: no RateLimit-Limit / RateLimit-Remaining / Retry-After headers documented
+x-evidence:
+  fetched: '2026-08-04'
+  url: https://developer.madhive.com/portals/api/sites/mad-master-mozart/liveportal/page/faq
+  http_status: 200

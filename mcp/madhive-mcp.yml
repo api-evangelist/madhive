@@ -1,0 +1,125 @@
+generated: '2026-08-04'
+method: searched
+status: published
+source: https://developer.madhive.com/mcp
+spec: openapi/madhive-mcp-openapi-original.json
+server:
+  name: madhive
+  transport: http
+  url: https://api2.madhive.com/mcp
+  protocol: JSON-RPC 2.0 (Model Context Protocol)
+  gateway: Apigee
+  health: https://api2.madhive.com/mcp/health
+  sse: true
+  contact: api-platform@madhive.com
+authentication:
+  type: oauth2
+  token_endpoint: https://api2.madhive.com/oauth/token
+  authorization_endpoint: https://api2.madhive.com/oauth/authorize
+  discovery: https://api2.madhive.com/.well-known/oauth-authorization-server
+  flows:
+  - flow: clientCredentials
+    label: Machine-to-machine
+    use: backend services, automated workflows, batch processing
+  - flow: authorizationCode
+    pkce: S256
+    label: User-delegated
+    use: developer tools where a user signs in interactively
+  note: >-
+    Onboarding is gated — Madhive issues client credentials through an Account Manager.
+    An anonymous POST of {"jsonrpc":"2.0","id":1,"method":"tools/list"} to
+    https://api2.madhive.com/mcp returns HTTP 401 {"error":"unauthorized"}, so the live
+    tool inputSchemas require authenticated introspection. The tool names and descriptions
+    below are taken verbatim from the provider's published MCP OpenAPI description and
+    the developer-portal MCP page — not from a live tools/list.
+clients:
+- Claude Code
+- Claude Desktop
+- Claude Web
+- Gemini CLI
+- Gemini Enterprise
+- Custom Agent
+tool_count: 22
+tools:
+- name: get_campaigns
+  category: campaigns
+  description: List all campaigns or get a specific campaign by ID
+- name: get_campaign_details
+  category: campaigns
+  description: Get detailed campaign information including line items and creatives
+- name: manage_campaign
+  category: campaigns
+  description: Create, update, or archive campaigns and line items
+- name: get_advertisers
+  category: advertisers
+  description: List all advertisers or get a specific advertiser by ID
+- name: manage_advertiser
+  category: advertisers
+  description: Create, update, or archive advertisers
+- name: get_agencies
+  category: agencies
+  description: List all agencies or get a specific agency by ID
+- name: manage_agency
+  category: agencies
+  description: Create, update, or archive agencies
+- name: get_creatives
+  category: creatives
+  description: List all creatives or get a specific creative by ID
+- name: manage_creative
+  category: creatives
+  description: Create, update, or archive creative assets
+- name: get_audiences
+  category: audiences
+  description: Get audience by ID, search by text query, or list all with optional standard audiences
+- name: manage_audience
+  category: audiences
+  description: Create, update, or archive audience segments
+- name: list_publishers
+  category: publishers
+  description: List all available publishers
+- name: get_publisher_groups
+  category: publishers
+  description: List all publisher groups or get a specific group by ID
+- name: manage_publisher_group
+  category: publishers
+  description: Create, update, or archive publisher whitelists/groups
+- name: list_segments
+  category: segments
+  description: List all segments with pagination support
+- name: get_retargeting
+  category: segments
+  description: Get retargeting segment information by ID
+- name: get_lineitem_info
+  category: line-items
+  description: Get line item details by ID
+- name: get_pixel
+  category: pixels
+  description: Get pixel tracking information by ID
+- name: manage_pixel
+  category: pixels
+  description: Create or update tracking pixels
+- name: list_orgs
+  category: reference
+  description: List all organizations
+- name: list_metros
+  category: reference
+  description: List metro/DMA codes for geographic targeting
+- name: list_products
+  category: reference
+  description: List available ad products
+methods:
+- tools/list
+- tools/call
+x-evidence:
+- fetched: '2026-08-04'
+  url: https://developer.madhive.com/portals/api/sites/mad-master-mozart/liveportal/apis/mcp/spec
+  http_status: 200
+  note: published MCP OpenAPI snapshot from the Apigee developer portal
+- fetched: '2026-08-04'
+  url: https://api2.madhive.com/mcp
+  http_status: 401
+  note: anonymous tools/list rejected; live schemas are auth-gated
+- fetched: '2026-08-04'
+  url: https://developer.madhive.com/portals/api/sites/mad-master-mozart/liveportal/page/mcp
+  http_status: 200
+  note: developer-portal MCP onboarding page

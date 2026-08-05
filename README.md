@@ -42,5 +42,20 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-MadHive is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.hiive.com/securities/madhive-stock
+Madhive is an advertising technology company that operates a demand-side platform (DSP) and end-to-end software stack built for local and connected TV (CTV/OTT) advertising. Broadcasters, local media sellers, agencies and political advertisers use Madhive to plan campaigns, activate premium streaming and broadcast inventory, build cookieless audiences, manage creatives, and measure outcomes from a single unified DSP.
+
+Madhive runs a public developer program at [developer.madhive.com](https://developer.madhive.com/) — an Apigee-fronted API catalog publishing two OpenAPI 3.0 documents:
+
+- **Madhive API** — 75 REST operations over campaigns, line items, advertisers, agencies, creatives, audiences, segments, retargeting, publishers, publisher groups, tracking pixels, products, stations, metros and optimization templates. Base URL `https://api2.madhive.com/api`.
+- **Madhive MCP API** — a hosted Model Context Protocol server at `https://api2.madhive.com/mcp` exposing 22 campaign-management tools to AI assistants over JSON-RPC 2.0, with both client-credentials and authorization-code-with-PKCE OAuth flows.
+
+## Links
+
+- Company — https://www.madhive.com/
+- Developer portal — https://developer.madhive.com/
+- Get started — https://developer.madhive.com/get-started
+- FAQs — https://developer.madhive.com/faq
+- MCP — https://developer.madhive.com/mcp
+- API Change Schedule — https://developer.madhive.com/scheduled-updates
+- System status — https://madhive.checkly-status-page.com/
+- Developer API Terms of Use — https://developer.madhive.com/files/API_Terms_of_Use_Nov_21.pdf

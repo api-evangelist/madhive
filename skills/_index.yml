@@ -1,0 +1,36 @@
+generated: '2026-08-04'
+method: generated
+source: openapi/madhive-api-openapi-original.yml, openapi/madhive-mcp-openapi-original.json,
+  https://developer.madhive.com/get-started, https://developer.madhive.com/faq, https://developer.madhive.com/mcp
+note: >-
+  Madhive publishes no AGENTS.md or provider-authored skill files. These are API Evangelist
+  Agent Skills generated from the provider's own OpenAPI and developer-portal docs. Every
+  operationId referenced was verified verbatim in the published specs.
+skills:
+- file: madhive-launch-a-campaign.md
+  name: Launch a Madhive campaign
+  api: openapi/madhive-api-openapi-original.yml
+  operations: [createAdvertiser, createAgency, createCampaign, getProductsByOrg, getMetros,
+    createLineItem, createCreative, createCreativeLineItem, activateCampaignById, getCampaignById]
+- file: madhive-build-an-audience.md
+  name: Build and attach a Madhive audience
+  api: openapi/madhive-api-openapi-original.yml
+  operations: [getSegmentsByOrg, getAudiencesByOrg, searchAudiences, getAudienceById,
+    createAudience, updateAudience, deleteAudienceById, updateLineItemById, createLineItem]
+- file: madhive-build-a-publisher-group.md
+  name: Build a Madhive publisher group
+  api: openapi/madhive-api-openapi-original.yml
+  operations: [getPublishersByOrg, getPublisherGroupsByOrg, getPublisherGroupById,
+    createPublisherGroup, updatePublisherGroupById, deletePublisherGroupById,
+    updateLineItemById, getOptimizationTemplates]
+- file: madhive-pace-and-pause.md
+  name: Pace, pause and reconcile Madhive delivery
+  api: openapi/madhive-api-openapi-original.yml
+  operations: [getCampaignsByOrg, getCampaignById, getLineItemsByCampaignId, getLineItemById,
+    updateLineItemImpression, updateLineItemBudget, updateLineItemSchedule, updateLineItemById,
+    activateCampaignById, deactivateCampaignById, deactivateLineItemById, activateCreativeById,
+    deleteCreativeLineItem, deleteCampaignById, deleteLineItemById, deleteCreativeById]
+- file: madhive-mcp-agent.md
+  name: Drive Madhive through its MCP server
+  api: openapi/madhive-mcp-openapi-original.json
+  operations: [mcpJsonRpc, mcpSse, healthCheck]

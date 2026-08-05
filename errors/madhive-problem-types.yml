@@ -1,0 +1,122 @@
+generated: '2026-08-04'
+method: derived
+source: openapi/madhive-api-openapi-original.yml, openapi/madhive-mcp-openapi-original.json, https://developer.madhive.com/faq
+format: proprietary-json
+rfc9457: false
+envelope:
+  schema: openapi/madhive-api-openapi-original.yml#/components/schemas/ErrorResponse
+  content_type: application/json
+  fields:
+    error: single error message string
+    errors: array of error message strings
+    status: service status string, e.g. ERROR
+    transaction: trace envelope carrying id / taskId / created
+note: Madhive returns a proprietary JSON error envelope, not application/problem+json. The developer-portal
+  FAQ publishes a plain HTTP status-code summary; the OpenAPI declares 400/401/404/409/500 on individual
+  operations. 402, 403, 429 and 503 are documented in the FAQ but declared on no operation in the published
+  spec.
+problems:
+- status: 400
+  title: Bad Request
+  description: Request is unacceptable (ex. missing parameters)
+  spec_descriptions:
+  - Bad Request - Invalid JSON-RPC format or parameters
+  - Bad request
+  - Bad request — invalid fields or validation failure
+  - Bad request — missing required fields, invalid mediaType, or invalid pubId
+  - Invalid input
+  - Invalid template ID
+  schema: '#/components/schemas/ErrorResponse'
+  content_type:
+  - application/json
+  operations_declaring: 72
+  source_operations:
+  - openapi/madhive-api-openapi-original.yml#POST /v1/campaigns/{cid}/lineitems/{id}/activation
+  - openapi/madhive-api-openapi-original.yml#activateCampaignById
+  - openapi/madhive-api-openapi-original.yml#activateCreativeById
+  - openapi/madhive-api-openapi-original.yml#createAdvertiser
+  - openapi/madhive-api-openapi-original.yml#createAgency
+  - openapi/madhive-api-openapi-original.yml#createAudience
+  in_openapi: true
+- status: 401
+  title: Unauthorized
+  description: Authentication failed or token expired
+  spec_descriptions:
+  - Unauthorized
+  - Unauthorized - Invalid or missing access token
+  schema: '#/components/schemas/ApigeeError'
+  content_type:
+  - application/json
+  operations_declaring: 75
+  source_operations:
+  - openapi/madhive-api-openapi-original.yml#GET /health
+  - openapi/madhive-api-openapi-original.yml#POST /v1/campaigns/{cid}/lineitems/{id}/activation
+  - openapi/madhive-api-openapi-original.yml#activateCampaignById
+  - openapi/madhive-api-openapi-original.yml#activateCreativeById
+  - openapi/madhive-api-openapi-original.yml#createAdvertiser
+  - openapi/madhive-api-openapi-original.yml#createAgency
+  in_openapi: true
+- status: 402
+  title: Request Failed
+  description: Valid parameters but the request failed
+  in_openapi: false
+  documented_in: https://developer.madhive.com/faq
+- status: 403
+  title: Forbidden
+  description: API key doesn’t have permissions to perform the request
+  in_openapi: false
+  documented_in: https://developer.madhive.com/faq
+- status: 404
+  title: Not Found
+  description: The requested resource does not exist
+  spec_descriptions:
+  - Not Found - Method or tool not found
+  - Optimization template not found
+  schema: '#/components/schemas/ErrorResponse'
+  content_type:
+  - application/json
+  operations_declaring: 4
+  source_operations:
+  - openapi/madhive-api-openapi-original.yml#deleteOptimizationTemplate
+  - openapi/madhive-api-openapi-original.yml#getOptimizationTemplateById
+  - openapi/madhive-api-openapi-original.yml#updateOptimizationTemplate
+  - openapi/madhive-mcp-openapi-original.json#mcpJsonRpc
+  in_openapi: true
+- status: 409
+  spec_descriptions:
+  - Template is assigned to one or more active line items
+  schema: '#/components/schemas/ErrorResponse'
+  content_type:
+  - application/json
+  operations_declaring: 1
+  source_operations:
+  - openapi/madhive-api-openapi-original.yml#deleteOptimizationTemplate
+  in_openapi: true
+- status: 429
+  title: Too Many Requests
+  description: Too many requests are being sent to the API
+  in_openapi: false
+  documented_in: https://developer.madhive.com/faq
+- status: 500
+  title: Server Error
+  description: Something went wrong on Madhive’s end.
+  spec_descriptions:
+  - Internal Server Error
+  - Internal server error
+  schema: '#/components/schemas/ErrorResponse'
+  content_type:
+  - application/json
+  operations_declaring: 7
+  source_operations:
+  - openapi/madhive-api-openapi-original.yml#createOptimizationTemplate
+  - openapi/madhive-api-openapi-original.yml#deleteOptimizationTemplate
+  - openapi/madhive-api-openapi-original.yml#getMetros
+  - openapi/madhive-api-openapi-original.yml#getOptimizationTemplateById
+  - openapi/madhive-api-openapi-original.yml#getOptimizationTemplates
+  - openapi/madhive-api-openapi-original.yml#updateOptimizationTemplate
+  in_openapi: true
+- status: 503
+  title: Server Error
+  description: Something went wrong on Madhive’s end.
+  in_openapi: false
+  documented_in: https://developer.madhive.com/faq

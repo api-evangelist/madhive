@@ -1,0 +1,174 @@
+generated: '2026-08-04'
+method: derived
+source: mcp/madhive-mcp.yml + openapi/madhive-api-openapi-original.yml
+note: >-
+  Madhive publishes 22 MCP tools and a 75-operation REST API over the same campaign core.
+  The live MCP tools/list is OAuth-gated (HTTP 401 anonymous), so each tool's real
+  inputSchema could not be introspected; the bindings below are derived by matching the
+  provider's published tool names and descriptions to REST operationIds verified verbatim
+  in openapi/madhive-api-openapi-original.yml. Confidence is set honestly: high where the
+  tool maps 1:1 or to an obvious CRUD triple, medium where a single tool fans out across
+  several operations or composes them server-side.
+surfaces:
+  openapi:
+    file: openapi/madhive-api-openapi-original.yml
+    server: https://api2.madhive.com/api
+    operations: 75
+    gated: false
+    note: spec is public; calling the API requires OAuth client credentials
+  mcp:
+    url: https://api2.madhive.com/mcp
+    spec: openapi/madhive-mcp-openapi-original.json
+    gated: true
+    note: anonymous tools/list returns 401; input schemas need authenticated introspection
+  graphql: null
+crosswalk:
+- tool: get_campaigns
+  category: campaigns
+  rest: [getCampaignsByOrg, getCampaignById]
+  binding: rest
+  confidence: high
+- tool: get_campaign_details
+  category: campaigns
+  rest: [getCampaignById, getLineItemsByCampaignId, getCreativesByCampaignId]
+  binding: rest
+  confidence: medium
+  note: composite — "including line items and creatives" implies a server-side fan-in of three REST reads
+- tool: manage_campaign
+  category: campaigns
+  rest: [createCampaign, updateCampaignById, deleteCampaignById, activateCampaignById,
+    deactivateCampaignById, createLineItem, updateLineItemById, deleteLineItemById,
+    deactivateLineItemById]
+  binding: rest
+  confidence: medium
+  note: one verb-multiplexed tool covering create/update/archive for both campaigns and line items
+- tool: get_advertisers
+  category: advertisers
+  rest: [getAdvertisers, getAdvertiserById]
+  binding: rest
+  confidence: high
+- tool: manage_advertiser
+  category: advertisers
+  rest: [createAdvertiser, updateAdvertiser, deleteAdvertiserById]
+  binding: rest
+  confidence: high
+- tool: get_agencies
+  category: agencies
+  rest: [getAgencies, getAgencyById]
+  binding: rest
+  confidence: high
+- tool: manage_agency
+  category: agencies
+  rest: [createAgency, updateAgency, deleteAgencyById]
+  binding: rest
+  confidence: high
+- tool: get_creatives
+  category: creatives
+  rest: [getCreatives, getCreativeById]
+  binding: rest
+  confidence: high
+- tool: manage_creative
+  category: creatives
+  rest: [createCreative, updateCreative, deleteCreativeById]
+  binding: rest
+  confidence: high
+- tool: get_audiences
+  category: audiences
+  rest: [getAudiencesByOrg, getAudienceById, searchAudiences]
+  binding: rest
+  confidence: high
+  note: the "search by text query" mode maps to searchAudiences; "optional standard audiences" is the includeStdAuds query param on getAudiencesByOrg
+- tool: manage_audience
+  category: audiences
+  rest: [createAudience, updateAudience, deleteAudienceById]
+  binding: rest
+  confidence: high
+- tool: list_publishers
+  category: publishers
+  rest: [getPublishersByOrg]
+  binding: rest
+  confidence: high
+- tool: get_publisher_groups
+  category: publishers
+  rest: [getPublisherGroupsByOrg, getPublisherGroupById]
+  binding: rest
+  confidence: high
+- tool: manage_publisher_group
+  category: publishers
+  rest: [createPublisherGroup, updatePublisherGroupById, deletePublisherGroupById]
+  binding: rest
+  confidence: high
+- tool: list_segments
+  category: segments
+  rest: [getSegmentsByOrg]
+  binding: rest
+  confidence: high
+- tool: get_retargeting
+  category: segments
+  rest: [getRetargetingSegById]
+  binding: rest
+  confidence: high
+- tool: get_lineitem_info
+  category: line-items
+  rest: [getLineItemById]
+  binding: rest
+  confidence: high
+- tool: get_pixel
+  category: pixels
+  rest: [getPixelById]
+  binding: rest
+  confidence: high
+- tool: manage_pixel
+  category: pixels
+  rest: [createPixel, updatePixel]
+  binding: rest
+  confidence: high
+- tool: list_orgs
+  category: reference
+  rest: [getOrgs]
+  binding: rest
+  confidence: high
+- tool: list_metros
+  category: reference
+  rest: [getMetros]
+  binding: rest
+  confidence: high
+- tool: list_products
+  category: reference
+  rest: [getProductsByOrg]
+  binding: rest
+  confidence: high
+mcp_only: []
+rest_only:
+- capability: line item goal + schedule patches
+  operations: [updateLineItemImpression, updateLineItemBudget, updateLineItemSchedule]
+  note: no dedicated tool; manage_campaign may cover these via full line-item update
+- capability: creative-to-line-item scheduling
+  operations: [createCreativeLineItem, updateCreativeLineItem, activateCreativeById, deleteCreativeLineItem]
+- capability: creative brand-safety scanning
+  operations: [getCreativesMediaTrustStatus]
+- capability: retargeting segment authoring
+  operations: [createRetargetingCampaign, updateRetargetingCampaign, createRetargetingLineItem,
+    updateRetargetingLineItem, createRetargetingTrackingPixel, updateRetargetingTrackingPixel,
+    createRetargetingCreative, updateRetargetingCreative, deleteRetargetingSegmentById]
+  note: get_retargeting reads them; nothing in the tool list creates or edits them
+- capability: optimization templates (Supply Guardrails)
+  operations: [getOptimizationTemplates, createOptimizationTemplate, getOptimizationTemplateById,
+    updateOptimizationTemplate, deleteOptimizationTemplate]
+- capability: contextual + inventory reference data
+  operations: [getContextualSegments, getStations]
+- capability: line item activation
+  operations: []
+  note: POST /v1/campaigns/{cid}/lineitems/{id}/activation carries no operationId in the published spec
+- capability: service health
+  operations: []
+  note: GET /health carries no operationId in the published spec
+coverage:
+  tools_named: 22
+  tools_bound: 22
+  tools_unbound: 0
+  mcp_only: 0
+  rest_operations_total: 75
+  rest_operations_without_operation_id: 2
+  rest_operations_with_a_tool: 48
+  rest_operations_without_a_tool: 27

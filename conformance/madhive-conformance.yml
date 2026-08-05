@@ -1,0 +1,90 @@
+generated: '2026-08-04'
+method: derived
+source: openapi/madhive-api-openapi-original.yml, openapi/madhive-mcp-openapi-original.json, well-known/madhive-oauth-authorization-server.json, https://developer.madhive.com/faq
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: two published OpenAPI 3.0.0 documents served from the Madhive Apigee developer portal
+- id: oauth2
+  conforms: true
+  evidence: components.securitySchemes declares oauth2 with a clientCredentials flow (tokenUrl https://api2.madhive.com/oauth/token) in both specs
+- id: oauth2-client-credentials-rfc6749
+  conforms: true
+  evidence: documented client_credentials grant; discovery advertises grant_types_supported [authorization_code, client_credentials]
+- id: oauth2-pkce-rfc7636
+  conforms: true
+  evidence: /.well-known/oauth-authorization-server advertises code_challenge_methods_supported [S256]; the MCP docs describe the authorization-code-with-PKCE flow for user-delegated clients
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: true
+  evidence: https://api2.madhive.com/.well-known/oauth-authorization-server returns 200 application/json with issuer, authorization_endpoint, token_endpoint, jwks_uri
+- id: openid-connect-discovery
+  conforms: partial
+  evidence: >-
+    https://api2.madhive.com/.well-known/openid-configuration returns 200, but advertises only
+    grant_types_supported [client_credentials] and response_types_supported [token] with no
+    authorization_endpoint, userinfo_endpoint or scopes_supported — it is an OAuth token-service
+    descriptor published at the OIDC path, not a full OpenID Provider configuration
+- id: jwt-rfc7519
+  conforms: true
+  evidence: bearerAuth scheme description "jwt access token for authentication"; discovery publishes jwks_uri with RS256 signing
+- id: model-context-protocol
+  conforms: true
+  evidence: hosted MCP server at https://api2.madhive.com/mcp implementing JSON-RPC 2.0 with tools/list and tools/call, plus an SSE streaming endpoint
+- id: json-rpc-2.0
+  conforms: true
+  evidence: MCP OpenAPI documents the jsonrpc/id/method/params request and jsonrpc/id/result|error response shape
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: errors use a proprietary application/json envelope (error/errors/status/transaction), not application/problem+json
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: no Sunset or Deprecation response headers documented; deprecation is announced on the API Change Schedule page instead
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: no /.well-known/security.txt on any Madhive host (500 on api2.madhive.com, 404 on api.madhive.com and www.madhive.com)
+- id: rfc8615-well-known-uris
+  conforms: partial
+  evidence: two RFC 8615 documents published on api2.madhive.com (openid-configuration, oauth-authorization-server, plus jwks.json); no api-catalog, agent-card or ai-plugin
+- id: a2a-agent-card
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json miss on every Madhive host
+- id: asyncapi
+  conforms: false
+  evidence: no event, streaming or webhook surface is documented; not applicable to this API
+- id: iab-content-taxonomy
+  conforms: true
+  evidence: >-
+    creatives and advertisers require an IAB category code (the FAQ gives IAB1-1 = "Books and
+    Literature") which publishers match against their own block lists
+- id: openrtb
+  conforms: partial
+  evidence: >-
+    Madhive operates a programmatic DSP and maintains archived Go/Java OpenRTB and VAST
+    libraries in its GitHub org; the public campaign-management API is not itself an
+    OpenRTB bidding surface
+- id: iab-vast
+  conforms: true
+  evidence: creatives are uploaded as VAST tags or CDN assets (POST /v1/creatives, createCreative)
+- id: soc-2
+  conforms: true
+  evidence: Madhive publishes renewed SOC 1, SOC 2 and SOC 3 attestations (audited by KirkpatrickPrice) at https://www.madhive.com/insights/madhive-renews-soc-1-2-and-3
+- id: tag-certified-against-fraud
+  conforms: true
+  evidence: TAG Certified Against Fraud as both intermediary and buyer, referenced on https://www.madhive.com/fraud-guarantee
+compliance_program:
+  published: true
+  url: https://www.madhive.com/insights/madhive-renews-soc-1-2-and-3
+  certifications:
+  - SOC 1
+  - SOC 2
+  - SOC 3
+  - TAG Certified Against Fraud
+  auditor: KirkpatrickPrice
+  privacy:
+  - url: https://www.madhive.com/legal/privacy-policy
+  - url: https://www.madhive.com/legal/us-state-privacy-notice
+  - url: https://www.madhive.com/legal/u-s-data-processing-agreement-addendum
+  - url: https://www.madhive.com/legal/iab-addendum
+  note: >-
+    No dedicated trust center (trust.madhive.com / security.madhive.com / /security) was found;
+    the compliance posture is published as newsroom and legal pages.

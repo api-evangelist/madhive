@@ -1,0 +1,701 @@
+generated: '2026-08-04'
+method: derived
+source: openapi/madhive-api-openapi-original.yml, openapi/madhive-mcp-openapi-original.json
+note: Index of the example payloads Madhive ships inside its own published OpenAPI. No example was authored by API
+  Evangelist — this is an inventory of what is already in the specs, so an agent or client generator knows where
+  concrete payloads exist. Madhive publishes no separate code-sample or recipe library; the MCP page carries curl
+  snippets for the OAuth token exchange and a tools/list call.
+summary:
+  operations_with_examples: 60
+  request_body_examples: 6
+  response_examples: 72
+  schemas_with_property_examples: 74
+code_samples:
+- language: shell
+  topic: OAuth client-credentials token exchange
+  source: https://developer.madhive.com/mcp
+- language: shell
+  topic: MCP tools/list JSON-RPC call
+  source: https://developer.madhive.com/mcp
+- language: json
+  topic: Gemini CLI mcpServers configuration
+  source: https://developer.madhive.com/mcp
+operations:
+- operationId: null
+  path: /health
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getCampaignById
+  path: /v1/campaigns/{id}
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: deleteCampaignById
+  path: /v1/campaigns/{id}
+  method: DELETE
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updateCampaignById
+  path: /v1/campaigns/{id}
+  method: PUT
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: activateCampaignById
+  path: /v1/campaigns/{id}/activation
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: null
+  path: /v1/campaigns/{cid}/lineitems/{id}/activation
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getCampaignsByOrg
+  path: /v1/campaigns
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: createCampaign
+  path: /v1/campaigns
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+  - status: '400'
+    content_type: application/json
+- operationId: getLineItemsByCampaignId
+  path: /v1/campaigns/{id}/lineitems
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getCreativesByCampaignId
+  path: /v1/campaigns/{id}/creatives
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getLineItemById
+  path: /v1/lineitems/{id}
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: deleteLineItemById
+  path: /v1/lineitems/{id}
+  method: DELETE
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updateLineItemById
+  path: /v1/lineitems/{id}
+  method: PUT
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updateLineItemImpression
+  path: /v1/lineitems/{id}/impression-goal
+  method: PATCH
+  spec: openapi/madhive-api-openapi-original.yml
+  request_examples:
+  - application/json
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updateLineItemBudget
+  path: /v1/lineitems/{id}/budget-goal
+  method: PATCH
+  spec: openapi/madhive-api-openapi-original.yml
+  request_examples:
+  - application/json
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updateLineItemSchedule
+  path: /v1/lineitems/{id}/schedule
+  method: PATCH
+  spec: openapi/madhive-api-openapi-original.yml
+  request_examples:
+  - application/json
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: createLineItem
+  path: /v1/lineitems
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+  - status: '400'
+    content_type: application/json
+- operationId: getContextualSegments
+  path: /v1/contextual-segments
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getAudienceById
+  path: /v1/audiences/{id}
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updateAudience
+  path: /v1/audiences/{id}
+  method: PUT
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: deleteAudienceById
+  path: /v1/audiences/{id}
+  method: DELETE
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getAudiencesByOrg
+  path: /v1/audiences
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: createAudience
+  path: /v1/audiences
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '201'
+    content_type: application/json
+- operationId: searchAudiences
+  path: /v1/audiences/search
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getAdvertiserById
+  path: /v1/advertisers/{id}
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updateAdvertiser
+  path: /v1/advertisers/{id}
+  method: PUT
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getStations
+  path: /v1/stations
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getAdvertisers
+  path: /v1/advertisers
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: createAdvertiser
+  path: /v1/advertisers
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+  - status: '400'
+    content_type: application/json
+- operationId: getAgencyById
+  path: /v1/agencies/{id}
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updateAgency
+  path: /v1/agencies/{id}
+  method: PUT
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getAgencies
+  path: /v1/agencies
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: createAgency
+  path: /v1/agencies
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+  - status: '400'
+    content_type: application/json
+- operationId: getPixelById
+  path: /v1/pixels/{id}
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updatePixel
+  path: /v1/pixels/{id}
+  method: PUT
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+  - status: '400'
+    content_type: application/json
+- operationId: createPixel
+  path: /v1/pixels
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+  - status: '400'
+    content_type: application/json
+- operationId: activateCreativeById
+  path: /v1/creatives/{cId}/lineitems/{id}/activation
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: deleteCreativeLineItem
+  path: /v1/creatives/{cId}/lineitems/{id}/activation
+  method: DELETE
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: createCreativeLineItem
+  path: /v1/creatives/{cId}/lineitems/{id}
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updateCreativeLineItem
+  path: /v1/creatives/{cId}/lineitems/{id}
+  method: PUT
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getCreativeById
+  path: /v1/creatives/{id}
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updateCreative
+  path: /v1/creatives/{id}
+  method: PATCH
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+  - status: '400'
+    content_type: application/json
+- operationId: getCreatives
+  path: /v1/creatives
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: createCreative
+  path: /v1/creatives
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+  - status: '400'
+    content_type: application/json
+- operationId: getCreativesMediaTrustStatus
+  path: /v1/creatives/media-trust-status
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getPublisherGroupById
+  path: /v1/publishergroups/{id}
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updatePublisherGroupById
+  path: /v1/publishergroups/{id}
+  method: PUT
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: deletePublisherGroupById
+  path: /v1/publishergroups/{id}
+  method: DELETE
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getPublisherGroupsByOrg
+  path: /v1/publishergroups
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: createPublisherGroup
+  path: /v1/publishergroups
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+  - status: '400'
+    content_type: application/json
+- operationId: getProductsByOrg
+  path: /v1/products
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getSegmentsByOrg
+  path: /v1/segments
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getRetargetingSegById
+  path: /v1/retargeting/{id}
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: deleteRetargetingSegmentById
+  path: /v1/retargeting/{id}
+  method: DELETE
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getOptimizationTemplates
+  path: /v1/optimization-templates
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: createOptimizationTemplate
+  path: /v1/optimization-templates
+  method: POST
+  spec: openapi/madhive-api-openapi-original.yml
+  request_examples:
+  - application/json
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: getOptimizationTemplateById
+  path: /v1/optimization-templates/{id}
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: updateOptimizationTemplate
+  path: /v1/optimization-templates/{id}
+  method: PATCH
+  spec: openapi/madhive-api-openapi-original.yml
+  request_examples:
+  - application/json
+- operationId: getOrgs
+  path: /v1/orgs
+  method: GET
+  spec: openapi/madhive-api-openapi-original.yml
+  response_examples:
+  - status: '200'
+    content_type: application/json
+- operationId: mcpJsonRpc
+  path: /
+  method: POST
+  spec: openapi/madhive-mcp-openapi-original.json
+  request_examples:
+  - application/json
+  response_examples:
+  - status: '200'
+    content_type: application/json
+  - status: '400'
+    content_type: application/json
+  - status: '401'
+    content_type: application/json
+  - status: '404'
+    content_type: application/json
+  - status: '500'
+    content_type: application/json
+schemas:
+- schema: OptimizationTemplateResponse
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 8
+- schema: OptimizationTemplateListItem
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 8
+- schema: PatchOptimizationTemplateRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: CreateOptimizationTemplateRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: PubSetting
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 1
+- schema: PubCap
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 1
+- schema: BundleRule
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: ChannelRule
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: Org
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 1
+- schema: RetargetingRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: RetargetingUpdateRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: LineItemScheduleRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: LineItemImpressionRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: LineItemImpressionBudgetRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: Segment
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 8
+- schema: Pagination
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 4
+- schema: Product
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 5
+- schema: PublisherGroupListItem
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: PublisherGroupPublisher
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: Publisher
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: PublisherResponse
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 1
+- schema: PublisherGroup
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 4
+- schema: PublisherGroupRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: PublisherGroupRequestPublisher
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: GenericResponse
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: CreativeLineItem
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 7
+- schema: CreativeLineItemEvent
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 1
+- schema: CreativeLineItemRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 5
+- schema: Creative
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 15
+- schema: AssetValidationAttribute
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: AssetValidationResult
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 4
+- schema: MediaTrustProblem
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: MediaTrustStatusRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 1
+- schema: MediaTrustStatusResult
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: CreativeRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 10
+- schema: CreativeListItem
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: CompanionBannerMetadata
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 6
+- schema: CreativeListResponse
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 1
+- schema: Pixel
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 6
+- schema: PixelRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: StatusDetail
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: Advertiser
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 6
+- schema: AdvertiserListItem
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 1
+- schema: AdvertiserRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 5
+- schema: StationListItem
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 4
+- schema: Agency
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: AgencyListItem
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: AgencyRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: AudienceBoolExp
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 1
+- schema: Audience
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 13
+- schema: AudienceRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: LineItem
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 10
+- schema: LineItemPace
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 1
+- schema: LineItemRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 13
+- schema: Campaign
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 8
+- schema: CampaignRequest
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 7
+- schema: CampaignListLineItem
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: CampaignListItem
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: CampaignCreativeFlightResponse
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 1
+- schema: GeoFence
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 4
+- schema: GeoRecency
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: Targeting
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 5
+- schema: ExternalSegment
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 4
+- schema: FrequencyCap
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 4
+- schema: ExcludeDayparting
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 7
+- schema: DeviceCap
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 4
+- schema: Transaction
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 3
+- schema: MultiErrorResponse
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: ErrorResponse
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: Metro
+  spec: openapi/madhive-api-openapi-original.yml
+  properties_with_examples: 2
+- schema: MCPRequest
+  spec: openapi/madhive-mcp-openapi-original.json
+  properties_with_examples: 1
+- schema: MCPResponse
+  spec: openapi/madhive-mcp-openapi-original.json
+  properties_with_examples: 1
+- schema: MCPError
+  spec: openapi/madhive-mcp-openapi-original.json
+  properties_with_examples: 1
+- schema: Tool
+  spec: openapi/madhive-mcp-openapi-original.json
+  properties_with_examples: 2

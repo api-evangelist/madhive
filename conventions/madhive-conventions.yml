@@ -1,0 +1,118 @@
+generated: '2026-08-04'
+method: searched
+source: https://developer.madhive.com/faq + https://developer.madhive.com/get-started + openapi/madhive-api-openapi-original.yml
+summary: >-
+  Madhive's public API is a resource-oriented JSON REST API behind an Apigee gateway,
+  versioned in the URI path (/v1/), authenticated with OAuth 2.0 client credentials
+  exchanged for a JWT bearer token. Responses carry a transaction envelope with a trace
+  id; list endpoints use an opaque page-token cursor with an offset direction hint. The
+  API publishes no idempotency contract, no conditional-request support, and no
+  rate-limit response headers.
+authentication:
+  style: oauth2-client-credentials
+  token_endpoint: https://api2.madhive.com/oauth/token
+  header: 'Authorization: Bearer <jwt>'
+  discovery: https://api2.madhive.com/.well-known/oauth-authorization-server
+  artifact: authentication/madhive-authentication.yml
+  note: >-
+    the spec also declares a basicAuth scheme whose own description says
+    "Basic Authentication Not Implemented"
+versioning:
+  scheme: uri-path
+  current: v1
+  base_path: /api/v1
+  change_schedule: https://developer.madhive.com/scheduled-updates
+  artifact: lifecycle/madhive-lifecycle.yml
+idempotency:
+  supported: false
+  note: >-
+    no Idempotency-Key header, no idempotency parameter, and no idempotency guidance
+    appears in the published OpenAPI or the developer-portal docs. Retrying a POST to
+    /v1/campaigns, /v1/lineitems or /v1/creatives is not documented as safe.
+pagination:
+  style: cursor-with-offset
+  request_params:
+  - name: page_size
+    in: query
+    description: number of items per page
+  - name: page_token
+    in: query
+    description: opaque token for retrieving the next page of results
+  - name: offset
+    in: query
+    description: >-
+      page position relative to the supplied page_token (1 = next page, -1 = previous
+      page, 0 = current page)
+  response_field: pagination
+  response_shape:
+    pageSize: integer
+    offset: integer
+    pageToken: string
+    totalRecords: integer
+  schema: openapi/madhive-api-openapi-original.yml#/components/schemas/Pagination
+  note: >-
+    a minority of operations use the camelCase pageSize query parameter instead of
+    page_size — the parameter naming is not uniform across the spec
+filtering:
+  supported: true
+  examples:
+  - {operation: getCreatives, params: [advertiser, statuses, media_types, search]}
+  - {operation: getAudiencesByOrg, params: [type, includeStdAuds, search]}
+  - {operation: getStations, params: [call_letters]}
+  - {operation: getCampaignById, params: [includeLineItems]}
+field_expansion:
+  supported: partial
+  note: >-
+    expansion is expressed as boolean query flags on specific reads
+    (includeLineItems on getCampaignById, includeStdAuds on getAudiencesByOrg)
+    rather than a generic expand/fields parameter
+metadata:
+  supported: true
+  note: >-
+    most resources carry a customer-supplied externalId free-text field for
+    correlating Madhive records with the caller's own system of record
+request_tracing:
+  supported: true
+  mechanism: response body
+  field: transaction.id
+  description: trace id returned on every success and error envelope
+  additional:
+    transaction.taskId: asynchronous task identifier
+    transaction.created: record creation timestamp
+  note: >-
+    the MCP surface additionally returns an x-request-id response header;
+    the REST spec documents no tracing header
+error_envelope:
+  format: proprietary-json
+  rfc9457: false
+  content_type: application/json
+  schema: openapi/madhive-api-openapi-original.yml#/components/schemas/ErrorResponse
+  fields:
+    error: single error message string
+    errors: array of error message strings
+    status: service status string, e.g. ERROR
+    transaction: trace envelope
+  artifact: errors/madhive-problem-types.yml
+rate_limiting:
+  signalled_in_headers: false
+  documented_in: https://developer.madhive.com/faq
+  model: per-tier requests per second
+  artifact: rate-limits/madhive-rate-limits.yml
+time:
+  timezone: UTC
+  datetime_format: 'yyyy:mm:ddThh:mm:ss'
+  note: >-
+    the FAQ states all API times are UTC, that start dates cannot be in the past, and
+    that setting a line item live with a past start time silently rewrites the start to
+    now + 10 minutes
+async_behaviour:
+  note: >-
+    the FAQ states line item details are refetched by the delivery system approximately
+    every 30 minutes, so a publisher-group edit is not immediately reflected on running
+    line items unless the group is re-applied to the line item
+conditional_requests:
+  etag: false
+  if_match: false
+webhooks:
+  supported: false
+  note: no webhook, callback or event surface appears in the spec or the docs

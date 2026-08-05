@@ -1,0 +1,108 @@
+generated: '2026-08-04'
+method: searched
+source: live probes of every Madhive host in apis.yml and OpenAPI servers[]
+notes: >-
+  developer.madhive.com is an Apigee integrated developer portal single-page app that
+  answers HTTP 200 with the same 2,138-byte HTML shell for every /.well-known/* path.
+  Those responses are catch-all false positives, not published documents, and are
+  recorded here as html-catchall rather than as hits.
+hosts:
+- host: https://api2.madhive.com
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: application/json
+    file: madhive-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    file: madhive-oauth-authorization-server.json
+  - path: /.well-known/jwks.json
+    status: 200
+    content_type: application/json
+    note: JSON Web Key Set referenced by both discovery documents; not archived (rotating keys)
+  - path: /.well-known/security.txt
+    status: 500
+  - path: /.well-known/oauth-protected-resource
+    status: 500
+  - path: /.well-known/api-catalog
+    status: 500
+  - path: /.well-known/ai-plugin.json
+    status: 500
+  - path: /.well-known/agent-card.json
+    status: 500
+  - path: /.well-known/agent.json
+    status: 500
+- host: https://api.madhive.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://developer.madhive.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/html
+    result: html-catchall
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: text/html
+    result: html-catchall
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: text/html
+    result: html-catchall
+  - path: /.well-known/api-catalog
+    status: 200
+    content_type: text/html
+    result: html-catchall
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: text/html
+    result: html-catchall
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: text/html
+    result: html-catchall
+- host: https://www.madhive.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+summary:
+  security_txt: false
+  openid_configuration: true
+  oauth_authorization_server: true
+  api_catalog: false
+  ai_plugin: false
+  agent_card: false
+x-evidence:
+  fetched: '2026-08-04'
+  probed_hosts:
+  - api2.madhive.com
+  - api.madhive.com
+  - developer.madhive.com
+  - www.madhive.com
+  - madhive.com

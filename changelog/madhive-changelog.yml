@@ -1,0 +1,39 @@
+generated: '2026-08-04'
+method: searched
+source: https://developer.madhive.com/scheduled-updates
+title: API Change Schedule
+description: >-
+  Madhive's forward-looking change log. Rather than a retrospective release feed, the page
+  publishes the timeline for upcoming changes plus support guidelines for upgrading to new
+  features or incompatible API updates. Entries are grouped into change periods and carry an
+  effective date, feature, update type, impact and required action.
+scheme: change-period
+current_version: v1
+spec_version: 1.0.0
+spec_last_modified: '2025-12-03'
+spec_last_modified_note: >-
+  Apigee portal metadata for the Madhive API doc records modified=1764799790000
+  (2025-12-03) and a spec snapshot regenerated 2026-08-01.
+entries:
+- period: February - March 2025
+  effective: '2025-02'
+  feature: Line Items
+  update_type: Endpoint Update
+  headline: New endpoints for editing impressions and budgets
+  breaking: true
+  additions:
+  - PATCH /v1/lineitems/{id}/impression-goal (updateLineItemImpression)
+  - PATCH /v1/lineitems/{id}/budget-goal (updateLineItemBudget)
+  impact: >-
+    Starting February 2025, new patch endpoints for updating impressions or budgets to align
+    with Madhive naming conventions.
+  action_required: >-
+    Immediate action is required to move to these new patch endpoints if using the old ones.
+  also_listed: Campaign Version Check Requirement
+window: >-
+  Only one change period is currently published on the page; this artifact captures the live
+  window rather than a full history.
+x-evidence:
+  fetched: '2026-08-04'
+  url: https://developer.madhive.com/portals/api/sites/mad-master-mozart/liveportal/page/scheduled-updates
+  http_status: 200

@@ -1,0 +1,69 @@
+generated: '2026-08-04'
+method: searched
+source: openapi/madhive-api-openapi-original.yml, openapi/madhive-mcp-openapi-original.json
+docs: https://developer.madhive.com/mcp
+discovery:
+  oauth_authorization_server: https://api2.madhive.com/.well-known/oauth-authorization-server
+  openid_configuration: https://api2.madhive.com/.well-known/openid-configuration
+  jwks_uri: https://api2.madhive.com/.well-known/jwks.json
+  file: well-known/madhive-oauth-authorization-server.json
+schemes:
+- name: oauth2
+  source: openapi/madhive-api-openapi-original.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://api2.madhive.com/oauth/token
+    scopes: 0
+- name: OAuth2
+  source: openapi/madhive-mcp-openapi-original.json
+  description: OAuth 2.0 authentication using client credentials grant
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://api2.madhive.com/oauth/token
+    scopes: 0
+- name: authorizationCode
+  source: https://developer.madhive.com/mcp
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://api2.madhive.com/oauth/authorize
+    tokenUrl: https://api2.madhive.com/oauth/token
+    pkce: S256
+  note: >-
+    The user-delegated authorization-code-with-PKCE flow is documented on the developer-portal
+    MCP page and advertised by /.well-known/oauth-authorization-server, but is not declared in
+    either published OpenAPI document.
+scopes: []
+scopes_published: false
+finding: >-
+  Madhive publishes NO OAuth scopes. Both OpenAPI documents declare an empty scopes map on their
+  clientCredentials flow, /.well-known/oauth-authorization-server publishes no scopes_supported,
+  /.well-known/openid-configuration publishes no scopes_supported, and no scope, permission or
+  role reference page exists on developer.madhive.com. Authorization is therefore all-or-nothing
+  at the credential level: a token carries whatever the Apigee API product grants, with no
+  least-privilege narrowing available to the caller. That matters most on the MCP surface, where
+  the same undifferentiated token is handed to an AI client that can archive campaigns,
+  advertisers, creatives and audiences.
+authorization_model:
+  granularity: api-product
+  gateway: Apigee
+  products:
+  - name: madhive-api
+    display: Madhive Public API
+    approval: auto
+  - name: mcp
+    display: mcp
+    description: Madhive MCP (Model Context Protocol) API (Production Environment)
+    approval: auto
+  note: >-
+    Two Apigee API products are published on the developer portal. Entitlement is expressed by
+    which product a client's credentials are bound to, not by OAuth scopes.
+x-evidence:
+- fetched: '2026-08-04'
+  url: https://api2.madhive.com/.well-known/oauth-authorization-server
+  http_status: 200
+- fetched: '2026-08-04'
+  url: https://api2.madhive.com/.well-known/openid-configuration
+  http_status: 200
+- fetched: '2026-08-04'
+  url: https://developer.madhive.com/portals/api/sites/mad-master-mozart/liveportal/apis
+  http_status: 200

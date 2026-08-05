@@ -1,0 +1,1007 @@
+generated: '2026-08-04'
+method: derived
+source: openapi/madhive-api-openapi-original.yml
+note: 'Entity graph derived from the published Madhive OpenAPI: resource families from the /v1/* path space, composition
+  edges from components.schemas $ref links, and cross-entity references from id-bearing fields. Madhive publishes
+  no object reference with id prefixes, so no id-format column is asserted.'
+entities:
+- name: campaigns
+  base_path: /v1/campaigns
+  paths:
+  - /v1/campaigns
+  - /v1/campaigns/{cid}/lineitems/{id}/activation
+  - /v1/campaigns/{id}
+  - /v1/campaigns/{id}/activation
+  - /v1/campaigns/{id}/creatives
+  - /v1/campaigns/{id}/lineitems
+  operations:
+  - activateCampaignById
+  - createCampaign
+  - deactivateCampaignById
+  - deactivateLineItemById
+  - deleteCampaignById
+  - getCampaignById
+  - getCampaignsByOrg
+  - getCreativesByCampaignId
+  - getLineItemsByCampaignId
+  - updateCampaignById
+- name: lineitems
+  base_path: /v1/lineitems
+  paths:
+  - /v1/lineitems
+  - /v1/lineitems/{id}
+  - /v1/lineitems/{id}/budget-goal
+  - /v1/lineitems/{id}/impression-goal
+  - /v1/lineitems/{id}/schedule
+  operations:
+  - createLineItem
+  - deleteLineItemById
+  - getLineItemById
+  - updateLineItemBudget
+  - updateLineItemById
+  - updateLineItemImpression
+  - updateLineItemSchedule
+- name: contextual-segments
+  base_path: /v1/contextual-segments
+  paths:
+  - /v1/contextual-segments
+  operations:
+  - getContextualSegments
+- name: audiences
+  base_path: /v1/audiences
+  paths:
+  - /v1/audiences
+  - /v1/audiences/search
+  - /v1/audiences/{id}
+  operations:
+  - createAudience
+  - deleteAudienceById
+  - getAudienceById
+  - getAudiencesByOrg
+  - searchAudiences
+  - updateAudience
+- name: advertisers
+  base_path: /v1/advertisers
+  paths:
+  - /v1/advertisers
+  - /v1/advertisers/{id}
+  operations:
+  - createAdvertiser
+  - deleteAdvertiserById
+  - getAdvertiserById
+  - getAdvertisers
+  - updateAdvertiser
+- name: stations
+  base_path: /v1/stations
+  paths:
+  - /v1/stations
+  operations:
+  - getStations
+- name: agencies
+  base_path: /v1/agencies
+  paths:
+  - /v1/agencies
+  - /v1/agencies/{id}
+  operations:
+  - createAgency
+  - deleteAgencyById
+  - getAgencies
+  - getAgencyById
+  - updateAgency
+- name: pixels
+  base_path: /v1/pixels
+  paths:
+  - /v1/pixels
+  - /v1/pixels/{id}
+  operations:
+  - createPixel
+  - getPixelById
+  - updatePixel
+- name: creatives
+  base_path: /v1/creatives
+  paths:
+  - /v1/creatives
+  - /v1/creatives/media-trust-status
+  - /v1/creatives/{cId}/lineitems/{id}
+  - /v1/creatives/{cId}/lineitems/{id}/activation
+  - /v1/creatives/{id}
+  operations:
+  - activateCreativeById
+  - createCreative
+  - createCreativeLineItem
+  - deleteCreativeById
+  - deleteCreativeLineItem
+  - getCreativeById
+  - getCreatives
+  - getCreativesMediaTrustStatus
+  - updateCreative
+  - updateCreativeLineItem
+- name: publishers
+  base_path: /v1/publishers
+  paths:
+  - /v1/publishers
+  operations:
+  - getPublishersByOrg
+- name: publishergroups
+  base_path: /v1/publishergroups
+  paths:
+  - /v1/publishergroups
+  - /v1/publishergroups/{id}
+  operations:
+  - createPublisherGroup
+  - deletePublisherGroupById
+  - getPublisherGroupById
+  - getPublisherGroupsByOrg
+  - updatePublisherGroupById
+- name: products
+  base_path: /v1/products
+  paths:
+  - /v1/products
+  operations:
+  - getProductsByOrg
+- name: segments
+  base_path: /v1/segments
+  paths:
+  - /v1/segments
+  operations:
+  - getSegmentsByOrg
+- name: retargeting
+  base_path: /v1/retargeting
+  paths:
+  - /v1/retargeting/campaigns
+  - /v1/retargeting/campaigns/{id}
+  - /v1/retargeting/creatives
+  - /v1/retargeting/creatives/{id}
+  - /v1/retargeting/lineitems
+  - /v1/retargeting/lineitems/{id}
+  - /v1/retargeting/trackingpixels
+  - /v1/retargeting/trackingpixels/{id}
+  - /v1/retargeting/{id}
+  operations:
+  - createRetargetingCampaign
+  - createRetargetingCreative
+  - createRetargetingLineItem
+  - createRetargetingTrackingPixel
+  - deleteRetargetingSegmentById
+  - getRetargetingSegById
+  - updateRetargetingCampaign
+  - updateRetargetingCreative
+  - updateRetargetingLineItem
+  - updateRetargetingTrackingPixel
+- name: metros
+  base_path: /v1/metros
+  paths:
+  - /v1/metros
+  operations:
+  - getMetros
+- name: optimization-templates
+  base_path: /v1/optimization-templates
+  paths:
+  - /v1/optimization-templates
+  - /v1/optimization-templates/{id}
+  operations:
+  - createOptimizationTemplate
+  - deleteOptimizationTemplate
+  - getOptimizationTemplateById
+  - getOptimizationTemplates
+  - updateOptimizationTemplate
+- name: orgs
+  base_path: /v1/orgs
+  paths:
+  - /v1/orgs
+  operations:
+  - getOrgs
+relationships:
+- from: CustomerExternalId
+  to: CustomerExternalID
+  kind: has_one
+- from: OptimizationTemplateResponse
+  to: PubSetting
+  kind: has_one
+- from: OptimizationTemplateResponse
+  to: Transaction
+  kind: has_one
+- from: OptimizationTemplatesListResponse
+  to: OptimizationTemplateListItem
+  kind: has_one
+- from: OptimizationTemplatesListResponse
+  to: Pagination
+  kind: has_many
+- from: OptimizationTemplatesListResponse
+  to: Transaction
+  kind: has_many
+- from: PatchOptimizationTemplateRequest
+  to: PubSetting
+  kind: has_one
+- from: CreateOptimizationTemplateRequest
+  to: PubSetting
+  kind: has_one
+- from: PubSetting
+  to: BundleRule
+  kind: has_one
+- from: PubSetting
+  to: ChannelRule
+  kind: has_many
+- from: PubSetting
+  to: PubCap
+  kind: has_many
+- from: Org
+  to: ID
+  kind: has_one
+- from: Org
+  to: Name
+  kind: has_one
+- from: Org
+  to: Status
+  kind: has_many
+- from: OrgListResponse
+  to: Org
+  kind: has_one
+- from: OrgListResponse
+  to: Transaction
+  kind: has_many
+- from: RetargetingRequest
+  to: ID
+  kind: has_many
+- from: RetargetingRequest
+  to: Name
+  kind: has_many
+- from: RetargetingUpdateRequest
+  to: ID
+  kind: has_many
+- from: RetargetingUpdateRequest
+  to: Name
+  kind: has_many
+- from: RetargetingCreativeRequest
+  to: RetargetingRequest
+  kind: has_one
+- from: RetargetingTrackingPixelRequest
+  to: RetargetingRequest
+  kind: has_one
+- from: RetargetingCampaignRequest
+  to: Date
+  kind: has_one
+- from: RetargetingCampaignRequest
+  to: RetargetingRequest
+  kind: has_one
+- from: RetargetingLineItemRequest
+  to: RetargetingCampaignRequest
+  kind: has_one
+- from: Retargeting
+  to: ID
+  kind: has_one
+- from: Retargeting
+  to: RetargetingCampaignRequest
+  kind: has_one
+- from: Retargeting
+  to: RetargetingType
+  kind: has_many
+- from: RetargetingResponse
+  to: Date
+  kind: has_one
+- from: RetargetingResponse
+  to: ID
+  kind: has_one
+- from: RetargetingResponse
+  to: RetargetingRequest
+  kind: has_one
+- from: RetargetingResponse
+  to: RetargetingType
+  kind: has_one
+- from: RetargetingResponse
+  to: Transaction
+  kind: has_one
+- from: Segment
+  to: SegmentType
+  kind: has_one
+- from: SegmentResponse
+  to: Segment
+  kind: has_one
+- from: SegmentResponse
+  to: Transaction
+  kind: has_one
+- from: SegmentListResponse
+  to: Pagination
+  kind: has_one
+- from: SegmentListResponse
+  to: SegmentResponse
+  kind: has_one
+- from: SegmentListResponse
+  to: Transaction
+  kind: has_many
+- from: Product
+  to: DeviceCap
+  kind: has_one
+- from: Product
+  to: MediaType
+  kind: has_one
+- from: Product
+  to: Status
+  kind: has_one
+- from: ProductResponse
+  to: Product
+  kind: has_one
+- from: ProductResponse
+  to: Status
+  kind: has_one
+- from: ProductResponse
+  to: Transaction
+  kind: has_one
+- from: ProductListResponse
+  to: ProductResponse
+  kind: has_one
+- from: ProductListResponse
+  to: Transaction
+  kind: has_many
+- from: PublisherGroupListResponse
+  to: PublisherGroupListItem
+  kind: has_one
+- from: PublisherGroupListResponse
+  to: Transaction
+  kind: has_many
+- from: PublisherGroupListItem
+  to: MediaType
+  kind: has_one
+- from: PublisherResponse
+  to: Publisher
+  kind: has_one
+- from: PublisherResponse
+  to: Transaction
+  kind: has_many
+- from: PublisherGroup
+  to: MediaType
+  kind: has_one
+- from: PublisherGroup
+  to: PublisherGroupPublisher
+  kind: has_one
+- from: PublisherGroupRequest
+  to: MediaType
+  kind: has_one
+- from: PublisherGroupRequest
+  to: Name
+  kind: has_one
+- from: PublisherGroupRequest
+  to: PublisherGroupRequestPublisher
+  kind: has_one
+- from: PublisherGroupResponse
+  to: PublisherGroup
+  kind: has_one
+- from: PublisherGroupResponse
+  to: Status
+  kind: has_one
+- from: PublisherGroupResponse
+  to: Transaction
+  kind: has_one
+- from: GenericResponse
+  to: Transaction
+  kind: has_one
+- from: CreativeLineItem
+  to: CreativeLineItemEvent
+  kind: has_one
+- from: CreativeLineItemEvent
+  to: EventType
+  kind: has_one
+- from: CreativeLineItemRequest
+  to: CreativeLineItemEvent
+  kind: has_one
+- from: CreativeLineItemResponse
+  to: CreativeLineItem
+  kind: has_one
+- from: CreativeLineItemResponse
+  to: Status
+  kind: has_one
+- from: CreativeLineItemResponse
+  to: Transaction
+  kind: has_one
+- from: Creative
+  to: AssetValidation
+  kind: has_one
+- from: AssetValidation
+  to: AssetValidationAttribute
+  kind: has_one
+- from: AssetValidation
+  to: AssetValidationResult
+  kind: has_one
+- from: MediaTrustStatusResult
+  to: MediaTrustProblem
+  kind: has_one
+- from: MediaTrustStatusResponse
+  to: MediaTrustStatusResult
+  kind: has_one
+- from: MediaTrustStatusResponse
+  to: Transaction
+  kind: has_many
+- from: CreativeResponse
+  to: CompanionBannerMetadata
+  kind: has_one
+- from: CreativeResponse
+  to: Creative
+  kind: has_one
+- from: CreativeResponse
+  to: CreativeLineItemEvent
+  kind: has_one
+- from: CreativeResponse
+  to: Status
+  kind: has_many
+- from: CreativeResponse
+  to: Transaction
+  kind: has_one
+- from: CreativeListResponse
+  to: CreativeListItem
+  kind: has_one
+- from: CreativeListResponse
+  to: Pagination
+  kind: has_many
+- from: CreativeListResponse
+  to: Transaction
+  kind: has_many
+- from: PixelResponse
+  to: Pixel
+  kind: has_one
+- from: PixelResponse
+  to: Status
+  kind: has_one
+- from: PixelResponse
+  to: Transaction
+  kind: has_one
+- from: StatusDetail
+  to: Status
+  kind: has_many
+- from: Advertiser
+  to: Status
+  kind: has_one
+- from: AdvertiserListItem
+  to: Advertiser
+  kind: has_one
+- from: AdvertiserResponse
+  to: Advertiser
+  kind: has_one
+- from: AdvertiserResponse
+  to: Transaction
+  kind: has_one
+- from: AdvertiserListResponse
+  to: AdvertiserListItem
+  kind: has_one
+- from: AdvertiserListResponse
+  to: Pagination
+  kind: has_many
+- from: AdvertiserListResponse
+  to: Transaction
+  kind: has_many
+- from: StationListItem
+  to: Status
+  kind: has_one
+- from: StationListResponse
+  to: Pagination
+  kind: has_one
+- from: StationListResponse
+  to: StationListItem
+  kind: has_one
+- from: StationListResponse
+  to: Transaction
+  kind: has_many
+- from: Agency
+  to: Status
+  kind: has_one
+- from: AgencyResponse
+  to: Agency
+  kind: has_one
+- from: AgencyResponse
+  to: Transaction
+  kind: has_one
+- from: AgencyListResponse
+  to: AgencyListItem
+  kind: has_one
+- from: AgencyListResponse
+  to: Pagination
+  kind: has_many
+- from: AgencyListResponse
+  to: Transaction
+  kind: has_many
+- from: Audience
+  to: AudienceBoolExp
+  kind: has_one
+- from: Audience
+  to: CompositionType
+  kind: has_one
+- from: AudienceResponse
+  to: Audience
+  kind: has_one
+- from: AudienceResponse
+  to: Status
+  kind: has_one
+- from: AudienceResponse
+  to: Transaction
+  kind: has_one
+- from: AudienceRequest
+  to: AudienceBoolExp
+  kind: has_one
+- from: AudienceSearchRequest
+  to: AudienceBoolExp
+  kind: has_one
+- from: AudienceListResponse
+  to: AudienceResponse
+  kind: has_one
+- from: AudienceListResponse
+  to: Pagination
+  kind: has_many
+- from: AudienceListResponse
+  to: Transaction
+  kind: has_many
+- from: LineItem
+  to: CustomerExternalID
+  kind: has_many
+- from: LineItem
+  to: Date
+  kind: has_many
+- from: LineItem
+  to: DeviceCap
+  kind: has_many
+- from: LineItem
+  to: ExcludeDayparting
+  kind: has_one
+- from: LineItem
+  to: ExternalSegment
+  kind: has_one
+- from: LineItem
+  to: FrequencyCap
+  kind: has_one
+- from: LineItem
+  to: ID
+  kind: has_many
+- from: LineItem
+  to: LineItemPace
+  kind: has_one
+- from: LineItem
+  to: Targeting
+  kind: has_many
+- from: LineItemRequest
+  to: DeviceCap
+  kind: has_one
+- from: LineItemRequest
+  to: ExcludeDayparting
+  kind: has_one
+- from: LineItemRequest
+  to: FrequencyCap
+  kind: has_one
+- from: LineItemRequest
+  to: LineItemPace
+  kind: has_one
+- from: LineItemRequest
+  to: Targeting
+  kind: has_many
+- from: LineItemResponse
+  to: LineItem
+  kind: has_one
+- from: LineItemResponse
+  to: StatusDetail
+  kind: has_one
+- from: LineItemResponse
+  to: Transaction
+  kind: has_one
+- from: CampaignResponse
+  to: Campaign
+  kind: has_one
+- from: CampaignResponse
+  to: Date
+  kind: has_one
+- from: CampaignResponse
+  to: StatusDetail
+  kind: has_one
+- from: CampaignResponse
+  to: Transaction
+  kind: has_one
+- from: CampaignListItem
+  to: CampaignListLineItem
+  kind: has_one
+- from: CampaignListResponse
+  to: CampaignListItem
+  kind: has_one
+- from: CampaignListResponse
+  to: Pagination
+  kind: has_many
+- from: CampaignListResponse
+  to: Transaction
+  kind: has_many
+- from: CampaignLineItemResponse
+  to: Campaign
+  kind: has_one
+- from: CampaignLineItemResponse
+  to: Date
+  kind: has_many
+- from: CampaignLineItemResponse
+  to: LineItemResponse
+  kind: has_one
+- from: CampaignLineItemResponse
+  to: StatusDetail
+  kind: has_many
+- from: CampaignLineItemResponse
+  to: Transaction
+  kind: has_many
+- from: CampaignCreativeFlightResponse
+  to: Date
+  kind: has_one
+- from: CampaignCreativeFlightResponse
+  to: Status
+  kind: has_one
+- from: GeoRecency
+  to: GeoFence
+  kind: has_one
+- from: Targeting
+  to: GeoRecency
+  kind: has_many
+- from: ContextualSegmentListResponse
+  to: ExternalSegment
+  kind: has_one
+- from: ContextualSegmentListResponse
+  to: Transaction
+  kind: has_many
+- from: ErrorResponse
+  to: Transaction
+  kind: has_one
+- from: MetroListResponse
+  to: Metro
+  kind: has_one
+- from: MetroListResponse
+  to: Transaction
+  kind: has_many
+id_reference_fields:
+- schema: OptimizationTemplateResponse
+  field: id
+  type: string
+  description: Unique identifier for the optimization template
+- schema: OptimizationTemplateListItem
+  field: id
+  type: string
+  description: Unique identifier for the optimization template
+- schema: PubSetting
+  field: pubId
+  type: string
+  description: Publisher ID
+- schema: BundleRule
+  field: bundleId
+  type: string
+  description: Bundle identifier
+- schema: Org
+  field: parentID
+  type: string
+  description: parent organization id
+- schema: Org
+  field: publisherGroupIDs
+  type: array
+  description: list of publisher group ids
+- schema: Org
+  field: defaultPublisherGroupID
+  type: string
+  description: default publisher group id
+- schema: RetargetingRequest
+  field: ids
+  type: array
+  description: resource ids
+- schema: RetargetingRequest
+  field: advertiserId
+  type: string
+  description: advertiser id
+- schema: RetargetingUpdateRequest
+  field: ids
+  type: array
+  description: resource ids
+- schema: LineItemScheduleRequest
+  field: id
+  type: string
+  description: madhive line item id (read only)
+- schema: LineItemImpressionRequest
+  field: id
+  type: string
+  description: madhive line item id (read only)
+- schema: LineItemImpressionBudgetRequest
+  field: id
+  type: string
+  description: madhive line item id (read only)
+- schema: Segment
+  field: id
+  type: string
+  description: madhive segment id
+- schema: Segment
+  field: parentId
+  type: string
+  description: madhive segment parent id
+- schema: Segment
+  field: customerExternalId
+  type: string
+  description: customer external id
+- schema: Product
+  field: id
+  type: string
+  description: madhive product id
+- schema: Product
+  field: whitelistId
+  type: string
+  description: whitelist id
+- schema: PublisherGroupListItem
+  field: id
+  type: string
+  description: madhive publisher group id
+- schema: PublisherGroupPublisher
+  field: id
+  type: string
+  description: madhive publisher id
+- schema: Publisher
+  field: id
+  type: string
+  description: madhive publisher id
+- schema: PublisherGroup
+  field: id
+  type: string
+  description: madhive publisher group id
+- schema: PublisherGroup
+  field: productId
+  type: string
+  description: product id
+- schema: PublisherGroupRequest
+  field: productId
+  type: string
+  description: product id
+- schema: PublisherGroupRequestPublisher
+  field: id
+  type: string
+  description: madhive publisher id
+- schema: GenericResponse
+  field: id
+  type: string
+  description: resource id
+- schema: CreativeLineItem
+  field: creativeId
+  type: string
+  description: madhive creative id
+- schema: CreativeLineItem
+  field: lineItemId
+  type: string
+  description: madhive line item id
+- schema: CreativeLineItem
+  field: companionBannerIds
+  type: array
+  description: 'List of display creative IDs to attach as companion banners on this flight. Only applicable to audio
+    creatives. Maximum '
+- schema: CreativeLineItemRequest
+  field: companionBannerIds
+  type: array
+  description: 'List of display creative IDs to attach as companion banners on this flight. Only applicable to audio
+    creatives. Maximum '
+- schema: Creative
+  field: id
+  type: string
+  description: madhive creative id
+- schema: Creative
+  field: advertiserId
+  type: string
+  description: advertiser id
+- schema: Creative
+  field: adId
+  type: string
+  description: ' Ad-ID replaced (ISCI Code) Industry Standard Coding Identification'
+- schema: Creative
+  field: companionBannerIds
+  type: array
+  description: 'List of display creative IDs attached as companion banners. Only applicable to audio creatives.
+    Maximum 6 allowed. Each '
+- schema: AssetValidationAttribute
+  field: id
+  type: string
+  description: id of the asset
+- schema: MediaTrustProblem
+  field: scanId
+  type: string
+  description: the Media Trust scan id that reported this problem
+- schema: MediaTrustStatusRequest
+  field: creativeIds
+  type: array
+  description: batch of madhive creative ids to check (max 500 per request)
+- schema: MediaTrustStatusResult
+  field: creativeId
+  type: string
+  description: madhive creative id, echoed back from the request
+- schema: CreativeRequest
+  field: advertiserId
+  type: string
+  description: advertiser id
+- schema: CreativeRequest
+  field: adId
+  type: string
+  description: ' Ad-ID replaced (ISCI Code) Industry Standard Coding Identification'
+- schema: CreativeRequest
+  field: companionBannerIds
+  type: array
+  description: List of display creative IDs to attach as companion banners. Only applicable to audio creatives.
+    Maximum 6 allowed. Each
+- schema: CreativeListItem
+  field: id
+  type: string
+  description: madhive creative id
+- schema: CreativeListItem
+  field: companionBannerIds
+  type: array
+  description: List of display creative IDs attached as companion banners. Only present for audio creatives with
+    companion banners.
+- schema: CompanionBannerMetadata
+  field: id
+  type: string
+  description: madhive creative id of the companion banner
+- schema: Pixel
+  field: id
+  type: string
+  description: madhive pixel id
+- schema: Pixel
+  field: advertiserId
+  type: string
+  description: advertiser id
+- schema: PixelRequest
+  field: advertiserId
+  type: string
+  description: advertiser id
+- schema: Advertiser
+  field: id
+  type: string
+  description: madhive advertiser id
+- schema: Advertiser
+  field: customerExternalId
+  type: string
+  description: external id of the advertiser
+- schema: AdvertiserListItem
+  field: id
+  type: string
+  description: madhive advertiser id
+- schema: AdvertiserRequest
+  field: customerExternalId
+  type: string
+  description: external id of the advertiser
+- schema: StationListItem
+  field: id
+  type: string
+  description: madhive station id (28-char key required by the campaign API)
+- schema: StationListItem
+  field: dmaId
+  type: integer
+  description: DMA (designated market area) id for the station
+- schema: Agency
+  field: id
+  type: string
+  description: madhive agency id
+- schema: Agency
+  field: customerExternalId
+  type: string
+  description: external id of the agency
+- schema: AgencyListItem
+  field: id
+  type: string
+  description: madhive agency id
+- schema: AgencyRequest
+  field: customerExternalId
+  type: string
+  description: external id of the agency
+- schema: AudienceBoolExp
+  field: ids
+  type: array
+  description: null
+- schema: Audience
+  field: id
+  type: string
+  description: madhive audience id
+- schema: Audience
+  field: orgId
+  type: string
+  description: parent organization id
+- schema: LineItem
+  field: campaignId
+  type: string
+  description: madhive parent campaign id
+- schema: LineItem
+  field: productId
+  type: string
+  description: product id
+- schema: LineItem
+  field: whitelistId
+  type: string
+  description: Publisher Allow List ID. Required for legacy orgs (orgs without an active contract). Silently ignored
+    for non-legacy (2.
+- schema: LineItem
+  field: optimizationTemplateId
+  type: string
+  description: 'ID of the Optimization Template (supply guardrail) for this line item. For non-legacy (2.0) orgs:
+    optional on POST — if '
+- schema: LineItemRequest
+  field: campaignId
+  type: string
+  description: madhive parent campaign id
+- schema: LineItemRequest
+  field: customerExternalId
+  type: string
+  description: external id of the line item
+- schema: LineItemRequest
+  field: productId
+  type: string
+  description: product id
+- schema: LineItemRequest
+  field: whitelistId
+  type: string
+  description: Publisher Allow List ID. Required for legacy orgs (orgs without an active contract). Silently ignored
+    for non-legacy (2.
+- schema: LineItemRequest
+  field: optimizationTemplateId
+  type: string
+  description: ID of the optimization template (supply guardrail) to attach to this line item. Omitting this field
+    or passing null pres
+- schema: Campaign
+  field: id
+  type: string
+  description: madhive order id
+- schema: Campaign
+  field: customerExternalId
+  type: string
+  description: external id of the order
+- schema: Campaign
+  field: agencyId
+  type: string
+  description: madhive agency id
+- schema: Campaign
+  field: advertiserId
+  type: string
+  description: madhive advertiser id
+- schema: Campaign
+  field: stationId
+  type: string
+  description: madhive station id
+- schema: CampaignRequest
+  field: customerExternalId
+  type: string
+  description: external id of the order
+- schema: CampaignRequest
+  field: agencyId
+  type: string
+  description: madhive agency id
+- schema: CampaignRequest
+  field: advertiserId
+  type: string
+  description: madhive advertiser id
+- schema: CampaignRequest
+  field: stationId
+  type: string
+  description: madhive station id
+- schema: CampaignListLineItem
+  field: id
+  type: string
+  description: lineitem id
+- schema: CampaignListItem
+  field: id
+  type: string
+  description: campaign id
+- schema: CampaignCreativeFlightResponse
+  field: creativeId
+  type: string
+  description: madhive creative id
+- schema: CampaignCreativeFlightResponse
+  field: lineItemId
+  type: string
+  description: madhive line item id
+- schema: CampaignCreativeFlightResponse
+  field: companionBannerIds
+  type: array
+  description: 'List of display creative IDs attached as companion banners on this flight. Only present for audio
+    creative flights with '
+- schema: ExternalSegment
+  field: id
+  type: string
+  description: external segment ID (IAS segment identifier)
+- schema: Transaction
+  field: id
+  type: string
+  description: trace id
+- schema: Transaction
+  field: taskId
+  type: string
+  description: task id
+counts:
+  entities: 17
+  schemas: 117
+  composition_edges: 151
+  id_fields: 86
