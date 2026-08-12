@@ -33,51 +33,1087 @@ tags:
 - Campaign Management
 - Model Context Protocol
 apis:
-- aid: madhive:madhive-api
-  name: Madhive API
-  description: 'The Madhive Public API is a REST interface for digital advertising
-    clients and services, fronted by Apigee and authenticated with OAuth 2.0 client
-    credentials. It covers the full campaign lifecycle — create and manage campaigns
-    and line items, set impression and budget goals, schedule flights, activate and
-    pause delivery — plus advertisers, agencies, creatives (VAST tags and CDN assets)
-    with Media Trust malware scanning, custom and standard audiences with boolean segment
-    logic, retargeting segments, tracking pixels, publishers and publisher groups,
-    contextual segments, stations, metros, products and optimization templates (Supply
-    Guardrails).'
+- aid: >-
+    madhive:madhive-ability-to-pause-a-campaign-and-all-of-its-associated-line-items-and-creatives-api
+  name: >-
+    MadHive Ability to pause a campaign and all of its associated line items and creatives API
+  description: >-
+    The Ability to pause a campaign and all of its associated line items and creatives API from MadHive
+    — 1 operation(s) for ability to pause a campaign and all of its associated line items and creatives.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
-  - Advertising
-  - Campaigns
-  - Audiences
-  - Creatives
-  - Connected TV
+  - Ability to pause a campaign and all of its associated line items and creatives
   properties:
   - type: OpenAPI
-    url: openapi/madhive-api-openapi-original.yml
+    url: >-
+      openapi/madhive-ability-to-pause-a-campaign-and-all-of-its-associated-line-items-and-creatives-api-openapi.yml
   - type: Documentation
     url: https://developer.madhive.com/
-- aid: madhive:madhive-mcp
-  name: Madhive MCP API
-  description: 'The Madhive MCP API is a hosted Model Context Protocol server that
-    exposes Madhive campaign management to AI assistants over JSON-RPC 2.0, authenticated
-    with OAuth 2.0 via Apigee. It supports both machine-to-machine (client credentials)
-    and user-delegated (authorization code with PKCE) flows, and publishes 22 tools
-    covering campaigns, advertisers, agencies, creatives, audiences, publishers, publisher
-    groups, segments, retargeting, line items, pixels, orgs, metros and products. Documented
-    clients include Claude Code, Claude Desktop/Web, Gemini CLI, Gemini Enterprise
-    and custom agents.'
-  humanURL: https://developer.madhive.com/mcp
-  baseURL: https://api2.madhive.com/mcp
-  tags:
-  - Model Context Protocol
-  - AI Agents
-  - Campaign Management
-  properties:
-  - type: OpenAPI
-    url: openapi/madhive-mcp-openapi-original.json
   - type: MCPServer
     url: mcp/madhive-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-ability-to-pause-a-line-item-api
+  name: MadHive Ability to pause a line item API
+  description: >-
+    The Ability to pause a line item API from MadHive — 1 operation(s) for ability to pause a line item.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - Ability to pause a line item
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-ability-to-pause-a-line-item-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-advertiser-api
+  name: MadHive Advertiser API
+  description: The advertiser API from MadHive — 1 operation(s) for advertiser.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - advertiser
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-advertiser-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-agency-api
+  name: MadHive Agency API
+  description: The agency API from MadHive — 1 operation(s) for agency.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - agency
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-agency-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-all-products-api
+  name: MadHive all products API
+  description: The all products API from MadHive — 1 operation(s) for all products.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - all products
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-all-products-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-all-publisher-groups-api
+  name: MadHive all publisher groups API
+  description: The all publisher groups API from MadHive — 1 operation(s) for all publisher groups.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - all publisher groups
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-all-publisher-groups-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-all-publishers-api
+  name: MadHive all publishers API
+  description: The all publishers API from MadHive — 1 operation(s) for all publishers.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - all publishers
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-all-publishers-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-archive-a-line-item-api
+  name: MadHive archive a line item API
+  description: The archive a line item API from MadHive — 1 operation(s) for archive a line item.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - archive a line item
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-archive-a-line-item-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-audiences-api
+  name: MadHive Audiences API
+  description: The audiences API from MadHive — 1 operation(s) for audiences.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - audiences
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-audiences-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-campaign-activation-api
+  name: MadHive campaign activation API
+  description: The campaign activation API from MadHive — 1 operation(s) for campaign activation.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - campaign activation
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-campaign-activation-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-campaign-api
+  name: MadHive Campaign API
+  description: The campaign API from MadHive — 1 operation(s) for campaign.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - campaign
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-campaign-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-campaign-creatives-api
+  name: MadHive campaign creatives API
+  description: The campaign creatives API from MadHive — 1 operation(s) for campaign creatives.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - campaign creatives
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-campaign-creatives-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-campaign-line-items-api
+  name: MadHive campaign line items API
+  description: The campaign line items API from MadHive — 1 operation(s) for campaign line items.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - campaign line items
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-campaign-line-items-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-contextual-segments-api
+  name: MadHive contextual segments API
+  description: The contextual segments API from MadHive — 1 operation(s) for contextual segments.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - contextual segments
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-contextual-segments-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-create-new-line-item-api
+  name: MadHive create new line item API
+  description: The create new line item API from MadHive — 1 operation(s) for create new line item.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - create new line item
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-create-new-line-item-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-creative-api
+  name: MadHive Creative API
+  description: The creative API from MadHive — 1 operation(s) for creative.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - creative
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-creative-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-creative-flight-activation-api
+  name: MadHive creative flight activation API
+  description: >-
+    The creative flight activation API from MadHive — 1 operation(s) for creative flight activation.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - creative flight activation
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-creative-flight-activation-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-creative-line-item-api
+  name: MadHive Creative Line Item API
+  description: The creative_line_item API from MadHive — 1 operation(s) for creative_line_item.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - creative_line_item
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-creative-line-item-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-deactivate-advertiser-api
+  name: MadHive deactivate advertiser API
+  description: The deactivate advertiser API from MadHive — 1 operation(s) for deactivate advertiser.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - deactivate advertiser
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-deactivate-advertiser-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-deactivate-agency-api
+  name: MadHive deactivate agency API
+  description: The deactivate agency API from MadHive — 1 operation(s) for deactivate agency.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - deactivate agency
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-deactivate-agency-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-deactivate-audience-api
+  name: MadHive deactivate audience API
+  description: The deactivate audience API from MadHive — 1 operation(s) for deactivate audience.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - deactivate audience
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-deactivate-audience-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-deactivate-campaign-api
+  name: MadHive deactivate campaign API
+  description: The deactivate campaign API from MadHive — 1 operation(s) for deactivate campaign.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - deactivate campaign
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-deactivate-campaign-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-deactivate-creative-api
+  name: MadHive deactivate creative API
+  description: The deactivate creative API from MadHive — 1 operation(s) for deactivate creative.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - deactivate creative
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-deactivate-creative-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-deactivate-creative-line-item-api
+  name: MadHive deactivate creative line item API
+  description: >-
+    The deactivate creative line item API from MadHive — 1 operation(s) for deactivate creative line item.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - deactivate creative line item
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-deactivate-creative-line-item-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-deactivate-publisher-group-api
+  name: MadHive deactivate publisher group API
+  description: >-
+    The deactivate publisher group API from MadHive — 1 operation(s) for deactivate publisher group.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - deactivate publisher group
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-deactivate-publisher-group-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-deactivate-retargeting-segment-api
+  name: MadHive deactivate retargeting segment API
+  description: >-
+    The deactivate retargeting segment API from MadHive — 1 operation(s) for deactivate retargeting segment.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - deactivate retargeting segment
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-deactivate-retargeting-segment-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-get-advertiser-by-id-api
+  name: MadHive Get Advertiser By ID API
+  description: The get_advertiser_by_id API from MadHive — 1 operation(s) for get_advertiser_by_id.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - get_advertiser_by_id
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-get-advertiser-by-id-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-get-agency-by-id-api
+  name: MadHive Get Agency By ID API
+  description: The get_agency_by_id API from MadHive — 1 operation(s) for get_agency_by_id.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - get_agency_by_id
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-get-agency-by-id-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-get-audience-by-id-api
+  name: MadHive Get Audience By ID API
+  description: The get_audience_by_id API from MadHive — 1 operation(s) for get_audience_by_id.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - get_audience_by_id
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-get-audience-by-id-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-get-creative-by-id-api
+  name: MadHive Get Creative By ID API
+  description: The get_creative_by_id API from MadHive — 1 operation(s) for get_creative_by_id.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - get_creative_by_id
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-get-creative-by-id-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-get-pixel-by-id-api
+  name: MadHive Get Pixel By ID API
+  description: The get_pixel_by_id API from MadHive — 1 operation(s) for get_pixel_by_id.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - get_pixel_by_id
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-get-pixel-by-id-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-health-api
+  name: MadHive Health API
+  description: The health API from MadHive — 1 operation(s) for health.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - health
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-health-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-line-item-activation-api
+  name: MadHive line item activation API
+  description: The line item activation API from MadHive — 1 operation(s) for line item activation.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - line item activation
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-line-item-activation-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-mcp-protocol-api
+  name: MadHive MCP Protocol API
+  description: Model Context Protocol JSON-RPC endpoints
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - MCP Protocol
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-mcp-protocol-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-media-trust-status-api
+  name: MadHive media trust status API
+  description: The media trust status API from MadHive — 1 operation(s) for media trust status.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - media trust status
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-media-trust-status-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-metros-api
+  name: MadHive Metros API
+  description: The metros API from MadHive — 1 operation(s) for metros.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - metros
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-metros-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-modify-advertiser-api
+  name: MadHive modify advertiser API
+  description: The modify advertiser API from MadHive — 1 operation(s) for modify advertiser.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - modify advertiser
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-modify-advertiser-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-modify-agency-api
+  name: MadHive modify agency API
+  description: The modify agency API from MadHive — 1 operation(s) for modify agency.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - modify agency
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-modify-agency-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-modify-campaign-api
+  name: MadHive modify campaign API
+  description: The modify campaign API from MadHive — 1 operation(s) for modify campaign.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - modify campaign
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-modify-campaign-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-modify-creative-api
+  name: MadHive modify creative API
+  description: The modify creative API from MadHive — 1 operation(s) for modify creative.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - modify creative
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-modify-creative-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-modify-creative-line-item-api
+  name: MadHive modify creative line item API
+  description: >-
+    The modify creative line item API from MadHive — 1 operation(s) for modify creative line item.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - modify creative line item
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-modify-creative-line-item-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-modify-line-item-api
+  name: MadHive modify line item API
+  description: The modify line item API from MadHive — 1 operation(s) for modify line item.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - modify line item
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-modify-line-item-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-modify-retargeting-campaign-api
+  name: MadHive modify retargeting campaign API
+  description: >-
+    The modify retargeting campaign API from MadHive — 1 operation(s) for modify retargeting campaign.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - modify retargeting campaign
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-modify-retargeting-campaign-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-modify-retargeting-creative-api
+  name: MadHive modify retargeting creative API
+  description: >-
+    The modify retargeting creative API from MadHive — 1 operation(s) for modify retargeting creative.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - modify retargeting creative
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-modify-retargeting-creative-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-modify-retargeting-line-item-api
+  name: MadHive modify retargeting line item API
+  description: >-
+    The modify retargeting line item API from MadHive — 1 operation(s) for modify retargeting line item.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - modify retargeting line item
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-modify-retargeting-line-item-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-modify-retargeting-tracking-pixel-api
+  name: MadHive modify retargeting tracking pixel API
+  description: >-
+    The modify retargeting tracking pixel API from MadHive — 1 operation(s) for modify retargeting tracking
+    pixel.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - modify retargeting tracking pixel
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-modify-retargeting-tracking-pixel-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-optimization-templates-api
+  name: MadHive optimization templates API
+  description: The optimization templates API from MadHive — 2 operation(s) for optimization templates.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - optimization templates
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-optimization-templates-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-organizations-api
+  name: MadHive Organizations API
+  description: The organizations API from MadHive — 1 operation(s) for organizations.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-pixel-api
+  name: MadHive Pixel API
+  description: The pixel API from MadHive — 2 operation(s) for pixel.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - pixel
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-pixel-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-publisher-group-api
+  name: MadHive publisher group API
+  description: The publisher group API from MadHive — 1 operation(s) for publisher group.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - publisher group
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-publisher-group-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-publisher-group-modification-api
+  name: MadHive publisher group modification API
+  description: >-
+    The publisher group modification API from MadHive — 1 operation(s) for publisher group modification.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - publisher group modification
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-publisher-group-modification-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-publisher-group-retrieval-api
+  name: MadHive publisher group retrieval API
+  description: >-
+    The publisher group retrieval API from MadHive — 1 operation(s) for publisher group retrieval.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - publisher group retrieval
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-publisher-group-retrieval-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-retargeting-campaign-api
+  name: MadHive retargeting campaign API
+  description: The retargeting campaign API from MadHive — 1 operation(s) for retargeting campaign.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - retargeting campaign
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-retargeting-campaign-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-retargeting-creative-api
+  name: MadHive retargeting creative API
+  description: The retargeting creative API from MadHive — 1 operation(s) for retargeting creative.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - retargeting creative
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-retargeting-creative-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-retargeting-line-item-api
+  name: MadHive retargeting line item API
+  description: The retargeting line item API from MadHive — 1 operation(s) for retargeting line item.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - retargeting line item
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-retargeting-line-item-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-retargeting-segment-retrieval-api
+  name: MadHive retargeting segment retrieval API
+  description: >-
+    The retargeting segment retrieval API from MadHive — 1 operation(s) for retargeting segment retrieval.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - retargeting segment retrieval
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-retargeting-segment-retrieval-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-retargeting-tracking-pixel-api
+  name: MadHive retargeting tracking pixel API
+  description: >-
+    The retargeting tracking pixel API from MadHive — 1 operation(s) for retargeting tracking pixel.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - retargeting tracking pixel
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-retargeting-tracking-pixel-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-retrieve-a-campaign-by-its-unique-identifier-api
+  name: MadHive retrieve a campaign by its unique identifier API
+  description: >-
+    The retrieve a campaign by its unique identifier API from MadHive — 1 operation(s) for retrieve a
+    campaign by its unique identifier.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - retrieve a campaign by its unique identifier
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-retrieve-a-campaign-by-its-unique-identifier-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-retrieve-a-line-item-by-its-unique-identifier-api
+  name: MadHive retrieve a line item by its unique identifier API
+  description: >-
+    The retrieve a line item by its unique identifier API from MadHive — 1 operation(s) for retrieve a
+    line item by its unique identifier.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - retrieve a line item by its unique identifier
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-retrieve-a-line-item-by-its-unique-identifier-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-search-audiences-api
+  name: MadHive Search Audiences API
+  description: The search_audiences API from MadHive — 1 operation(s) for search_audiences.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - search_audiences
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-search-audiences-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-segments-api
+  name: MadHive Segments API
+  description: The segments API from MadHive — 1 operation(s) for segments.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - segments
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-segments-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-station-api
+  name: MadHive Station API
+  description: The station API from MadHive — 1 operation(s) for station.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - station
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-station-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-update-audience-api
+  name: MadHive Update Audience API
+  description: The update_audience API from MadHive — 1 operation(s) for update_audience.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - update_audience
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-update-audience-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-update-impression-goal-api
+  name: MadHive update impression goal API
+  description: The update impression goal API from MadHive — 1 operation(s) for update impression goal.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - update impression goal
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-update-impression-goal-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-update-line-item-budget-api
+  name: MadHive update line item budget API
+  description: >-
+    The update line item budget API from MadHive — 1 operation(s) for update line item budget.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - update line item budget
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-update-line-item-budget-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
+  - type: ToolCrosswalk
+    url: mcp/madhive-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.madhive.com/mcp
+- aid: madhive:madhive-update-line-item-start-end-dates-api
+  name: MadHive update line item start/end dates API
+  description: >-
+    The update line item start/end dates API from MadHive — 1 operation(s) for update line item start/end
+    dates.
+  humanURL: https://developer.madhive.com/
+  baseURL: https://api2.madhive.com/api
+  tags:
+  - update line item start/end dates
+  properties:
+  - type: OpenAPI
+    url: openapi/madhive-update-line-item-start-end-dates-api-openapi.yml
+  - type: Documentation
+    url: https://developer.madhive.com/
   - type: ToolCrosswalk
     url: mcp/madhive-tool-crosswalk.yml
   - type: Documentation
