@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive modify agency API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "modify agency",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Editing the name or external ID of an agency.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api2.madhive.com/api/v1/agencies/:id",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "resource id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Editing the name or external ID of an agency."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

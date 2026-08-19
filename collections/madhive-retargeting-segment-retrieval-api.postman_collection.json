@@ -1,0 +1,272 @@
+{
+  "item": [
+    {
+      "id": "e8d77a75-5c4f-4ed8-a404-f798be4873ba",
+      "name": "retargeting segment retrieval",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "edfc6c9f-4eb8-4265-96f3-89869fc51642",
+          "name": "Send a retargeting segment ID of any type (campaign, line item, tracking pixel or creative) and retrieve all retargeting segment information.",
+          "request": {
+            "name": "Send a retargeting segment ID of any type (campaign, line item, tracking pixel or creative) and retrieve all retargeting segment information.",
+            "description": {
+              "content": "Send a retargeting segment ID of any type (campaign, line item, tracking pixel or creative) and retrieve all retargeting segment information.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "retargeting",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) retargeting segment id"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "gcp trace",
+                "key": "X-Cloud-Trace-Context",
+                "value": "91f9f012dc7c7ffc13604c77f12a8931"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api2.madhive.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ab3bfdd9-62f9-4323-85c3-c333066e1349",
+              "name": "successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "retargeting",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) retargeting segment id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"0X4Ue7ELKvMI6cQaPzZ8evrO0XUx\",\n  \"name\": \"my first segment\",\n  \"segmentType\": \"RETARGETING\",\n  \"description\": \"my first segment description\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6b42baf4-b5ad-41e1-94ef-2ecad909e7ef",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "retargeting",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) retargeting segment id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid resource id\",\n  \"status\": \"ERROR\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "09bf74fc-8307-4f1d-9261-9129534f2bf9",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "retargeting",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) retargeting segment id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"unauthorized\",\n  \"status\": \"ERROR\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api2.madhive.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "6f910458-2567-4656-8ef2-b272af988481",
+    "name": "Madhive retargeting segment retrieval API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n",
+      "type": "text/plain"
+    }
+  }
+}

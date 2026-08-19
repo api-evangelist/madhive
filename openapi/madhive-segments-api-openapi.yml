@@ -1,0 +1,325 @@
+openapi: 3.2.0
+info:
+  title: Madhive Segments API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: segments
+paths:
+  /v1/segments:
+    get:
+      tags:
+      - segments
+      summary: Receive the list of segments and their IDs. Includes retargeting, third party and first party segment types. When third party segments are selected it includes data companies as well.
+      description: Receive the list of segments and their IDs. Includes retargeting, third party and first party segment types. When third party segments are selected it includes data companies as well.
+      operationId: getSegmentsByOrg
+      parameters:
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      - in: query
+        name: page_size
+        description: number of segments per page (default 100, max 10000)
+        required: false
+        schema:
+          type: integer
+          default: 100
+          maximum: 10000
+      - in: query
+        name: offset
+        description: 'Optional page selector RELATIVE to page_token: 1 = next page (the default when a page_token is supplied), -1 = previous page, 0 = reload the current page. Has no effect without page_token.
+
+          '
+        required: false
+        schema:
+          type: integer
+      - in: query
+        name: page_token
+        description: 'Opaque cursor from the previous response''s pagination.pageToken. Pass it alone to fetch the next page; pagination is cursor-based and offset defaults to the next page when a page_token is supplied.
+
+          '
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentListResponse'
+              examples:
+                response:
+                  value:
+                    segments:
+                    - id: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+                      parentId: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+                      customerExternalId: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+                      name: my first segment
+                      dataOwner: my first data owner
+                      initialProvider: my first provider
+                      category: my first category
+                      segmentType: RETARGETING
+                      description: my first segment description
+                      transaction:
+                        id: 4af459ff8e1a36b6bb74fb88f1a02477
+                        created: '2030-11-02T15:04:00Z'
+                      source: Liveramp
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      created: '2030-11-02T15:04:00Z'
+        '400':
+          $ref: '#/components/responses/400InvalidID'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+components:
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+  schemas:
+    Segment:
+      x-isnullable: false
+      type: object
+      required:
+      - id
+      - parentId
+      - customerExternalId
+      - name
+      - dataOwner
+      - initialProvider
+      - category
+      - description
+      - segmentType
+      - transaction
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive segment id
+          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+        parentId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive segment parent id
+          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+        customerExternalId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          description: customer external id
+          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          description: segment name
+          example: my first segment
+        dataOwner:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          description: segment data owner
+          example: my first data owner
+        initialProvider:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          description: initial provider
+          example: my first provider
+        category:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          description: segment category
+          example: my first category
+        segmentType:
+          $ref: '#/components/schemas/SegmentType'
+        description:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          description: segment description
+          example: my first segment description
+        source:
+          type: string
+          x-omitempty: false
+          x-go-type-skip-optional-pointer: true
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    Pagination:
+      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      readOnly: true
+      required:
+      - pageSize
+      - offset
+      - pageToken
+      - totalRecords
+      type: object
+      properties:
+        pageSize:
+          type: integer
+          format: int32
+          description: Number of items per page
+          example: 100
+        offset:
+          type: integer
+          format: int32
+          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
+
+            '
+          example: 1
+        pageToken:
+          type: string
+          description: Opaque token for retrieving the next page of results
+          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
+        totalRecords:
+          type: integer
+          format: int32
+          description: Total number of records available
+          example: 500
+    SegmentListResponse:
+      x-isnullable: false
+      type: object
+      required:
+      - segments
+      - transaction
+      properties:
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentResponse'
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,dive
+          description: list of segments
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    SegmentType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=RETARGETING FIRST_PARTY THIRD_PARTY
+      enum:
+      - RETARGETING
+      - FIRST_PARTY
+      - THIRD_PARTY
+      description: segment type
+    SegmentResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Segment'
+      - type: object
+        required:
+        - transaction
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

@@ -1,0 +1,144 @@
+{
+  "item": [
+    {
+      "id": "ba1465e7-3f3c-4f88-ba83-eedf6ebd3bc0",
+      "name": "campaign line items",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "18b5b554-ac2c-4d04-91a2-75814803199f",
+          "name": "Receive all campaign or line item details when sending the IDs. Includes campaign/line item status details.",
+          "request": {
+            "name": "Receive all campaign or line item details when sending the IDs. Includes campaign/line item status details.",
+            "description": {
+              "content": "Receive all campaign or line item details when sending the IDs. Includes campaign/line item status details.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "campaigns",
+                ":id",
+                "lineitems"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) campaign id"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api2.madhive.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "5ab59ebe-c595-46cb-b9ce-1ab09f117638",
+              "name": "successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":id",
+                    "lineitems"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) campaign id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"pdzKDktfwIV3FI7R6gHEbg32tpgl\",\n  \"name\": \"Newly Created Order\",\n  \"customerExternalId\": \"client-123456\",\n  \"startDate\": \"2030-01-02T15:04:00Z\",\n  \"endDate\": \"2030-10-02T15:04:00Z\",\n  \"advertiserId\": \"4gV9KIg6E2kX3d6117OO8rgseJRl\",\n  \"lineItems\": [\n    {\n      \"id\": \"pdzKDktfwIV3FI7R6gHEbg32tpgl\",\n      \"campaignId\": \"a8MWQ2v4ZceGhsku2P5amaOXCnwe\",\n      \"name\": \"line item 1\",\n      \"whitelistId\": \"a8MWQ2v4ZceGhsku2P5amaOXCnwe\",\n      \"startDate\": \"2030-01-02T15:04:00Z\",\n      \"endDate\": \"2030-10-02T15:04:00Z\",\n      \"impressionGoal\": 1000,\n      \"frequencyCap\": {\n        \"daily\": 1,\n        \"weekly\": 7,\n        \"monthly\": 31\n      },\n      \"audiences\": [\n        \"GaTiRIezyA98Lv6hACORtRWBFY4T\",\n        \"K5gUgp1fTrbdANCatOawqfBtv2GE\"\n      ],\n      \"deviceCap\": {\n        \"tv\": 40,\n        \"mobile\": 40,\n        \"desktop\": 20,\n        \"tablet\": 0\n      },\n      \"targeting\": {\n        \"country\": \"US\",\n        \"postalCodes\": [\n          \"92844\",\n          \"90630\"\n        ],\n        \"states\": [\n          \"CA\",\n          \"NY\"\n        ],\n        \"metros\": [\n          803,\n          807,\n          810\n        ]\n      },\n      \"excludeDayparting\": {\n        \"monday\": [\n          0,\n          2,\n          23\n        ],\n        \"tuesday\": [\n          0,\n          1,\n          2,\n          3,\n          4,\n          5,\n          6,\n          7,\n          8,\n          9,\n          10,\n          11,\n          12,\n          13,\n          14,\n          15,\n          16,\n          17,\n          18,\n          19,\n          20,\n          21,\n          22,\n          23\n        ],\n        \"wednesday\": [\n          0,\n          1,\n          2,\n          3,\n          22,\n          23\n        ],\n        \"thursday\": [],\n        \"friday\": [\n          23\n        ],\n        \"saturday\": [\n          0,\n          1,\n          2,\n          3,\n          4,\n          5,\n          6,\n          7,\n          8,\n          9,\n          10,\n          11,\n          12,\n          13,\n          14,\n          15,\n          16,\n          17,\n          18,\n          19,\n          20,\n          21,\n          22,\n          23\n        ],\n        \"sunday\": [\n          0,\n          2,\n          6,\n          8,\n          10,\n          12,\n          14,\n          16,\n          18,\n          20,\n          22,\n          23\n        ]\n      },\n      \"status\": \"READY\"\n    }\n  ],\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api2.madhive.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "4dbb5816-9eef-45fe-9380-1de4625cb44d",
+    "name": "Madhive campaign line items API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n",
+      "type": "text/plain"
+    }
+  }
+}

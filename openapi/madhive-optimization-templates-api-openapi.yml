@@ -1,0 +1,797 @@
+openapi: 3.2.0
+info:
+  title: Madhive optimization templates API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: optimization templates
+paths:
+  /v1/optimization-templates:
+    get:
+      tags:
+      - optimization templates
+      summary: Retrieve optimization templates (Supply Guardrails)
+      description: 'Get a list of optimization templates (also known as Supply Guardrails) for the authenticated organization.
+
+        Templates can be filtered by media type and status. Results are paginated and sorted by most recently updated.
+
+
+        **Note:** This endpoint returns basic template information only (excludes `pubSettings` for performance).
+
+        Use GET `/v1/optimization-templates/{id}` to retrieve full template details including publisher settings.
+
+        '
+      operationId: getOptimizationTemplates
+      parameters:
+      - name: mediaType
+        in: query
+        description: Filter by media type (VIDEO, AUDIO, DISPLAY). Comma-separated for multiple values.
+        required: false
+        schema:
+          type: string
+          example: VIDEO
+      - name: status
+        in: query
+        description: Filter by status (READY, ARCHIVED). Comma-separated for multiple values.
+        required: false
+        schema:
+          type: string
+          example: READY
+      - name: offset
+        in: query
+        description: Pagination offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: pageSize
+        in: query
+        description: Number of results per page
+        required: false
+        schema:
+          type: integer
+          default: 50
+          maximum: 100
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      responses:
+        '200':
+          description: Successfully retrieved optimization templates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptimizationTemplatesListResponse'
+              examples:
+                response:
+                  value:
+                    data:
+                    - id: abc123def456ghi789jkl012mno3
+                      name: Premium Video Template
+                      mediaType: VIDEO
+                      status: READY
+                      createdAt: '2025-01-15T10:30:00Z'
+                      updatedAt: '2025-01-20T14:45:00Z'
+                      createdBy: user@madhive.com
+                      updatedBy: admin@madhive.com
+                    pagination:
+                      offset: 0
+                      pageSize: 50
+                      totalRecords: 42
+                      pageToken: nextPageToken123
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      created: '2025-01-20T15:00:00Z'
+        '400':
+          $ref: '#/components/responses/400InvalidID'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth2: []
+    post:
+      tags:
+      - optimization templates
+      summary: Create an optimization template (Supply Guardrail)
+      description: 'Create a new optimization template (also known as a Supply Guardrail) for the authenticated organization.
+
+
+        Templates allow partners to define publisher-specific supply guardrails including:
+
+        - **Cap Management**: Impression caps per publisher as a percentage (0-100)
+
+        - **Bundle Rules**: App bundle inclusion/exclusion rules per publisher
+
+        - **Channel Rules**: Channel (YouTube/CTV) inclusion/exclusion rules per publisher
+
+
+        Once created, a template can be assigned to line items individually via the line item update endpoint.
+
+        '
+      operationId: createOptimizationTemplate
+      parameters:
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOptimizationTemplateRequest'
+            examples:
+              minimal:
+                summary: Minimal request (name and mediaType only)
+                value:
+                  name: Premium Video Template
+                  mediaType: VIDEO
+              withPubSettings:
+                summary: Request with publisher settings
+                value:
+                  name: Premium Video Template
+                  mediaType: VIDEO
+                  pubSettings:
+                  - pubId: pub123abc456def789ghi012jkl3
+                    pubCap:
+                      pubCapPct: 75
+                    bundleRules:
+                    - bundleId: bundle123
+                      excluded: false
+                    - bundleId: bundle456
+                      excluded: true
+                    channelRules:
+                    - channelName: ESPN
+                      excluded: false
+                    - channelName: CNN
+                      excluded: true
+      responses:
+        '200':
+          description: Optimization template created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptimizationTemplateResponse'
+              examples:
+                response:
+                  value:
+                    id: abc123def456ghi789jkl012mno3
+                    name: Premium Video Template
+                    mediaType: VIDEO
+                    status: READY
+                    createdAt: '2025-01-15T10:30:00Z'
+                    updatedAt: '2025-01-15T10:30:00Z'
+                    createdBy: user@madhive.com
+                    updatedBy: user@madhive.com
+                    pubSettings:
+                    - pubId: pub123abc456def789ghi012jkl3
+                      pubCap:
+                        pubCapPct: 75
+                      bundleRules:
+                      - bundleId: bundle123
+                        excluded: false
+                      channelRules:
+                      - channelName: ESPN
+                        excluded: false
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      created: '2025-01-15T10:30:00Z'
+        '400':
+          description: Bad request — missing required fields, invalid mediaType, or invalid pubId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth2: []
+  /v1/optimization-templates/{id}:
+    get:
+      tags:
+      - optimization templates
+      summary: Retrieve a specific optimization template by ID
+      description: Get detailed information about a specific optimization template including all publisher settings, bundle rules, and channel rules.
+      operationId: getOptimizationTemplateById
+      parameters:
+      - name: id
+        in: path
+        description: Optimization template ID
+        required: true
+        x-oapi-codegen-extra-tags:
+          validate: required,min=28,max=28
+        schema:
+          type: string
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      responses:
+        '200':
+          description: Successfully retrieved optimization template
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptimizationTemplateResponse'
+              examples:
+                response:
+                  value:
+                    id: abc123def456ghi789jkl012mno3
+                    name: Premium Video Template
+                    mediaType: VIDEO
+                    status: READY
+                    createdAt: '2025-01-15T10:30:00Z'
+                    updatedAt: '2025-01-20T14:45:00Z'
+                    createdBy: user@madhive.com
+                    updatedBy: admin@madhive.com
+                    pubSettings:
+                    - pubId: pub123abc456def789ghi012jkl3
+                      pubCap:
+                        pubCapPct: 75
+                      bundleRules:
+                      - bundleId: bundle123
+                        excluded: false
+                      - bundleId: bundle456
+                        excluded: true
+                      channelRules:
+                      - channelName: ESPN
+                        excluded: false
+                      - channelName: CNN
+                        excluded: true
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      created: '2025-01-20T15:00:00Z'
+        '400':
+          $ref: '#/components/responses/400InvalidID'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          description: Optimization template not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth2: []
+    patch:
+      tags:
+      - optimization templates
+      summary: Partially update an optimization template
+      description: 'Partially update an existing optimization template. Only fields included in the request body are updated — omitted fields remain unchanged.
+
+
+        **Partial update behavior:**
+
+        - `name` only → updates name, leaves pubSettings untouched
+
+        - `pubSettings` with items → replaces all publisher settings, leaves name/mediaType untouched
+
+        - `pubSettings: []` (empty array) or omitted → leaves existing publisher settings unchanged
+
+
+        **Note:** The `mediaType` field cannot be changed after template creation.
+
+        '
+      operationId: updateOptimizationTemplate
+      parameters:
+      - name: id
+        in: path
+        description: Optimization template ID
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchOptimizationTemplateRequest'
+            examples:
+              nameOnly:
+                summary: Update name only
+                value:
+                  name: Updated Template Name
+              pubSettingsOnly:
+                summary: Update publisher settings only
+                value:
+                  pubSettings:
+                  - pubId: pub123abc456def789ghi012jkl3
+                    pubCap:
+                      pubCapPct: 75
+              full:
+                summary: Update all fields
+                value:
+                  name: Updated Template
+                  mediaType: VIDEO
+                  pubSettings:
+                  - pubId: pub123abc456def789ghi012jkl3
+                    pubCap:
+                      pubCapPct: 50
+                    bundleRules:
+                    - bundleId: bundle123
+                      excluded: true
+                    channelRules:
+                    - channelName: ESPN
+                      excluded: false
+      responses:
+        '200':
+          description: Optimization template updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptimizationTemplateResponse'
+        '400':
+          description: Bad request — invalid fields or validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          description: Optimization template not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth2: []
+    delete:
+      tags:
+      - optimization templates
+      summary: Delete (archive) an optimization template
+      description: 'Soft-deletes an optimization template by archiving it. Archived templates are no longer returned in list responses.
+
+
+        **Validation:** Returns `409 Conflict` if the template is currently assigned to any active (DRAFT or READY) line item.
+
+        Remove the template from all active line items before deleting it.
+
+        '
+      operationId: deleteOptimizationTemplate
+      parameters:
+      - name: id
+        in: path
+        description: Optimization template ID
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      responses:
+        '200':
+          description: Optimization template successfully archived
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptimizationTemplateResponse'
+        '400':
+          description: Invalid template ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          description: Optimization template not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Template is assigned to one or more active line items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth2: []
+components:
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+  schemas:
+    PubCap:
+      type: object
+      required:
+      - pubCapPct
+      properties:
+        pubCapPct:
+          type: number
+          format: double
+          description: Publisher cap percentage (0-100, supports decimals like 75.5)
+          minimum: 0
+          maximum: 100
+          example: 75.5
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    PubSetting:
+      type: object
+      required:
+      - pubId
+      properties:
+        pubId:
+          type: string
+          description: Publisher ID
+          example: pub123abc456def789ghi012jkl3
+        pubCap:
+          $ref: '#/components/schemas/PubCap'
+        bundleRules:
+          type: array
+          description: Bundle inclusion/exclusion rules
+          items:
+            $ref: '#/components/schemas/BundleRule'
+        channelRules:
+          type: array
+          description: Channel inclusion/exclusion rules
+          items:
+            $ref: '#/components/schemas/ChannelRule'
+    ChannelRule:
+      type: object
+      required:
+      - channelName
+      - excluded
+      properties:
+        channelName:
+          type: string
+          description: Channel name
+          example: ESPN
+        excluded:
+          type: boolean
+          description: Whether the channel is excluded (true) or included (false)
+          example: true
+    PatchOptimizationTemplateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Template name
+          example: Updated Video Template
+        mediaType:
+          type: string
+          description: Media type (VIDEO, AUDIO, DISPLAY)
+          enum:
+          - VIDEO
+          - AUDIO
+          - DISPLAY
+          example: VIDEO
+        pubSettings:
+          type: array
+          description: Publisher-specific settings — replaces all existing settings when provided
+          items:
+            $ref: '#/components/schemas/PubSetting'
+    OptimizationTemplateListItem:
+      type: object
+      required:
+      - id
+      - name
+      - mediaType
+      - status
+      - createdAt
+      - updatedAt
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the optimization template
+          example: abc123def456ghi789jkl012mno3
+        name:
+          type: string
+          description: Template name
+          example: Premium Video Template
+        mediaType:
+          type: string
+          description: Media type (VIDEO, AUDIO, DISPLAY)
+          enum:
+          - NONE
+          - VIDEO
+          - AUDIO
+          - DISPLAY
+          example: VIDEO
+        status:
+          type: string
+          description: Template status (READY, ARCHIVED)
+          enum:
+          - INVALID
+          - DRAFT
+          - READY
+          - PAUSED
+          - CANCELLED
+          - ARCHIVED
+          - TEST
+          - EXPIRED
+          example: READY
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when template was created
+          example: '2025-01-15T10:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when template was last updated
+          example: '2025-01-20T14:45:00Z'
+        createdBy:
+          type: string
+          description: Email of user who created the template
+          example: user@madhive.com
+        updatedBy:
+          type: string
+          description: Email of user who last updated the template
+          example: admin@madhive.com
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    Pagination:
+      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      readOnly: true
+      required:
+      - pageSize
+      - offset
+      - pageToken
+      - totalRecords
+      type: object
+      properties:
+        pageSize:
+          type: integer
+          format: int32
+          description: Number of items per page
+          example: 100
+        offset:
+          type: integer
+          format: int32
+          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
+
+            '
+          example: 1
+        pageToken:
+          type: string
+          description: Opaque token for retrieving the next page of results
+          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
+        totalRecords:
+          type: integer
+          format: int32
+          description: Total number of records available
+          example: 500
+    OptimizationTemplateResponse:
+      type: object
+      required:
+      - id
+      - name
+      - mediaType
+      - status
+      - createdAt
+      - updatedAt
+      - transaction
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the optimization template
+          example: abc123def456ghi789jkl012mno3
+        name:
+          type: string
+          description: Template name
+          example: Premium Video Template
+        mediaType:
+          type: string
+          description: Media type (VIDEO, AUDIO, DISPLAY)
+          enum:
+          - NONE
+          - VIDEO
+          - AUDIO
+          - DISPLAY
+          example: VIDEO
+        status:
+          type: string
+          description: Template status (READY, ARCHIVED)
+          enum:
+          - INVALID
+          - DRAFT
+          - READY
+          - PAUSED
+          - CANCELLED
+          - ARCHIVED
+          - TEST
+          - EXPIRED
+          example: READY
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when template was created
+          example: '2025-01-15T10:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when template was last updated
+          example: '2025-01-20T14:45:00Z'
+        createdBy:
+          type: string
+          description: Email of user who created the template
+          example: user@madhive.com
+        updatedBy:
+          type: string
+          description: Email of user who last updated the template
+          example: admin@madhive.com
+        pubSettings:
+          type: array
+          description: Publisher-specific settings (caps, bundle rules, channel rules)
+          items:
+            $ref: '#/components/schemas/PubSetting'
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    CreateOptimizationTemplateRequest:
+      type: object
+      required:
+      - name
+      - mediaType
+      properties:
+        name:
+          type: string
+          description: Template name
+          example: Premium Video Template
+        mediaType:
+          type: string
+          description: Media type for this template (VIDEO, AUDIO, DISPLAY)
+          enum:
+          - VIDEO
+          - AUDIO
+          - DISPLAY
+          example: VIDEO
+        pubSettings:
+          type: array
+          description: Optional publisher-specific settings (caps, bundle rules, channel rules)
+          items:
+            $ref: '#/components/schemas/PubSetting'
+    OptimizationTemplatesListResponse:
+      type: object
+      required:
+      - data
+      - pagination
+      - transaction
+      properties:
+        data:
+          type: array
+          description: List of optimization templates (basic info only, excludes pubSettings and transaction)
+          items:
+            $ref: '#/components/schemas/OptimizationTemplateListItem'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    BundleRule:
+      type: object
+      required:
+      - bundleId
+      - excluded
+      properties:
+        bundleId:
+          type: string
+          description: Bundle identifier
+          example: bundle123
+        excluded:
+          type: boolean
+          description: Whether the bundle is excluded (true) or included (false)
+          example: false
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

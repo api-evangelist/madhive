@@ -1,0 +1,70 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive Station API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "station",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Receive the list of stations (call letters, IDs, DMA) for your org.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api2.madhive.com/api/v1/stations",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "number of stations per page (default 100, max 10000)"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "page number for pagination (0-based)"
+              },
+              {
+                "name": "page_token",
+                "value": "",
+                "type": "query",
+                "description": "token for cursor-based pagination"
+              },
+              {
+                "name": "call_letters",
+                "value": "",
+                "type": "query",
+                "description": "filter by station call letters (exact match, case-sensitive)"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Receive the list of stations for your org, each with its madhive station ID, call letters and DMA. Use this to resolve a station's call letters (e.g. MHBND) to the 28-char station ID required by the campaign API. Optionally filter by call_letters to narrow the results."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

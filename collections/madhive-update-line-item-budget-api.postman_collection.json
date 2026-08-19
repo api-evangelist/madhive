@@ -1,0 +1,313 @@
+{
+  "item": [
+    {
+      "id": "bea80332-7adf-42c4-b2df-204de124522a",
+      "name": "update line item budget",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4e1da68b-f724-4a65-a733-312553cb3d26",
+          "name": "Editing line item budget amounts",
+          "request": {
+            "name": "Editing line item budget amounts",
+            "description": {
+              "content": "Editing line item budget amounts. Keeps the existing pace per day/lifetime and pace to impressions logic on the line item",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "lineitems",
+                ":id",
+                "budget-goal"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) line item id"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "gcp trace",
+                "key": "X-Cloud-Trace-Context",
+                "value": "91f9f012dc7c7ffc13604c77f12a8931"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api2.madhive.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"budgetGoal\": \"<uint64>\",\n  \"impressionGoal\": \"<uint32>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "fbbd0a47-8b20-4e41-8d18-1409b77c3106",
+              "name": "impression budget updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lineitems",
+                    ":id",
+                    "budget-goal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) line item id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"budgetGoal\": 333333333\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"a8MWQ2v4ZceGhsku2P5amaOXCnwe\",\n  \"campaignId\": \"pdzKDktfwIV3FI7R6gHEbg32tpgl\",\n  \"name\": \"Impression Budget Updated\",\n  \"startDate\": \"2030-01-02T15:04:00Z\",\n  \"endDate\": \"2030-10-02T15:04:00Z\",\n  \"status\": \"READY\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f3999062-0cd0-47ef-b0b3-0af8f754dbe4",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lineitems",
+                    ":id",
+                    "budget-goal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) line item id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"budgetGoal\": 333333333\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid line item id\",\n  \"status\": \"ERROR\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "72b2992b-78ab-419a-ade0-edfabadffe03",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lineitems",
+                    ":id",
+                    "budget-goal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) line item id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"budgetGoal\": 333333333\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"unauthorized\",\n  \"status\": \"ERROR\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api2.madhive.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "b77eccc3-af62-49b4-8a1a-c5c942dad7d1",
+    "name": "Madhive update line item budget API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n",
+      "type": "text/plain"
+    }
+  }
+}

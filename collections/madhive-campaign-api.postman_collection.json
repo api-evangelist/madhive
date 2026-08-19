@@ -1,0 +1,553 @@
+{
+  "item": [
+    {
+      "id": "1fe35efb-ce59-4d14-8d82-c287f50d9878",
+      "name": "campaign",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c5dce293-6d91-4128-aed7-795037a9686a",
+          "name": "Receive the list of campaigns and their campaign IDs. Includes a parameter to include line item names and IDs.",
+          "request": {
+            "name": "Receive the list of campaigns and their campaign IDs. Includes a parameter to include line item names and IDs.",
+            "description": {
+              "content": "Receive the list of campaigns and their campaign IDs. Includes a parameter to include line item names and IDs.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "campaigns"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "includeLineItems",
+                  "value": "<boolean>",
+                  "description": "include lineitems in response"
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "100",
+                  "description": "number of campaigns per page (default 100, max 10000)"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "<integer>",
+                  "description": "Optional page selector RELATIVE to page_token: 1 = next page (the default when a page_token is supplied), -1 = previous page, 0 = reload the current page. Has no effect without page_token.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "page_token",
+                  "value": "<string>",
+                  "description": "Opaque cursor from the previous response's pagination.pageToken. Pass it alone to fetch the next page; pagination is cursor-based and offset defaults to the next page when a page_token is supplied.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "gcp trace",
+                "key": "X-Cloud-Trace-Context",
+                "value": "91f9f012dc7c7ffc13604c77f12a8931"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api2.madhive.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "3b6c9d85-27a1-4573-8cdd-d82e3af15c55",
+              "name": "successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "includeLineItems",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page_token",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\"\n  },\n  \"campaigns\": [\n    {\n      \"id\": \"a8MWQ2v4ZceGhsku2P5amaOXCnwe\",\n      \"name\": \"Test Campaign\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a44cb164-6c97-4f94-9017-d128d2351f51",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "includeLineItems",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page_token",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  },\n  \"errors\": [\n    \"string\",\n    \"string\"\n  ],\n  \"error\": \"Unauthorized\",\n  \"status\": \"ERROR\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ab1a1604-c3bc-4fe6-9a6c-6313dbe5e52e",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "includeLineItems",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page_token",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"unauthorized\",\n  \"status\": \"ERROR\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a9e7d508-918e-42f4-b260-48dfa75acf29",
+          "name": "Creating a campaign inclusive of Campaign Name, Advertiser, Agency and Station (if applicable).",
+          "request": {
+            "name": "Creating a campaign inclusive of Campaign Name, Advertiser, Agency and Station (if applicable).",
+            "description": {
+              "content": "Creating a campaign inclusive of Campaign Name, Advertiser, Agency and Station (if applicable).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "campaigns"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "gcp trace",
+                "key": "X-Cloud-Trace-Context",
+                "value": "91f9f012dc7c7ffc13604c77f12a8931"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api2.madhive.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"advertiserId\": \"<string>\",\n  \"customerExternalId\": \"<string>\",\n  \"agencyId\": \"<string>\",\n  \"brand\": \"<string>\",\n  \"stationId\": \"<string>\",\n  \"estimate\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8e0040b6-0983-4608-9454-29cd24dce60b",
+              "name": "campaign created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"New Order\",\n  \"advertiserId\": \"4gV9KIg6E2kX3d6117OO8rgseJRl\",\n  \"customerExternalId\": \"123456\",\n  \"agencyId\": \"aaSnY49QgOyR65yXqm6PIz2CEly0\",\n  \"brand\": \"Madhive Brand Jeans\",\n  \"stationId\": \"OI7qpnLagTWCyVCxVXVxxHmgfcbo\",\n  \"estimate\": \"2x 30s spots\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"a8MWQ2v4ZceGhsku2P5amaOXCnwe\",\n  \"name\": \"Newly Created Order\",\n  \"customerExternalId\": \"client-123456\",\n  \"startDate\": \"2030-01-02T15:04:00Z\",\n  \"endDate\": \"2030-10-02T15:04:00Z\",\n  \"advertiserId\": \"4gV9KIg6E2kX3d6117OO8rgseJRl\",\n  \"brand\": \"Madhive Brand Jeans\",\n  \"stationId\": \"OI7qpnLagTWCyVCxVXVxxHmgfcbo\",\n  \"estimate\": \"2x 30s spots\",\n  \"status\": \"READY\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "261c3d3f-1e3d-44f1-a914-dba162f95895",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"New Order\",\n  \"advertiserId\": \"4gV9KIg6E2kX3d6117OO8rgseJRl\",\n  \"customerExternalId\": \"123456\",\n  \"agencyId\": \"aaSnY49QgOyR65yXqm6PIz2CEly0\",\n  \"brand\": \"Madhive Brand Jeans\",\n  \"stationId\": \"OI7qpnLagTWCyVCxVXVxxHmgfcbo\",\n  \"estimate\": \"2x 30s spots\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"name: cannot be empty\",\n  \"status\": \"ERROR\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1209edca-8ea4-4cbb-a7b3-eab9a0f3399e",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"New Order\",\n  \"advertiserId\": \"4gV9KIg6E2kX3d6117OO8rgseJRl\",\n  \"customerExternalId\": \"123456\",\n  \"agencyId\": \"aaSnY49QgOyR65yXqm6PIz2CEly0\",\n  \"brand\": \"Madhive Brand Jeans\",\n  \"stationId\": \"OI7qpnLagTWCyVCxVXVxxHmgfcbo\",\n  \"estimate\": \"2x 30s spots\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"unauthorized\",\n  \"status\": \"ERROR\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api2.madhive.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "c6e5248c-d4d3-45e7-bc97-92a96d5f66ac",
+    "name": "Madhive Campaign API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n",
+      "type": "text/plain"
+    }
+  }
+}

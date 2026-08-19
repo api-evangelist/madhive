@@ -1,0 +1,248 @@
+openapi: 3.2.0
+info:
+  title: Madhive retargeting tracking pixel API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: retargeting tracking pixel
+paths:
+  /v1/retargeting/trackingpixels:
+    post:
+      tags:
+      - retargeting tracking pixel
+      summary: Ability to create a tracking pixel for retargeting
+      description: Ability to create a tracking pixel retargeting segment with ability to add a custom name and notes. The inputs include advertiser and tracking pixel IDs. If the advertiser do not match the tracking pixel ID’s it will return an error
+      operationId: createRetargetingTrackingPixel
+      parameters:
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetargetingTrackingPixelRequest'
+      responses:
+        '200':
+          description: retargeting tracking pixel created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetargetingResponse'
+        '400':
+          $ref: '#/components/responses/400InvalidID'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+components:
+  schemas:
+    Date:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: required,datetime=2006-01-02T15:04:05Z07:00
+      description: 2020-06-18T17:24:53Z is a basic example of an RFC 3339 timestamp, which refers to June 18, 2020 5:24:53 PM in UTC
+      example: '2030-01-10T23:00:00Z'
+    RetargetingTrackingPixelRequest:
+      allOf:
+      - $ref: '#/components/schemas/RetargetingRequest'
+    RetargetingResponse:
+      type: object
+      x-isnullable: false
+      description: generic response for all retargeting requests
+      allOf:
+      - $ref: '#/components/schemas/RetargetingRequest'
+      - type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/ID'
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          retargetingType:
+            $ref: '#/components/schemas/RetargetingType'
+          startDate:
+            $ref: '#/components/schemas/Date'
+          endDate:
+            $ref: '#/components/schemas/Date'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    Name:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: 'required,min=2,max=128,ne= '
+      description: resource name
+      example: name of resource
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    ID:
+      type: string
+      x-go-name: ID
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,min=28,max=28
+      description: resource id
+      example: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+    RetargetingRequest:
+      type: object
+      x-isnullable: false
+      required:
+      - ids
+      - name
+      - advertiserId
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+        description:
+          type: string
+          x-isnullable: true
+          x-omitempty: true
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,max=128,ne= '
+          description: retargeting description
+          example: retargeting description
+        ids:
+          x-go-name: IDs
+          type: array
+          items:
+            $ref: '#/components/schemas/ID'
+          x-oapi-codegen-extra-tags:
+            validate: required,unique,gte=1,dive
+          description: resource ids
+        advertiserId:
+          type: string
+          x-go-name: AdvertiserID
+          x-omitempty: true
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          description: advertiser id
+          example: 3XhdJ4bBiPD1B0kr2jjFFJjOvH8S
+        retargetingWindow:
+          type: string
+          x-omitempty: true
+          x-go-type-skip-optional-pointer: true
+          pattern: ^([1-9][0-9]* (DAY|MONTH))?$
+          description: retargeting window interval (e.g., "7 DAY", "3 MONTH")
+          example: 7 DAY
+    RetargetingType:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: required,oneof=RETARGETING_CAMPAIGN RETARGETING_LINE_ITEM RETARGETING_TRACKING_PIXEL RETARGETING_CREATIVE
+      enum:
+      - RETARGETING_CAMPAIGN
+      - RETARGETING_LINE_ITEM
+      - RETARGETING_TRACKING_PIXEL
+      - RETARGETING_CREATIVE
+      description: retargeting type
+      example: RETARGETING_CAMPAIGN
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

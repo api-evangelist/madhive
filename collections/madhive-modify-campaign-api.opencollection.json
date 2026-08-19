@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive modify campaign API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "modify campaign",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Editing any attribute of a campaign. Unable to edit if the campaign is completed.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api2.madhive.com/api/v1/campaigns/:id",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "campaign id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Editing any attribute of a campaign. Unable to edit if the campaign is completed."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

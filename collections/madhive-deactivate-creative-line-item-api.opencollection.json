@@ -1,0 +1,52 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive deactivate creative line item API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "deactivate creative line item",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ability to pause a single creative flight on a line item.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api2.madhive.com/api/v1/creatives/:cId/lineitems/:id/activation",
+            "params": [
+              {
+                "name": "cId",
+                "value": "",
+                "type": "path",
+                "description": "creative id"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "line item id"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Ability to pause a single creative flight on a line item."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

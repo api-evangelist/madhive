@@ -1,0 +1,46 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive retrieve a line item by its unique identifier API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "retrieve a line item by its unique identifier",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Send line item ID and receive line item details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api2.madhive.com/api/v1/lineitems/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "line item id"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Send line item ID and receive line item details"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

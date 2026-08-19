@@ -1,0 +1,499 @@
+openapi: 3.2.0
+info:
+  title: Madhive Audiences API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: audiences
+paths:
+  /v1/audiences:
+    get:
+      tags:
+      - audiences
+      summary: Receive the list of custom and standard audiences with IDs
+      description: Receive the list of custom and standard audiences with IDs
+      operationId: getAudiencesByOrg
+      parameters:
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      - in: query
+        name: includeStdAuds
+        description: include std audiences along with custom audiences
+        required: true
+        schema:
+          type: boolean
+      - in: query
+        name: search
+        description: restrict to audiences that match according to fuzzy-search
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: page_size
+        description: number of audiences per page (default 100, max 10000)
+        required: false
+        schema:
+          type: integer
+          default: 100
+          maximum: 10000
+      - in: query
+        name: offset
+        description: 'Optional page selector RELATIVE to page_token: 1 = next page (the default when a page_token is supplied), -1 = previous page, 0 = reload the current page. Has no effect without page_token.
+
+          '
+        required: false
+        schema:
+          type: integer
+      - in: query
+        name: page_token
+        description: 'Opaque cursor from the previous response''s pagination.pageToken. Pass it alone to fetch the next page; pagination is cursor-based and offset defaults to the next page when a page_token is supplied.
+
+          '
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudienceListResponse'
+              examples:
+                response:
+                  value:
+                    audiences:
+                    - id: VKzwqdlbkuiox9mriAVJ2khImKSD
+                      name: Household - HHI - 25-50k
+                      orgId: yTh0Oaq4wcnQPUTBdE1PtZSPuvZk
+                      category: Consumer
+                      description: WN Updated March 2023
+                      recipeType: CUSTOM
+                      status: READY
+                      derivedStatus: READY
+        '400':
+          $ref: '#/components/responses/400InvalidID'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+    post:
+      tags:
+      - audiences
+      summary: Using segments and audiences to create a new custom audience with AND/OR/NOT boolean logic. Custom audiences can then be applied to line items in create/edit line item.
+      description: Using segments and audiences to create a new custom audience with AND/OR/NOT boolean logic. Custom audiences can then be applied to line items in create/edit line item.
+      operationId: createAudience
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AudienceRequest'
+      responses:
+        '201':
+          description: Audience created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudienceResponse'
+              examples:
+                default:
+                  value:
+                    id: VKzwqdlbkuiox9mriAVJ2khImKSD
+                    name: Household - HHI - 25-50k
+                    orgId: yTh0Oaq4wcnQPUTBdE1PtZSPuvZk
+                    category: Consumer
+                    description: WN Updated March 2023
+                    cpm: 100
+                    minCpm: 50
+                    householdReach: 100000
+                    lastModified: 1685632200
+                    lastRefreshed: 1685632200
+                    expr:
+                      op: AND
+                      ids:
+                      - GaTiRIezyA98Lv6hACORtRWBFY4T
+                      - K5gUgp1fTrbdANCatOawqfBtv2GE
+                      children:
+                      - op: OR
+                        ids:
+                        - hjkl83kjldfjskljF3
+                        - l9sdf98sd98fdsf0sdf
+                        children:
+                        - op: NOT
+                          ids:
+                          - sdf9834jdfs0dfj23
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+components:
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    AudienceListResponse:
+      x-isnullable: false
+      type: object
+      required:
+      - transaction
+      - audiences
+      properties:
+        audiences:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudienceResponse'
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    Pagination:
+      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      readOnly: true
+      required:
+      - pageSize
+      - offset
+      - pageToken
+      - totalRecords
+      type: object
+      properties:
+        pageSize:
+          type: integer
+          format: int32
+          description: Number of items per page
+          example: 100
+        offset:
+          type: integer
+          format: int32
+          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
+
+            '
+          example: 1
+        pageToken:
+          type: string
+          description: Opaque token for retrieving the next page of results
+          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
+        totalRecords:
+          type: integer
+          format: int32
+          description: Total number of records available
+          example: 500
+    Audience:
+      x-isnullable: false
+      type: object
+      required:
+      - id
+      - category
+      - name
+      - description
+      - orgId
+      - cpm
+      - minCpm
+      - householdReach
+      - lastModified
+      - lastRefreshed
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required_with=Status,omitempty,min=28,max=28
+          description: madhive audience id
+          example: VKzwqdlbkuiox9mriAVJ2khImKSD
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-isnullable: false
+          x-omitempty: false
+          description: audience name
+          example: Household - HHI - 25-50k
+        orgId:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          description: parent organization id
+          example: yTh0Oaq4wcnQPUTBdE1PtZSPuvZk
+        category:
+          type: string
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: audience category
+          example: Consumer
+        description:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: audience description
+          example: WN Updated March 2023
+        cpm:
+          type: integer
+          format: int64
+          x-omitempty: true
+          description: cost per thousand impressions (CPM)
+          example: 100
+        minCpm:
+          type: integer
+          format: int64
+          x-omitempty: true
+          description: minimum cost per thousand impressions (CPM)
+          example: 50
+        householdReach:
+          type: integer
+          format: int64
+          x-omitempty: true
+          description: household reach value
+          example: 100000
+        lastModified:
+          type: integer
+          format: int64
+          x-omitempty: true
+          description: unix timestamp for modification date
+          example: 1685632200
+        lastRefreshed:
+          type: integer
+          format: int64
+          x-omitempty: true
+          description: unix timestamp for refresh date
+          example: 1685632200
+        expr:
+          $ref: '#/components/schemas/AudienceBoolExp'
+        recipeType:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          x-go-type-skip-optional-pointer: true
+          description: audience type
+          example: STANDARD
+        composition:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompositionType'
+          x-omitempty: true
+          x-go-type-skip-optional-pointer: true
+          readOnly: true
+          description: list of segment types that compose this audience
+        mixWith:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompositionType'
+          x-omitempty: true
+          x-go-type-skip-optional-pointer: true
+          readOnly: true
+          description: list of segment types allowed in audiences that are used with this audience
+        derivedStatus:
+          type: string
+          x-isnullable: false
+          x-omitempty: true
+          x-go-type-skip-optional-pointer: true
+          description: audience status enum used for display in UI
+          example: PARTIALLY_EXPIRED
+        preferred:
+          type: boolean
+          x-omitempty: false
+          x-go-type-skip-optional-pointer: true
+          description: whether this audience is marked as preferred for the organization
+          example: false
+    CompositionType:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=LIVERAMP DIRECT NEITHER
+      description: type of segments that compose an audience
+      example: LIVERAMP
+      enum:
+      - LIVERAMP
+      - DIRECT
+      - NEITHER
+    AudienceBoolExp:
+      type: object
+      required:
+      - op
+      - ids
+      - children
+      properties:
+        op:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,oneof=IDENTITY AND OR NOT
+          enum:
+          - IDENTITY
+          - AND
+          - OR
+          - NOT
+          description: Boolean operation to apply across segment IDs and children
+          example: AND
+        ids:
+          type: array
+          items:
+            type: string
+            format: byte
+            description: Segment IDs
+            example: U29tZUJ5dGVBcnJheQ==
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudienceBoolExp'
+          description: Sub-expressions that recursively apply the Boolean operation
+    AudienceRequest:
+      x-isnullable: false
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          x-isnullable: false
+          type: string
+          description: the name of the audience
+          example: custom Audience Name
+        description:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: a brief description of the audience
+          example: this audience targets users interested in tech products
+        expr:
+          $ref: '#/components/schemas/AudienceBoolExp'
+    AudienceResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audience'
+      - type: object
+        required:
+        - transaction
+        - status
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          status:
+            $ref: '#/components/schemas/Status'
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

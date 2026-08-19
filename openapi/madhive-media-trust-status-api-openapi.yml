@@ -1,0 +1,239 @@
+openapi: 3.2.0
+info:
+  title: Madhive media trust status API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: media trust status
+paths:
+  /v1/creatives/media-trust-status:
+    post:
+      tags:
+      - media trust status
+      summary: Batch-check the Media Trust (malware scan) status of creatives.
+      description: Given a batch of MadHive creative IDs, returns each creative's Media Trust malware-scan verdict. Creatives are scanned automatically once pushed to the MadHive Creative Library; this is a read-only status check over that scan result, not a submission endpoint.
+      operationId: getCreativesMediaTrustStatus
+      parameters:
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaTrustStatusRequest'
+        description: batch of creative ids to check
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaTrustStatusResponse'
+              examples:
+                response:
+                  value:
+                    results:
+                    - creativeId: HPAKbbHX1IZFeeAh1K7dSogRUvgF
+                      status: APPROVED
+                      scannedAt: '2026-07-20T10:15:00Z'
+                    - creativeId: tfgGrw2ZRrinUTDwAJVW7ygrvoHx
+                      status: REJECTED
+                      scannedAt: '2026-07-20T10:15:00Z'
+                      problems:
+                      - name: EICAR-Test
+                        type: malware
+                        scanId: scan-2
+                        reportedAt: '2026-07-20T10:15:00Z'
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      taskId: '14158884487309867565'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+components:
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    MediaTrustStatusResponse:
+      type: object
+      required:
+      - results
+      - transaction
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaTrustStatusResult'
+          description: one result per requested creative id, in request order
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    MediaTrustStatusResult:
+      type: object
+      required:
+      - creativeId
+      properties:
+        creativeId:
+          type: string
+          description: madhive creative id, echoed back from the request
+          example: HPAKbbHX1IZFeeAh1K7dSogRUvgF
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          description: IN_REVIEW while queued or awaiting a scan result, UPLOAD_FAILED if the creative never reached Media Trust (a transient upload problem, distinct from a completed scan), APPROVED once scanned with no issues found, REJECTED if malware was detected, NOT_FOUND if the id is unrecognized or not a creative id.
+          example: APPROVED
+          enum:
+          - IN_REVIEW
+          - UPLOAD_FAILED
+          - APPROVED
+          - REJECTED
+          - NOT_FOUND
+        scannedAt:
+          type: string
+          format: date-time
+          description: timestamp of the most recent Media Trust scan, if any
+        uploadedAt:
+          type: string
+          format: date-time
+          description: timestamp of the last upload attempt to Media Trust; set when status is UPLOAD_FAILED
+        problems:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          items:
+            $ref: '#/components/schemas/MediaTrustProblem'
+          description: malware/policy issues detected by Media Trust, if any
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    MediaTrustProblem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of the detected malware/outbreak
+          example: EICAR-Test
+        type:
+          type: string
+          description: type/category of the detected issue
+          example: malware
+        scanId:
+          type: string
+          description: the Media Trust scan id that reported this problem
+        reportedAt:
+          type: string
+          format: date-time
+          description: when this problem was reported
+    MediaTrustStatusRequest:
+      type: object
+      required:
+      - creativeIds
+      properties:
+        creativeIds:
+          type: array
+          minItems: 1
+          maxItems: 500
+          items:
+            type: string
+            minLength: 28
+            maxLength: 28
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,max=500,dive,min=28,max=28
+          description: batch of madhive creative ids to check (max 500 per request)
+          example:
+          - HPAKbbHX1IZFeeAh1K7dSogRUvgF
+          - tfgGrw2ZRrinUTDwAJVW7ygrvoHx
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  responses:
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

@@ -1,0 +1,517 @@
+openapi: 3.2.0
+info:
+  title: Madhive Campaign API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: campaign
+paths:
+  /v1/campaigns:
+    get:
+      tags:
+      - campaign
+      summary: Receive the list of campaigns and their campaign IDs. Includes a parameter to include line item names and IDs.
+      description: Receive the list of campaigns and their campaign IDs. Includes a parameter to include line item names and IDs.
+      operationId: getCampaignsByOrg
+      parameters:
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      - name: includeLineItems
+        in: query
+        description: include lineitems in response
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: page_size
+        description: number of campaigns per page (default 100, max 10000)
+        required: false
+        schema:
+          type: integer
+          default: 100
+          maximum: 10000
+      - in: query
+        name: offset
+        description: 'Optional page selector RELATIVE to page_token: 1 = next page (the default when a page_token is supplied), -1 = previous page, 0 = reload the current page. Has no effect without page_token.
+
+          '
+        required: false
+        schema:
+          type: integer
+      - in: query
+        name: page_token
+        description: 'Opaque cursor from the previous response''s pagination.pageToken. Pass it alone to fetch the next page; pagination is cursor-based and offset defaults to the next page when a page_token is supplied.
+
+          '
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignListResponse'
+              examples:
+                response:
+                  value:
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      taskId: '14158884487309867565'
+                    campaigns:
+                    - id: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+                      name: Test Campaign
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+    post:
+      tags:
+      - campaign
+      summary: Creating a campaign inclusive of Campaign Name, Advertiser, Agency and Station (if applicable).
+      description: Creating a campaign inclusive of Campaign Name, Advertiser, Agency and Station (if applicable).
+      operationId: createCampaign
+      parameters:
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignRequest'
+        description: campaign creation
+        required: true
+      responses:
+        '200':
+          description: campaign created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignResponse'
+              examples:
+                response:
+                  value:
+                    id: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+                    name: Newly Created Order
+                    customerExternalId: client-123456
+                    startDate: '2030-01-02T15:04:00Z'
+                    endDate: '2030-10-02T15:04:00Z'
+                    advertiserId: 4gV9KIg6E2kX3d6117OO8rgseJRl
+                    brand: Madhive Brand Jeans
+                    stationId: OI7qpnLagTWCyVCxVXVxxHmgfcbo
+                    estimate: 2x 30s spots
+                    status: READY
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      created: '2030-11-02T15:04:00Z'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                response:
+                  value:
+                    error: 'name: cannot be empty'
+                    status: ERROR
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      taskId: '14158884487309867565'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+components:
+  schemas:
+    Date:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: required,datetime=2006-01-02T15:04:05Z07:00
+      description: 2020-06-18T17:24:53Z is a basic example of an RFC 3339 timestamp, which refers to June 18, 2020 5:24:53 PM in UTC
+      example: '2030-01-10T23:00:00Z'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    CampaignListLineItem:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: lineitem id
+          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
+        name:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: lineitem name
+          example: lineitem name
+    CampaignResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Campaign'
+      - type: object
+        required:
+        - transaction
+        - statusDetail
+        properties:
+          startDate:
+            $ref: '#/components/schemas/Date'
+          endDate:
+            $ref: '#/components/schemas/Date'
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          statusDetail:
+            $ref: '#/components/schemas/StatusDetail'
+    StatusDetail:
+      x-isnullable: false
+      type: object
+      required:
+      - detail
+      - reasons
+      - numberOfInvalidLineItems
+      - status
+      properties:
+        detail:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          description: status detail
+          example: CAMPAIGN_STATUS_MISSING_LINE_ITEM
+        reasons:
+          type: array
+          items:
+            type: string
+            x-oapi-codegen-extra-tags:
+              validate: omitempty,min=1,dive
+          x-omitempty: true
+          description: reasons for status
+          example:
+          - LINE_ITEM_STATUS_INVALID
+          - MISSING_CREATIVE
+        numberOfInvalidLineItems:
+          type: integer
+          format: uint32
+          x-isnullable: false
+          x-omitempty: false
+          x-oapi-codegen-extra-tags:
+            validate: omitempty
+          description: number of line items
+          example: 2
+        status:
+          $ref: '#/components/schemas/Status'
+    CampaignListResponse:
+      x-isnullable: false
+      type: object
+      required:
+      - campaigns
+      - transaction
+      properties:
+        campaigns:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignListItem'
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    Pagination:
+      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      readOnly: true
+      required:
+      - pageSize
+      - offset
+      - pageToken
+      - totalRecords
+      type: object
+      properties:
+        pageSize:
+          type: integer
+          format: int32
+          description: Number of items per page
+          example: 100
+        offset:
+          type: integer
+          format: int32
+          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
+
+            '
+          example: 1
+        pageToken:
+          type: string
+          description: Opaque token for retrieving the next page of results
+          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
+        totalRecords:
+          type: integer
+          format: int32
+          description: Total number of records available
+          example: 500
+    CampaignListItem:
+      type: object
+      required:
+      - id
+      - name
+      - lineItems
+      properties:
+        id:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: campaign id
+          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
+        name:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: campaign name
+          example: campaign name
+        lineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignListLineItem'
+          description: line items
+    Campaign:
+      type: object
+      required:
+      - name
+      - advertiserId
+      properties:
+        id:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: required_with=Status,omitempty,min=28,max=28
+          description: madhive order id
+          example: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-omitempty: false
+          x-isnullable: false
+          description: name of the order
+          example: New Order
+        customerExternalId:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: external id of the order
+          example: '123456'
+        agencyId:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive agency id
+          example: aaSnY49QgOyR65yXqm6PIz2CEly0
+        advertiserId:
+          type: string
+          x-omitempty: false
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          description: madhive advertiser id
+          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
+        brand:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: brand
+          example: Madhive Brand Jeans
+        stationId:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive station id
+          example: OI7qpnLagTWCyVCxVXVxxHmgfcbo
+        estimate:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: estimate for campaign
+          example: 2x 30s spots
+    CampaignRequest:
+      type: object
+      required:
+      - name
+      - advertiserId
+      properties:
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-omitempty: false
+          x-isnullable: false
+          description: name of the order
+          example: New Order
+        customerExternalId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: external id of the order
+          example: '123456'
+        agencyId:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive agency id
+          example: aaSnY49QgOyR65yXqm6PIz2CEly0
+        advertiserId:
+          type: string
+          x-omitempty: false
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          description: madhive advertiser id
+          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
+        brand:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: brand
+          example: Madhive Brand Jeans
+        stationId:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive station id
+          example: OI7qpnLagTWCyVCxVXVxxHmgfcbo
+        estimate:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: estimate for campaign
+          example: 2x 30s spots
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  responses:
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

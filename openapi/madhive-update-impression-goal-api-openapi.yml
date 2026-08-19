@@ -1,0 +1,846 @@
+openapi: 3.2.0
+info:
+  title: Madhive update impression goal API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: update impression goal
+paths:
+  /v1/lineitems/{id}/impression-goal:
+    patch:
+      tags:
+      - update impression goal
+      summary: Editing line item impression goal amounts
+      description: Editing line item impression goal amounts. Keeps the existing pace per day/lifetime and pace to impressions logic on the line item
+      operationId: updateLineItemImpression
+      parameters:
+      - name: id
+        in: path
+        description: line item id
+        required: true
+        x-oapi-codegen-extra-tags:
+          validate: required,min=28,max=28
+        schema:
+          type: string
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LineItemImpressionBudgetRequest'
+            examples:
+              response:
+                value:
+                  impressionGoal: 1000
+        description: impression goal update
+        required: true
+      responses:
+        '200':
+          description: impression goal updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LineItemResponse'
+              examples:
+                response:
+                  value:
+                    id: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+                    campaignId: pdzKDktfwIV3FI7R6gHEbg32tpgl
+                    name: Impression Goal Updated
+                    startDate: '2030-01-02T15:04:00Z'
+                    endDate: '2030-10-02T15:04:00Z'
+                    status: READY
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      created: '2030-11-02T15:04:00Z'
+        '400':
+          $ref: '#/components/responses/400InvalidLI'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+components:
+  schemas:
+    Date:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: required,datetime=2006-01-02T15:04:05Z07:00
+      description: 2020-06-18T17:24:53Z is a basic example of an RFC 3339 timestamp, which refers to June 18, 2020 5:24:53 PM in UTC
+      example: '2030-01-10T23:00:00Z'
+    DeviceCap:
+      x-isnullable: false
+      type: object
+      required:
+      - tv
+      - mobile
+      - desktop
+      - tablet
+      properties:
+        tv:
+          type: integer
+          format: uint32
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,max=100
+          description: tv device cap
+          example: 40
+        mobile:
+          type: integer
+          format: uint32
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,max=100
+          x-omitempty: true
+          description: mobile device cap
+          example: 40
+        desktop:
+          type: integer
+          format: uint32
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,max=100
+          x-omitempty: true
+          description: desktop device cap
+          example: 20
+        tablet:
+          type: integer
+          format: uint32
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,max=100
+          x-omitempty: true
+          description: tablet device cap
+          example: 0
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    Targeting:
+      x-isnullable: false
+      type: object
+      properties:
+        country:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: required_with=PostalCodes States,required_without_all=Districts Metros PostalCodes States,omitempty,oneof=US CA
+          x-isnullable: false
+          x-omitempty: true
+          description: only US CA are supported for now
+          example: US
+        postalCodes:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,unique,dive,alphanum
+          x-omitempty: true
+          description: postal codes requires country
+          example:
+          - '92844'
+          - '90630'
+        states:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,required_with=Country,unique,dive
+          x-omitempty: true
+          description: states requires country
+          example:
+          - CA
+          - NY
+        districts:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,unique,dive
+          x-omitempty: true
+          description: congressional districts codes can not include country unless states or postals are provided
+          example:
+          - AL02
+          - AL03
+        metros:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: integer
+            format: uint32
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,unique,dive,min=1,max=9999
+          x-omitempty: true
+          description: metro codes can not include country unless states or postals are provided
+          example:
+          - 803
+          - 807
+          - 810
+        georecency:
+          $ref: '#/components/schemas/GeoRecency'
+          description: 'Historical location targeting (geo-recency). Targets users who have been physically present within the specified geofences during the lookback window. Note: targeting is full-replace on every update — omitting this field from a PATCH request will clear any previously saved georecency, consistent with how all geo fields (country, states, metros) behave.'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    LineItemResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/LineItem'
+      - type: object
+        required:
+        - transaction
+        - statusDetail
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          statusDetail:
+            $ref: '#/components/schemas/StatusDetail'
+    ExternalSegment:
+      type: object
+      x-isnullable: false
+      required:
+      - id
+      - name
+      - category
+      - type
+      properties:
+        id:
+          type: string
+          x-isnullable: false
+          description: external segment ID (IAS segment identifier)
+          example: '3005009'
+        name:
+          type: string
+          x-isnullable: false
+          description: segment name
+          example: Automotive - Family Car
+        category:
+          type: string
+          enum:
+          - CONTEXTUAL
+          - KEYWORD
+          x-isnullable: false
+          description: segment category
+          example: CONTEXTUAL
+        type:
+          type: string
+          enum:
+          - TARGETING
+          - AVOIDANCE
+          x-isnullable: false
+          description: segment type (targeting or avoidance)
+          example: TARGETING
+    LineItem:
+      type: object
+      x-isnullable: false
+      required:
+      - campaignId
+      - deviceCap
+      - endDate
+      - frequencyCap
+      - impressionGoal
+      - name
+      - productId
+      - startDate
+      - targeting
+      properties:
+        campaignId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          x-isnullable: false
+          description: madhive parent campaign id
+          example: pdzKDktfwIV3FI7R6gHEbg32tpgl
+        id:
+          $ref: '#/components/schemas/ID'
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-isnullable: false
+          x-omitempty: false
+          description: name of the line item
+          example: New Line Item
+        customerExternalId:
+          $ref: '#/components/schemas/CustomerExternalID'
+        impressionGoal:
+          type: integer
+          format: uint32
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required_without=ImpressionBudget
+          x-omitempty: true
+          description: impression goal for line item
+          example: 1000
+        impressionBudget:
+          type: integer
+          format: uint64
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: excluded_with=ImpressionGoal
+          x-isnullable: false
+          x-omitempty: true
+          description: impression budget for line item in Toshis (100,000,000 Toshis = $1)
+          example: 200000000000
+        frequencyCap:
+          $ref: '#/components/schemas/FrequencyCap'
+        productId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          x-isnullable: false
+          description: product id
+          example: jao1gnhIUchSxQekAKyh6FZLCXjJ
+        whitelistId:
+          type: string
+          x-omitempty: true
+          x-isnullable: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: Publisher Allow List ID. Required for legacy orgs (orgs without an active contract). Silently ignored for non-legacy (2.0) orgs — use optimizationTemplateId instead.
+          example: UO05Jw3McE4dN4Wa6K9c7HjMLwEo
+        audiences:
+          type: array
+          items:
+            type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,unique,dive,min=28,max=28
+          x-omitempty: true
+          description: audience ids
+          example:
+          - GaTiRIezyA98Lv6hACORtRWBFY4T
+          - K5gUgp1fTrbdANCatOawqfBtv2GE
+        targeting:
+          $ref: '#/components/schemas/Targeting'
+        startDate:
+          $ref: '#/components/schemas/Date'
+        endDate:
+          $ref: '#/components/schemas/Date'
+        deviceCap:
+          $ref: '#/components/schemas/DeviceCap'
+        excludeDayparting:
+          $ref: '#/components/schemas/ExcludeDayparting'
+        pace:
+          $ref: '#/components/schemas/LineItemPace'
+        optimizationTemplateId:
+          type: string
+          x-omitempty: true
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: 'ID of the Optimization Template (supply guardrail) for this line item. For non-legacy (2.0) orgs: optional on POST — if omitted, the OT attached to the product is used automatically. For legacy orgs: silently ignored — use whitelistId instead. On PUT: if omitted, the existing value is preserved.'
+          example: QfDocoixdemalqll2xPvDd63w9ca
+        optimization:
+          type: object
+          x-omitempty: true
+          x-isnullable: true
+          description: Optimization configuration for this line item. Presence of this field (non-null) indicates perf optimization is enabled. Null or absent means optimization is disabled.
+        contextualTargeting:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalSegment'
+          x-omitempty: true
+          x-isnullable: true
+          description: IAS contextual targeting segments to include
+          example:
+          - id: '3005009'
+            name: News & Politics
+            category: CONTEXTUAL
+            type: TARGETING
+          - id: '1500079'
+            name: Sports
+            category: CONTEXTUAL
+            type: TARGETING
+        contextualAvoidance:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalSegment'
+          x-omitempty: true
+          x-isnullable: true
+          description: IAS contextual avoidance segments to exclude
+          example:
+          - id: '1500080'
+            name: Adult Content
+            category: CONTEXTUAL
+            type: AVOIDANCE
+          - id: '1500081'
+            name: Violence
+            category: CONTEXTUAL
+            type: AVOIDANCE
+    LineItemImpressionBudgetRequest:
+      type: object
+      x-isnullable: false
+      properties:
+        id:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive line item id (read only)
+          readOnly: true
+          example: FkQoFf2tJpJIvvUV1RoRfDz64ADD
+        budgetGoal:
+          type: integer
+          format: uint64
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: excluded_with=ImpressionGoal
+          x-isnullable: false
+          x-omitempty: true
+          description: impression budget for line item in Toshis (100,000,000 Toshis = $1)
+          example: 200000000000
+        impressionGoal:
+          type: integer
+          x-go-type-skip-optional-pointer: true
+          format: uint32
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required_without=BudgetGoal
+          x-omitempty: true
+          description: impression goal for line item
+          example: 1000
+    GeoFence:
+      type: object
+      x-isnullable: false
+      required:
+      - name
+      - latitude
+      - longitude
+      - radiusMeters
+      properties:
+        name:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: required
+          description: label for this geofence location
+          example: City Hall
+        latitude:
+          type: number
+          format: double
+          x-oapi-codegen-extra-tags:
+            validate: required,min=-90,max=90
+          description: latitude of the geofence center, range -90 to 90
+          example: 37.7749
+        longitude:
+          type: number
+          format: double
+          x-oapi-codegen-extra-tags:
+            validate: required,min=-180,max=180
+          description: longitude of the geofence center, range -180 to 180
+          example: -122.4194
+        radiusMeters:
+          type: integer
+          format: uint32
+          x-oapi-codegen-extra-tags:
+            validate: required,min=30,max=10000
+          description: radius of the geofence in meters, range 30 to 10,000
+          example: 500
+    LineItemPace:
+      type: object
+      properties:
+        eCPM:
+          type: integer
+          x-go-type-skip-optional-pointer: true
+          format: uint64
+          description: eCPM value in Toshis (100,000,000 Toshis = $1), defaults from the product
+          example: 1000000000
+        period:
+          x-omitempty: true
+          type: string
+          enum:
+          - DAY
+          - LIFETIME
+          description: Pacing period
+          x-isnullable: false
+    GeoRecency:
+      type: object
+      x-isnullable: false
+      required:
+      - lookbackDays
+      - geofences
+      properties:
+        lookbackDays:
+          type: integer
+          format: uint32
+          x-oapi-codegen-extra-tags:
+            validate: required,min=3,max=30
+          description: Lookback window in days for historical location targeting. Must be between 3 and 30 days (platform data retention limit).
+          example: 30
+        geofences:
+          type: array
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,dive
+          items:
+            $ref: '#/components/schemas/GeoFence'
+          description: List of geofence locations to target users who have been present within the lookback window.
+        confirmedHealthcare:
+          type: boolean
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          x-isnullable: false
+          description: Confirms that no geofence locations are within 2,000 feet of a healthcare facility. Required when geo-recency circles are used.
+          example: true
+        confirmedDataUsage:
+          type: boolean
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          x-isnullable: false
+          description: Confirms acceptance of Oregon (OR) and Maryland (MD) data usage terms. Required whenever georecency is provided, regardless of geofence location (state resolution from lat/long is not performed server-side).
+          example: true
+    CustomerExternalID:
+      type: string
+      x-go-name: CustomerExternalID
+      x-omitempty: true
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: 'omitempty,min=2,max=128,ne= '
+      description: resource external id
+      example: client-123456
+    ExcludeDayparting:
+      x-isnullable: false
+      type: object
+      properties:
+        monday:
+          type: array
+          items:
+            type: integer
+            format: int64
+          x-omitempty: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,unique,dive,min=0,max=23
+          description: 0-23
+          example:
+          - 0
+          - 2
+          - 23
+        tuesday:
+          type: array
+          items:
+            type: integer
+            format: int64
+          x-omitempty: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,unique,dive,min=0,max=23
+          description: 0-23
+          example:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+          - 13
+          - 14
+          - 15
+          - 16
+          - 17
+          - 18
+          - 19
+          - 20
+          - 21
+          - 22
+          - 23
+        wednesday:
+          type: array
+          items:
+            type: integer
+            format: int64
+          x-omitempty: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,unique,dive,min=0,max=23
+          description: 0-23
+          example:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 22
+          - 23
+        thursday:
+          type: array
+          items:
+            type: integer
+            format: int64
+          x-omitempty: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,unique,dive,min=0,max=23
+          description: 0-23
+          example: []
+        friday:
+          type: array
+          items:
+            type: integer
+            format: int64
+          x-omitempty: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,unique,dive,min=0,max=23
+          description: 0-23
+          example:
+          - 23
+        saturday:
+          type: array
+          items:
+            type: integer
+            format: int64
+          x-omitempty: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,unique,dive,min=0,max=23
+          description: 0-23
+          example:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+          - 13
+          - 14
+          - 15
+          - 16
+          - 17
+          - 18
+          - 19
+          - 20
+          - 21
+          - 22
+          - 23
+        sunday:
+          type: array
+          items:
+            type: integer
+            format: int64
+          x-omitempty: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,unique,dive,min=0,max=23
+          description: 0-23
+          example:
+          - 0
+          - 2
+          - 6
+          - 8
+          - 10
+          - 12
+          - 14
+          - 16
+          - 18
+          - 20
+          - 22
+          - 23
+      description: hours of the week to exclude [0,23]
+    StatusDetail:
+      x-isnullable: false
+      type: object
+      required:
+      - detail
+      - reasons
+      - numberOfInvalidLineItems
+      - status
+      properties:
+        detail:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          description: status detail
+          example: CAMPAIGN_STATUS_MISSING_LINE_ITEM
+        reasons:
+          type: array
+          items:
+            type: string
+            x-oapi-codegen-extra-tags:
+              validate: omitempty,min=1,dive
+          x-omitempty: true
+          description: reasons for status
+          example:
+          - LINE_ITEM_STATUS_INVALID
+          - MISSING_CREATIVE
+        numberOfInvalidLineItems:
+          type: integer
+          format: uint32
+          x-isnullable: false
+          x-omitempty: false
+          x-oapi-codegen-extra-tags:
+            validate: omitempty
+          description: number of line items
+          example: 2
+        status:
+          $ref: '#/components/schemas/Status'
+    ID:
+      type: string
+      x-go-name: ID
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,min=28,max=28
+      description: resource id
+      example: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+    FrequencyCap:
+      x-isnullable: false
+      type: object
+      required:
+      - daily
+      properties:
+        hourly:
+          type: integer
+          format: int64
+          x-oapi-codegen-extra-tags:
+            validate: min=0,max=12
+          description: hourly frequency cap
+          x-go-type-skip-optional-pointer: true
+          example: 23
+        daily:
+          type: integer
+          format: int64
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,max=20
+          x-omitempty: false
+          x-isnullable: false
+          description: daily frequency cap
+          x-go-type-skip-optional-pointer: true
+          example: 1
+        weekly:
+          type: integer
+          format: int64
+          x-oapi-codegen-extra-tags:
+            validate: min=0,max=140
+          description: weekly frequency cap
+          x-go-type-skip-optional-pointer: true
+          example: 7
+        monthly:
+          type: integer
+          format: int64
+          x-oapi-codegen-extra-tags:
+            validate: min=0,max=620
+          description: monthly frequency cap
+          x-go-type-skip-optional-pointer: true
+          example: 31
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+  responses:
+    400InvalidLI:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidLI'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  examples:
+    400InvalidLI:
+      value:
+        error: invalid line item id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

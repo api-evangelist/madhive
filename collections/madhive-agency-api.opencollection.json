@@ -1,0 +1,94 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive Agency API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "agency",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Receive the list of agencies and their IDs.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api2.madhive.com/api/v1/agencies",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "number of agencies per page (default 100, max 10000)"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Optional page selector RELATIVE to page_token: 1 = next page (the default when a page_token is supplied), -1 = previous page, 0 = reload the current page. Has no effect without page_token.\n"
+              },
+              {
+                "name": "page_token",
+                "value": "",
+                "type": "query",
+                "description": "Opaque cursor from the previous response's pagination.pageToken. Pass it alone to fetch the next page; pagination is cursor-based and offset defaults to the next page when a page_token is supplied.\n"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Receive the list of agencies and their IDs."
+        },
+        {
+          "info": {
+            "name": "Creating an agency with inputs for Name and an optional field for external ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api2.madhive.com/api/v1/agencies",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creating an agency with inputs for Name and an optional field for external ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,309 @@
+{
+  "item": [
+    {
+      "id": "633e0c4a-9c4c-4788-8155-81a944f6b73f",
+      "name": "modify line item",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "49b00b2e-f114-42f1-babd-1b8f8d0499e3",
+          "name": "Editing any attribute of a line item. Unable to edit the start date if it's live and in the past. Unable to edit targeting if the campaign is completed.",
+          "request": {
+            "name": "Editing any attribute of a line item. Unable to edit the start date if it's live and in the past. Unable to edit targeting if the campaign is completed.",
+            "description": {
+              "content": "Editing any attribute of a line item. Unable to edit the start date if it's live and in the past. Unable to edit targeting if the campaign is completed.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "lineitems",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) line item id"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "gcp trace",
+                "key": "X-Cloud-Trace-Context",
+                "value": "91f9f012dc7c7ffc13604c77f12a8931"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api2.madhive.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"campaignId\": \"<string>\",\n  \"deviceCap\": {\n    \"tv\": \"<uint32>\",\n    \"mobile\": \"<uint32>\",\n    \"desktop\": \"<uint32>\",\n    \"tablet\": \"<uint32>\"\n  },\n  \"endDate\": \"<string>\",\n  \"frequencyCap\": {\n    \"daily\": \"<long>\",\n    \"hourly\": \"<long>\",\n    \"weekly\": \"<long>\",\n    \"monthly\": \"<long>\"\n  },\n  \"impressionGoal\": \"<uint32>\",\n  \"name\": \"<string>\",\n  \"productId\": \"<string>\",\n  \"startDate\": \"<string>\",\n  \"targeting\": {\n    \"country\": \"<string>\",\n    \"postalCodes\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"states\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"districts\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"metros\": [\n      \"<uint32>\",\n      \"<uint32>\"\n    ],\n    \"georecency\": {\n      \"lookbackDays\": \"<uint32>\",\n      \"geofences\": [\n        {\n          \"name\": \"<string>\",\n          \"latitude\": \"<double>\",\n          \"longitude\": \"<double>\",\n          \"radiusMeters\": \"<uint32>\"\n        },\n        {\n          \"name\": \"<string>\",\n          \"latitude\": \"<double>\",\n          \"longitude\": \"<double>\",\n          \"radiusMeters\": \"<uint32>\"\n        }\n      ],\n      \"confirmedHealthcare\": \"<boolean>\",\n      \"confirmedDataUsage\": \"<boolean>\"\n    }\n  },\n  \"customerExternalId\": \"<string>\",\n  \"impressionBudget\": \"<uint64>\",\n  \"whitelistId\": \"<string>\",\n  \"audiences\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"excludeDayparting\": {\n    \"monday\": [\n      \"<long>\",\n      \"<long>\"\n    ],\n    \"tuesday\": [\n      \"<long>\",\n      \"<long>\"\n    ],\n    \"wednesday\": [\n      \"<long>\",\n      \"<long>\"\n    ],\n    \"thursday\": [\n      \"<long>\",\n      \"<long>\"\n    ],\n    \"friday\": [\n      \"<long>\",\n      \"<long>\"\n    ],\n    \"saturday\": [\n      \"<long>\",\n      \"<long>\"\n    ],\n    \"sunday\": [\n      \"<long>\",\n      \"<long>\"\n    ]\n  },\n  \"pace\": {\n    \"eCPM\": \"<uint64>\",\n    \"period\": \"<string>\"\n  },\n  \"optimizationTemplateId\": \"<string>\",\n  \"optimization\": \"<object>\",\n  \"contextualTargeting\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"contextualAvoidance\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "46ea91ec-66a1-4706-9ecf-7813d53907ef",
+              "name": "line item updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lineitems",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) line item id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"campaignId\": \"pdzKDktfwIV3FI7R6gHEbg32tpgl\",\n  \"deviceCap\": {\n    \"tv\": 40,\n    \"mobile\": 40,\n    \"desktop\": 20,\n    \"tablet\": 0\n  },\n  \"endDate\": \"2030-01-10T23:00:00Z\",\n  \"frequencyCap\": {\n    \"daily\": 1,\n    \"hourly\": 23,\n    \"weekly\": 7,\n    \"monthly\": 31\n  },\n  \"impressionGoal\": 1000,\n  \"name\": \"New Line Item\",\n  \"productId\": \"jao1gnhIUchSxQekAKyh6FZLCXjJ\",\n  \"startDate\": \"2029-01-10T23:00:00Z\",\n  \"targeting\": {\n    \"country\": \"US\",\n    \"postalCodes\": [\n      \"92844\",\n      \"90630\"\n    ],\n    \"states\": [\n      \"CA\",\n      \"NY\"\n    ],\n    \"districts\": [\n      \"AL02\",\n      \"AL03\"\n    ],\n    \"metros\": [\n      803,\n      807,\n      810\n    ],\n    \"georecency\": {\n      \"lookbackDays\": 30,\n      \"geofences\": [\n        {\n          \"name\": \"City Hall\",\n          \"latitude\": 37.7749,\n          \"longitude\": -122.4194,\n          \"radiusMeters\": 500\n        },\n        {\n          \"name\": \"City Hall\",\n          \"latitude\": 37.7749,\n          \"longitude\": -122.4194,\n          \"radiusMeters\": 500\n        }\n      ],\n      \"confirmedHealthcare\": true,\n      \"confirmedDataUsage\": true\n    }\n  },\n  \"customerExternalId\": \"client-123456\",\n  \"impressionBudget\": 200000000000,\n  \"whitelistId\": \"UO05Jw3McE4dN4Wa6K9c7HjMLwEo\",\n  \"audiences\": [\n    \"GaTiRIezyA98Lv6hACORtRWBFY4T\",\n    \"K5gUgp1fTrbdANCatOawqfBtv2GE\"\n  ],\n  \"excludeDayparting\": {\n    \"monday\": [\n      0,\n      2,\n      23\n    ],\n    \"tuesday\": [\n      0,\n      1,\n      2,\n      3,\n      4,\n      5,\n      6,\n      7,\n      8,\n      9,\n      10,\n      11,\n      12,\n      13,\n      14,\n      15,\n      16,\n      17,\n      18,\n      19,\n      20,\n      21,\n      22,\n      23\n    ],\n    \"wednesday\": [\n      0,\n      1,\n      2,\n      3,\n      22,\n      23\n    ],\n    \"friday\": [\n      23\n    ],\n    \"saturday\": [\n      0,\n      1,\n      2,\n      3,\n      4,\n      5,\n      6,\n      7,\n      8,\n      9,\n      10,\n      11,\n      12,\n      13,\n      14,\n      15,\n      16,\n      17,\n      18,\n      19,\n      20,\n      21,\n      22,\n      23\n    ],\n    \"sunday\": [\n      0,\n      2,\n      6,\n      8,\n      10,\n      12,\n      14,\n      16,\n      18,\n      20,\n      22,\n      23\n    ]\n  },\n  \"pace\": {\n    \"eCPM\": 1000000000,\n    \"period\": \"<string>\"\n  },\n  \"optimizationTemplateId\": \"QfDocoixdemalqll2xPvDd63w9ca\",\n  \"optimization\": \"<object>\",\n  \"contextualTargeting\": [\n    \"3005009\",\n    \"1500079\"\n  ],\n  \"contextualAvoidance\": [\n    \"1500080\",\n    \"1500081\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"a8MWQ2v4ZceGhsku2P5amaOXCnwe\",\n  \"campaignId\": \"pdzKDktfwIV3FI7R6gHEbg32tpgl\",\n  \"name\": \"Newly Created Order\",\n  \"startDate\": \"2030-01-02T15:04:00Z\",\n  \"endDate\": \"2030-10-02T15:04:00Z\",\n  \"status\": \"READY\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2f0c5fe8-fcd8-4151-841e-f868b34d0134",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lineitems",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) line item id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"campaignId\": \"pdzKDktfwIV3FI7R6gHEbg32tpgl\",\n  \"deviceCap\": {\n    \"tv\": 40,\n    \"mobile\": 40,\n    \"desktop\": 20,\n    \"tablet\": 0\n  },\n  \"endDate\": \"2030-01-10T23:00:00Z\",\n  \"frequencyCap\": {\n    \"daily\": 1,\n    \"hourly\": 23,\n    \"weekly\": 7,\n    \"monthly\": 31\n  },\n  \"impressionGoal\": 1000,\n  \"name\": \"New Line Item\",\n  \"productId\": \"jao1gnhIUchSxQekAKyh6FZLCXjJ\",\n  \"startDate\": \"2029-01-10T23:00:00Z\",\n  \"targeting\": {\n    \"country\": \"US\",\n    \"postalCodes\": [\n      \"92844\",\n      \"90630\"\n    ],\n    \"states\": [\n      \"CA\",\n      \"NY\"\n    ],\n    \"districts\": [\n      \"AL02\",\n      \"AL03\"\n    ],\n    \"metros\": [\n      803,\n      807,\n      810\n    ],\n    \"georecency\": {\n      \"lookbackDays\": 30,\n      \"geofences\": [\n        {\n          \"name\": \"City Hall\",\n          \"latitude\": 37.7749,\n          \"longitude\": -122.4194,\n          \"radiusMeters\": 500\n        },\n        {\n          \"name\": \"City Hall\",\n          \"latitude\": 37.7749,\n          \"longitude\": -122.4194,\n          \"radiusMeters\": 500\n        }\n      ],\n      \"confirmedHealthcare\": true,\n      \"confirmedDataUsage\": true\n    }\n  },\n  \"customerExternalId\": \"client-123456\",\n  \"impressionBudget\": 200000000000,\n  \"whitelistId\": \"UO05Jw3McE4dN4Wa6K9c7HjMLwEo\",\n  \"audiences\": [\n    \"GaTiRIezyA98Lv6hACORtRWBFY4T\",\n    \"K5gUgp1fTrbdANCatOawqfBtv2GE\"\n  ],\n  \"excludeDayparting\": {\n    \"monday\": [\n      0,\n      2,\n      23\n    ],\n    \"tuesday\": [\n      0,\n      1,\n      2,\n      3,\n      4,\n      5,\n      6,\n      7,\n      8,\n      9,\n      10,\n      11,\n      12,\n      13,\n      14,\n      15,\n      16,\n      17,\n      18,\n      19,\n      20,\n      21,\n      22,\n      23\n    ],\n    \"wednesday\": [\n      0,\n      1,\n      2,\n      3,\n      22,\n      23\n    ],\n    \"friday\": [\n      23\n    ],\n    \"saturday\": [\n      0,\n      1,\n      2,\n      3,\n      4,\n      5,\n      6,\n      7,\n      8,\n      9,\n      10,\n      11,\n      12,\n      13,\n      14,\n      15,\n      16,\n      17,\n      18,\n      19,\n      20,\n      21,\n      22,\n      23\n    ],\n    \"sunday\": [\n      0,\n      2,\n      6,\n      8,\n      10,\n      12,\n      14,\n      16,\n      18,\n      20,\n      22,\n      23\n    ]\n  },\n  \"pace\": {\n    \"eCPM\": 1000000000,\n    \"period\": \"<string>\"\n  },\n  \"optimizationTemplateId\": \"QfDocoixdemalqll2xPvDd63w9ca\",\n  \"optimization\": \"<object>\",\n  \"contextualTargeting\": [\n    \"3005009\",\n    \"1500079\"\n  ],\n  \"contextualAvoidance\": [\n    \"1500080\",\n    \"1500081\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid line item id\",\n  \"status\": \"ERROR\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b4b779c0-b4ad-451d-b9ca-f3810c0c9efe",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lineitems",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) line item id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "gcp trace",
+                    "key": "X-Cloud-Trace-Context",
+                    "value": "91f9f012dc7c7ffc13604c77f12a8931"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"campaignId\": \"pdzKDktfwIV3FI7R6gHEbg32tpgl\",\n  \"deviceCap\": {\n    \"tv\": 40,\n    \"mobile\": 40,\n    \"desktop\": 20,\n    \"tablet\": 0\n  },\n  \"endDate\": \"2030-01-10T23:00:00Z\",\n  \"frequencyCap\": {\n    \"daily\": 1,\n    \"hourly\": 23,\n    \"weekly\": 7,\n    \"monthly\": 31\n  },\n  \"impressionGoal\": 1000,\n  \"name\": \"New Line Item\",\n  \"productId\": \"jao1gnhIUchSxQekAKyh6FZLCXjJ\",\n  \"startDate\": \"2029-01-10T23:00:00Z\",\n  \"targeting\": {\n    \"country\": \"US\",\n    \"postalCodes\": [\n      \"92844\",\n      \"90630\"\n    ],\n    \"states\": [\n      \"CA\",\n      \"NY\"\n    ],\n    \"districts\": [\n      \"AL02\",\n      \"AL03\"\n    ],\n    \"metros\": [\n      803,\n      807,\n      810\n    ],\n    \"georecency\": {\n      \"lookbackDays\": 30,\n      \"geofences\": [\n        {\n          \"name\": \"City Hall\",\n          \"latitude\": 37.7749,\n          \"longitude\": -122.4194,\n          \"radiusMeters\": 500\n        },\n        {\n          \"name\": \"City Hall\",\n          \"latitude\": 37.7749,\n          \"longitude\": -122.4194,\n          \"radiusMeters\": 500\n        }\n      ],\n      \"confirmedHealthcare\": true,\n      \"confirmedDataUsage\": true\n    }\n  },\n  \"customerExternalId\": \"client-123456\",\n  \"impressionBudget\": 200000000000,\n  \"whitelistId\": \"UO05Jw3McE4dN4Wa6K9c7HjMLwEo\",\n  \"audiences\": [\n    \"GaTiRIezyA98Lv6hACORtRWBFY4T\",\n    \"K5gUgp1fTrbdANCatOawqfBtv2GE\"\n  ],\n  \"excludeDayparting\": {\n    \"monday\": [\n      0,\n      2,\n      23\n    ],\n    \"tuesday\": [\n      0,\n      1,\n      2,\n      3,\n      4,\n      5,\n      6,\n      7,\n      8,\n      9,\n      10,\n      11,\n      12,\n      13,\n      14,\n      15,\n      16,\n      17,\n      18,\n      19,\n      20,\n      21,\n      22,\n      23\n    ],\n    \"wednesday\": [\n      0,\n      1,\n      2,\n      3,\n      22,\n      23\n    ],\n    \"friday\": [\n      23\n    ],\n    \"saturday\": [\n      0,\n      1,\n      2,\n      3,\n      4,\n      5,\n      6,\n      7,\n      8,\n      9,\n      10,\n      11,\n      12,\n      13,\n      14,\n      15,\n      16,\n      17,\n      18,\n      19,\n      20,\n      21,\n      22,\n      23\n    ],\n    \"sunday\": [\n      0,\n      2,\n      6,\n      8,\n      10,\n      12,\n      14,\n      16,\n      18,\n      20,\n      22,\n      23\n    ]\n  },\n  \"pace\": {\n    \"eCPM\": 1000000000,\n    \"period\": \"<string>\"\n  },\n  \"optimizationTemplateId\": \"QfDocoixdemalqll2xPvDd63w9ca\",\n  \"optimization\": \"<object>\",\n  \"contextualTargeting\": [\n    \"3005009\",\n    \"1500079\"\n  ],\n  \"contextualAvoidance\": [\n    \"1500080\",\n    \"1500081\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"unauthorized\",\n  \"status\": \"ERROR\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api2.madhive.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "75d486b1-803c-4e17-91af-74b884622cb1",
+    "name": "Madhive modify line item API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n",
+      "type": "text/plain"
+    }
+  }
+}

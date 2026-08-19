@@ -1,0 +1,73 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive MCP MCP Protocol API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "MCP Protocol",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "MCP SSE Streaming Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api2.madhive.com/mcp/",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Server-Sent Events (SSE) streaming endpoint for real-time MCP protocol communication. Provides streaming responses for long-running operations."
+        },
+        {
+          "info": {
+            "name": "MCP JSON-RPC Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api2.madhive.com/mcp/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Main endpoint for Model Context Protocol JSON-RPC requests. Supports `tools/list` to discover available tools and `tools/call` to execute specific tools."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

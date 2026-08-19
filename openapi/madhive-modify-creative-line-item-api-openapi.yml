@@ -1,0 +1,369 @@
+openapi: 3.2.0
+info:
+  title: Madhive modify creative line item API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: modify creative line item
+paths:
+  /v1/creatives/{cId}/lineitems/{id}:
+    put:
+      tags:
+      - modify creative line item
+      summary: Editing creative scheduling. Unable to edit the start date if it's live and in the past. Unable to edit if the line item is completed.
+      description: Editing creative scheduling. Unable to edit the start date if it's live and in the past. Unable to edit if the line item is completed.
+      operationId: updateCreativeLineItem
+      parameters:
+      - in: path
+        name: cId
+        description: creative id
+        required: true
+        x-oapi-codegen-extra-tags:
+          validate: required,min=28,max=28
+        schema:
+          type: string
+      - in: path
+        name: id
+        description: line item id
+        required: true
+        x-oapi-codegen-extra-tags:
+          validate: required,min=28,max=28
+        schema:
+          type: string
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreativeLineItemRequest'
+        description: creative line item update
+        required: true
+      responses:
+        '200':
+          description: creative line item updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreativeLineItemResponse'
+              examples:
+                response:
+                  value:
+                    id: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+                    startDate: '2030-01-02T15:04:00Z'
+                    endDate: '2030-10-02T15:04:00Z'
+                    weight: 50
+                    status: READY
+        '400':
+          $ref: '#/components/responses/400InvalidID'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+components:
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+  schemas:
+    CreativeLineItemRequest:
+      type: object
+      required:
+      - startDate
+      - endDate
+      - weight
+      properties:
+        startDate:
+          type: string
+          x-omitempty: false
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,datetime=2006-01-02T15:04:05Z07:00
+          description: 'start date for creative, format: yyyy-mm-ddThh:mm:ssZ'
+          example: '2029-01-10T23:00:00Z'
+        endDate:
+          type: string
+          x-omitempty: false
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,datetime=2006-01-02T15:04:05Z07:00
+          description: 'start date for creative, format: yyyy-mm-ddThh:mm:ssZ'
+          example: '2029-11-10T23:00:00Z'
+        weight:
+          type: integer
+          format: uint32
+          x-omitempty: false
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,max=10000
+          description: percentage weight of the creative
+          example: 50
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreativeLineItemEvent'
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,dive
+          x-omitempty: true
+          description: list of events
+          example:
+          - eventType: IMPRESSION
+            urls:
+            - http://www.google.com
+            - http://click.com
+        companionBannerIds:
+          type: array
+          maxItems: 6
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          items:
+            type: string
+            minLength: 28
+            maxLength: 28
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,max=6,unique,dive,min=28,max=28
+          description: List of display creative IDs to attach as companion banners on this flight. Only applicable to audio creatives. Maximum 6 allowed. Each ID must match the audio creative's current companion banners (or an existing flight's). Omit to attach none.
+          example:
+          - HPAKbbHX1IZFeeAh1K7dSogRUvgF
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    CreativeLineItemEvent:
+      x-isnullable: false
+      type: object
+      required:
+      - eventType
+      - urls
+      properties:
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        urls:
+          type: array
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,dive,http_url
+          items:
+            type: string
+          description: list of creatives
+          example:
+          - http://www.google.com
+          - http://click.com
+    CreativeLineItem:
+      type: object
+      required:
+      - creativeId
+      - lineItemId
+      - startDate
+      - endDate
+      - weight
+      - events
+      properties:
+        creativeId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          x-isnullable: false
+          x-omitempty: false
+          description: madhive creative id
+          example: 5KWVy4nd3WCbMsatgltq1ac4MSGc
+        lineItemId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive line item id
+          example: 7A734HJhZ9lcYnIPxdlZf2exr6Nh
+        startDate:
+          type: string
+          x-omitempty: false
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,datetime=2006-01-02T15:04:05Z07:00
+          description: 'start date for creative, format: yyyy-mm-ddThh:mm:ssZ'
+          example: '2029-01-10T23:00:00Z'
+        endDate:
+          type: string
+          x-omitempty: false
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,datetime=2006-01-02T15:04:05Z07:00
+          description: 'start date for creative, format: yyyy-mm-ddThh:mm:ssZ'
+          example: '2029-11-10T23:00:00Z'
+        weight:
+          type: integer
+          format: uint32
+          x-omitempty: false
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,max=10000
+          description: percentage weight of the creative
+          example: 50
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreativeLineItemEvent'
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,dive
+          x-omitempty: true
+          description: list of events
+          example:
+          - eventType: IMPRESSION
+            urls:
+            - http://www.google.com
+            - http://click.com
+        companionBannerIds:
+          type: array
+          maxItems: 6
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          items:
+            type: string
+            minLength: 28
+            maxLength: 28
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,max=6,unique,dive,min=28,max=28
+          description: List of display creative IDs to attach as companion banners on this flight. Only applicable to audio creatives. Maximum 6 allowed. Each ID must match the audio creative's current companion banners (or an existing flight's). Omit to attach none.
+          example:
+          - HPAKbbHX1IZFeeAh1K7dSogRUvgF
+    CreativeLineItemResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/CreativeLineItem'
+      - type: object
+        required:
+        - transaction
+        - status
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          status:
+            $ref: '#/components/schemas/Status'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    EventType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: required,oneof=IMPRESSION CLICK_TRACKER CLICK_THROUGH START FIRST_QUARTILE MIDPOINT_QUARTILE THIRD_QUARTILE COMPLETE
+      enum:
+      - IMPRESSION
+      - CLICK_TRACKER
+      - CLICK_THROUGH
+      - START
+      - FIRST_QUARTILE
+      - MIDPOINT_QUARTILE
+      - THIRD_QUARTILE
+      - COMPLETE
+      description: event type for creative
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

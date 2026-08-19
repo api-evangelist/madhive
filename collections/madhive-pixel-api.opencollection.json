@@ -1,0 +1,86 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive Pixel API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "pixel",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Updating a tracking pixel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api2.madhive.com/api/v1/pixels/:id",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "pixel id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Updating a tracking pixel"
+        },
+        {
+          "info": {
+            "name": "Creating a tracking pixel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api2.madhive.com/api/v1/pixels",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creating a tracking pixel"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

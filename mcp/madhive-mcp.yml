@@ -25,13 +25,11 @@ authentication:
     pkce: S256
     label: User-delegated
     use: developer tools where a user signs in interactively
-  note: >-
-    Onboarding is gated — Madhive issues client credentials through an Account Manager.
-    An anonymous POST of {"jsonrpc":"2.0","id":1,"method":"tools/list"} to
-    https://api2.madhive.com/mcp returns HTTP 401 {"error":"unauthorized"}, so the live
-    tool inputSchemas require authenticated introspection. The tool names and descriptions
-    below are taken verbatim from the provider's published MCP OpenAPI description and
-    the developer-portal MCP page — not from a live tools/list.
+  note: Onboarding is gated — Madhive issues client credentials through an Account Manager. An anonymous
+    POST of {"jsonrpc":"2.0","id":1,"method":"tools/list"} to https://api2.madhive.com/mcp returns HTTP
+    401 {"error":"unauthorized"}, so the live tool inputSchemas require authenticated introspection. The
+    tool names and descriptions below are taken verbatim from the provider's published MCP OpenAPI description
+    and the developer-portal MCP page — not from a live tools/list.
 clients:
 - Claude Code
 - Claude Desktop
@@ -123,3 +121,10 @@ x-evidence:
   url: https://developer.madhive.com/portals/api/sites/mad-master-mozart/liveportal/page/mcp
   http_status: 200
   note: developer-portal MCP onboarding page
+deployment:
+  mode: remote
+  endpoint: https://api2.madhive.com/mcp
+  verified: probed
+  probe: gated
+  checked: '2026-08-12'
+  source: catalog MCP census

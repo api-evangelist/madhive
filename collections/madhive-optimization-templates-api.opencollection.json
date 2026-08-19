@@ -1,0 +1,206 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive optimization templates API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "optimization templates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve optimization templates (Supply Guardrails)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api2.madhive.com/api/v1/optimization-templates",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "mediaType",
+                "value": "",
+                "type": "query",
+                "description": "Filter by media type (VIDEO, AUDIO, DISPLAY). Comma-separated for multiple values."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status (READY, ARCHIVED). Comma-separated for multiple values."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Pagination offset"
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "Number of results per page"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get a list of optimization templates (also known as Supply Guardrails) for the authenticated organization.\nTemplates can be filtered by media type and status. Results are paginated and sorted by most recently updated.\n\n**Note:** This endpoint returns basic template information only (excludes `pubSettings` for performance).\nUse GET `/v1/optimization-templates/{id}` to retrieve full template details including publisher settings.\n"
+        },
+        {
+          "info": {
+            "name": "Create an optimization template (Supply Guardrail)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api2.madhive.com/api/v1/optimization-templates",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Create a new optimization template (also known as a Supply Guardrail) for the authenticated organization.\n\nTemplates allow partners to define publisher-specific supply guardrails including:\n- **Cap Management**: Impression caps per publisher as a percentage (0-100)\n- **Bundle Rules**: App bundle inclusion/exclusion rules per publisher\n- **Channel Rules**: Channel (YouTube/CTV) inclusion/exclusion rules per publisher\n\nOnce created, a template can be assigned to line items individually via the lin"
+        },
+        {
+          "info": {
+            "name": "Retrieve a specific optimization template by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api2.madhive.com/api/v1/optimization-templates/:id",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Optimization template ID"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get detailed information about a specific optimization template including all publisher settings, bundle rules, and channel rules."
+        },
+        {
+          "info": {
+            "name": "Partially update an optimization template",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api2.madhive.com/api/v1/optimization-templates/:id",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Optimization template ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Partially update an existing optimization template. Only fields included in the request body are updated — omitted fields remain unchanged.\n\n**Partial update behavior:**\n- `name` only → updates name, leaves pubSettings untouched\n- `pubSettings` with items → replaces all publisher settings, leaves name/mediaType untouched\n- `pubSettings: []` (empty array) or omitted → leaves existing publisher settings unchanged\n\n**Note:** The `mediaType` field cannot be changed after template creation.\n"
+        },
+        {
+          "info": {
+            "name": "Delete (archive) an optimization template",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api2.madhive.com/api/v1/optimization-templates/:id",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Optimization template ID"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Soft-deletes an optimization template by archiving it. Archived templates are no longer returned in list responses.\n\n**Validation:** Returns `409 Conflict` if the template is currently assigned to any active (DRAFT or READY) line item.\nRemove the template from all active line items before deleting it.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

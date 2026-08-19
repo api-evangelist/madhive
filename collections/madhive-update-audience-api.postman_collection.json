@@ -1,0 +1,285 @@
+{
+  "item": [
+    {
+      "id": "be4dd743-0ecd-49d4-987d-fdc18126ca7f",
+      "name": "update_audience",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6e5b5bd9-2d4c-4338-94bd-d7bd325dd0c6",
+          "name": "Ability to edit a custom audience and the boolean logic. Edits to custom audiences will apply to all line items that have that audience.",
+          "request": {
+            "name": "Ability to edit a custom audience and the boolean logic. Edits to custom audiences will apply to all line items that have that audience.",
+            "description": {
+              "content": "Ability to edit a custom audience and the boolean logic. Edits to custom audiences will apply to all line items that have that audience.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "audiences",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) audience id"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api2.madhive.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"expr\": {\n    \"op\": \"<string>\",\n    \"ids\": [\n      \"<byte>\",\n      \"<byte>\"\n    ],\n    \"children\": [\n      {\n        \"value\": \"<Circular reference to #/components/schemas/AudienceBoolExp detected>\"\n      },\n      {\n        \"value\": \"<Circular reference to #/components/schemas/AudienceBoolExp detected>\"\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7261d72c-4915-4fff-8851-c708e012a7d7",
+              "name": "Audience updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "audiences",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) audience id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"custom Audience Name\",\n  \"description\": \"this audience targets users interested in tech products\",\n  \"expr\": {\n    \"op\": \"AND\",\n    \"ids\": [\n      \"U29tZUJ5dGVBcnJheQ==\",\n      \"U29tZUJ5dGVBcnJheQ==\"\n    ],\n    \"children\": [\n      {\n        \"value\": \"<Circular reference to #/components/schemas/AudienceBoolExp detected>\"\n      },\n      {\n        \"value\": \"<Circular reference to #/components/schemas/AudienceBoolExp detected>\"\n      }\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"VKzwqdlbkuiox9mriAVJ2khImKSD\",\n  \"name\": \"Household - HHI - 25-50k\",\n  \"orgId\": \"yTh0Oaq4wcnQPUTBdE1PtZSPuvZk\",\n  \"category\": \"Consumer\",\n  \"description\": \"WN Updated March 2023\",\n  \"cpm\": 100,\n  \"minCpm\": 50,\n  \"householdReach\": 100000,\n  \"lastModified\": 1685632200,\n  \"lastRefreshed\": 1685632200,\n  \"expr\": {\n    \"op\": \"AND\",\n    \"ids\": [\n      \"GaTiRIezyA98Lv6hACORtRWBFY4T\",\n      \"K5gUgp1fTrbdANCatOawqfBtv2GE\"\n    ],\n    \"children\": [\n      {\n        \"op\": \"OR\",\n        \"ids\": [\n          \"hjkl83kjldfjskljF3\",\n          \"l9sdf98sd98fdsf0sdf\"\n        ],\n        \"children\": [\n          {\n            \"op\": \"NOT\",\n            \"ids\": [\n              \"sdf9834jdfs0dfj23\"\n            ]\n          }\n        ]\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b25118b7-d372-4e33-a9a8-4931bc505596",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "audiences",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) audience id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"custom Audience Name\",\n  \"description\": \"this audience targets users interested in tech products\",\n  \"expr\": {\n    \"op\": \"AND\",\n    \"ids\": [\n      \"U29tZUJ5dGVBcnJheQ==\",\n      \"U29tZUJ5dGVBcnJheQ==\"\n    ],\n    \"children\": [\n      {\n        \"value\": \"<Circular reference to #/components/schemas/AudienceBoolExp detected>\"\n      },\n      {\n        \"value\": \"<Circular reference to #/components/schemas/AudienceBoolExp detected>\"\n      }\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid resource id\",\n  \"status\": \"ERROR\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ac81260e-4741-4c0d-99da-002bfc4b92fb",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "audiences",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) audience id"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"custom Audience Name\",\n  \"description\": \"this audience targets users interested in tech products\",\n  \"expr\": {\n    \"op\": \"AND\",\n    \"ids\": [\n      \"U29tZUJ5dGVBcnJheQ==\",\n      \"U29tZUJ5dGVBcnJheQ==\"\n    ],\n    \"children\": [\n      {\n        \"value\": \"<Circular reference to #/components/schemas/AudienceBoolExp detected>\"\n      },\n      {\n        \"value\": \"<Circular reference to #/components/schemas/AudienceBoolExp detected>\"\n      }\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"unauthorized\",\n  \"status\": \"ERROR\",\n  \"transaction\": {\n    \"id\": \"4af459ff8e1a36b6bb74fb88f1a02477\",\n    \"taskId\": \"14158884487309867565\",\n    \"created\": \"2030-11-02T15:04:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api2.madhive.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "319a8764-8f22-4862-9c98-81cec433fbef",
+    "name": "Madhive Update Audience API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n",
+      "type": "text/plain"
+    }
+  }
+}

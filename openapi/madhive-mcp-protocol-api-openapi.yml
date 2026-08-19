@@ -1,0 +1,528 @@
+openapi: 3.2.0
+info:
+  title: Madhive MCP MCP Protocol API
+  description: "Model Context Protocol (MCP) API for programmatic campaign management via Apigee Gateway.\n\n## Authentication\n\nThis API uses **OAuth 2.0** authentication with client credentials grant.\n\n### Getting an Access Token\n\nFirst, obtain an OAuth access token:\n```bash\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials\" \\\n  -d \"client_id=YOUR_CLIENT_ID\" \\\n  -d \"client_secret=YOUR_CLIENT_SECRET\"\n```\n\nResponse:\n```json\n{\n  \"access_token\": \"YOUR_ACCESS_TOKEN\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 1799\n}\n```\n\n### Using the Access Token\n\nInclude the access token in the Authorization header:\n```bash\ncurl -X POST \"https://api2.madhive.com/mcp\" \\\n  -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/list\",\"params\":{}}'\n```\n\n### MCP Protocol\n\nThis API implements the **Model Context Protocol (MCP)** using JSON-RPC 2.0:\n- All requests use JSON-RPC 2.0 format with `jsonrpc`, `id`, `method`, and `params` fields\n- Responses include `jsonrpc`, `id`, and either `result` or `error` fields\n- Primary methods: `tools/list` (discover available tools) and `tools/call` (execute tools)\n\n### Available Tools\n\nThe service provides **22 MCP tools** for campaign management:\n\n**Campaign Management:**\n- `get_campaigns` - List all campaigns or get a specific campaign by ID\n- `get_campaign_details` - Get detailed campaign information including line items and creatives\n- `manage_campaign` - Create, update, or archive campaigns and line items\n\n**Advertiser Management:**\n- `get_advertisers` - List all advertisers or get a specific advertiser by ID\n- `manage_advertiser` - Create, update, or archive advertisers\n\n**Agency Management:**\n- `get_agencies` - List all agencies or get a specific agency by ID\n- `manage_agency` - Create, update, or archive agencies\n\n**Creative Management:**\n- `get_creatives` - List all creatives or get a specific creative by ID\n- `manage_creative` - Create, update, or archive creative assets\n\n**Audience Management:**\n- `get_audiences` - Get audience by ID, search by text query, or list all with optional standard audiences\n- `manage_audience` - Create, update, or archive audience segments\n\n**Publisher Management:**\n- `list_publishers` - List all available publishers\n- `get_publisher_groups` - List all publisher groups or get a specific group by ID\n- `manage_publisher_group` - Create, update, or archive publisher whitelists/groups\n\n**Segment & Retargeting:**\n- `list_segments` - List all segments with pagination support\n- `get_retargeting` - Get retargeting segment information by ID\n\n**Other Tools:**\n- `get_lineitem_info` - Get line item details by ID\n- `get_pixel` - Get pixel tracking information by ID\n- `manage_pixel` - Create or update tracking pixels\n- `list_orgs` - List all organizations\n- `list_metros` - List metro/DMA codes for geographic targeting\n- `list_products` - List available ad products"
+  version: 1.0.0
+  contact:
+    name: API Platform Team
+    email: api-platform@madhive.com
+servers:
+- url: https://api2.madhive.com/mcp
+  description: Production (mad-master)
+security:
+- OAuth2: []
+tags:
+- name: MCP Protocol
+  description: Model Context Protocol JSON-RPC endpoints
+paths:
+  /:
+    post:
+      tags:
+      - MCP Protocol
+      summary: MCP JSON-RPC Endpoint
+      description: Main endpoint for Model Context Protocol JSON-RPC requests. Supports `tools/list` to discover available tools and `tools/call` to execute specific tools.
+      operationId: mcpJsonRpc
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MCPRequest'
+            examples:
+              tools_list:
+                summary: List all available MCP tools
+                value:
+                  jsonrpc: '2.0'
+                  id: 1
+                  method: tools/list
+                  params: {}
+              tools_call_get_campaigns:
+                summary: Call get_campaigns tool to list all campaigns
+                value:
+                  jsonrpc: '2.0'
+                  id: 2
+                  method: tools/call
+                  params:
+                    name: get_campaigns
+                    arguments:
+                      page_size: '20'
+              tools_call_get_advertisers:
+                summary: Call get_advertisers tool with ID
+                value:
+                  jsonrpc: '2.0'
+                  id: 3
+                  method: tools/call
+                  params:
+                    name: get_advertisers
+                    arguments:
+                      advertiser_id: '123'
+              tools_call_manage_campaign:
+                summary: Call manage_campaign tool to create a campaign
+                value:
+                  jsonrpc: '2.0'
+                  id: 4
+                  method: tools/call
+                  params:
+                    name: manage_campaign
+                    arguments:
+                      action: create
+                      advertiser_id: '456'
+                      name: Spring Sale 2024
+                      start_date: '2024-04-01T00:00:00Z'
+                      end_date: '2024-04-30T23:59:59Z'
+              tools_call_manage_advertiser:
+                summary: Call manage_advertiser tool to create an advertiser
+                value:
+                  jsonrpc: '2.0'
+                  id: 5
+                  method: tools/call
+                  params:
+                    name: manage_advertiser
+                    arguments:
+                      action: create
+                      name: ACME Corporation
+                      domain: acme.com
+                      iabCategory: IAB3
+              tools_call_get_campaign_details:
+                summary: Call get_campaign_details tool for comprehensive campaign info
+                value:
+                  jsonrpc: '2.0'
+                  id: 6
+                  method: tools/call
+                  params:
+                    name: get_campaign_details
+                    arguments:
+                      campaign_id: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+              tools_call_list_publishers:
+                summary: Call list_publishers tool to get all publishers
+                value:
+                  jsonrpc: '2.0'
+                  id: 7
+                  method: tools/call
+                  params:
+                    name: list_publishers
+                    arguments: {}
+              tools_call_manage_publisher_group:
+                summary: Call manage_publisher_group to create a whitelist
+                value:
+                  jsonrpc: '2.0'
+                  id: 8
+                  method: tools/call
+                  params:
+                    name: manage_publisher_group
+                    arguments:
+                      action: create
+                      name: Premium Publishers
+                      media_type: CTV
+                      product_id: prod123
+                      publishers:
+                      - id: pub1
+                        cap: 1000
+                      - id: pub2
+                        cap: 2000
+                      - id: pub3
+                        cap: 1500
+              tools_call_get_audiences:
+                summary: Call get_audiences tool with search query
+                value:
+                  jsonrpc: '2.0'
+                  id: 9
+                  method: tools/call
+                  params:
+                    name: get_audiences
+                    arguments:
+                      search: tech enthusiasts
+                      includeStdAuds: true
+              tools_call_manage_creative:
+                summary: Call manage_creative to create a video creative
+                value:
+                  jsonrpc: '2.0'
+                  id: 10
+                  method: tools/call
+                  params:
+                    name: manage_creative
+                    arguments:
+                      action: create
+                      name: Spring Video Ad
+                      advertiser_id: adv123
+                      type: VAST
+                      iab_category: IAB1
+                      url: https://example.com/ad.xml
+              tools_call_list_metros:
+                summary: Call list_metros for geographic targeting
+                value:
+                  jsonrpc: '2.0'
+                  id: 11
+                  method: tools/call
+                  params:
+                    name: list_metros
+                    arguments: {}
+              tools_call_get_agencies:
+                summary: Call get_agencies to list all agencies
+                value:
+                  jsonrpc: '2.0'
+                  id: 12
+                  method: tools/call
+                  params:
+                    name: get_agencies
+                    arguments:
+                      page_size: 50
+              tools_call_manage_agency:
+                summary: Call manage_agency to update an agency
+                value:
+                  jsonrpc: '2.0'
+                  id: 13
+                  method: tools/call
+                  params:
+                    name: manage_agency
+                    arguments:
+                      action: update
+                      agency_id: agency123
+                      name: Updated Agency Name
+              tools_call_get_creatives:
+                summary: Call get_creatives to get a creative by ID
+                value:
+                  jsonrpc: '2.0'
+                  id: 14
+                  method: tools/call
+                  params:
+                    name: get_creatives
+                    arguments:
+                      creative_id: creative456
+              tools_call_manage_audience:
+                summary: Call manage_audience to create an audience segment
+                value:
+                  jsonrpc: '2.0'
+                  id: 15
+                  method: tools/call
+                  params:
+                    name: manage_audience
+                    arguments:
+                      action: create
+                      name: Tech Enthusiasts
+                      expr:
+                        op: OR
+                        ids:
+                        - seg1
+                        - seg2
+                        - seg3
+              tools_call_get_publisher_groups:
+                summary: Call get_publisher_groups to get a whitelist by ID
+                value:
+                  jsonrpc: '2.0'
+                  id: 16
+                  method: tools/call
+                  params:
+                    name: get_publisher_groups
+                    arguments:
+                      publisher_group_id: wl789
+              tools_call_list_segments:
+                summary: Call list_segments to list all segments with pagination
+                value:
+                  jsonrpc: '2.0'
+                  id: 17
+                  method: tools/call
+                  params:
+                    name: list_segments
+                    arguments:
+                      page_size: 100
+                      offset: 0
+              tools_call_get_retargeting:
+                summary: Call get_retargeting to get retargeting segment info
+                value:
+                  jsonrpc: '2.0'
+                  id: 18
+                  method: tools/call
+                  params:
+                    name: get_retargeting
+                    arguments:
+                      retargeting_id: retarget123
+              tools_call_get_lineitem_info:
+                summary: Call get_lineitem_info to get line item details
+                value:
+                  jsonrpc: '2.0'
+                  id: 19
+                  method: tools/call
+                  params:
+                    name: get_lineitem_info
+                    arguments:
+                      lineitem_id: li456
+              tools_call_get_pixel:
+                summary: Call get_pixel to get tracking pixel info
+                value:
+                  jsonrpc: '2.0'
+                  id: 20
+                  method: tools/call
+                  params:
+                    name: get_pixel
+                    arguments:
+                      pixel_id: pixel789
+              tools_call_manage_pixel:
+                summary: Call manage_pixel to create a tracking pixel
+                value:
+                  jsonrpc: '2.0'
+                  id: 21
+                  method: tools/call
+                  params:
+                    name: manage_pixel
+                    arguments:
+                      action: create
+                      name: Conversion Tracker
+                      advertiser_id: adv123
+              tools_call_list_orgs:
+                summary: Call list_orgs to list all organizations
+                value:
+                  jsonrpc: '2.0'
+                  id: 22
+                  method: tools/call
+                  params:
+                    name: list_orgs
+                    arguments: {}
+              tools_call_list_products:
+                summary: Call list_products to list all ad products
+                value:
+                  jsonrpc: '2.0'
+                  id: 23
+                  method: tools/call
+                  params:
+                    name: list_products
+                    arguments: {}
+      responses:
+        '200':
+          description: Successful MCP response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPResponse'
+              examples:
+                tools_list_response:
+                  summary: Response from tools/list
+                  value:
+                    jsonrpc: '2.0'
+                    id: 1
+                    result:
+                      tools:
+                      - name: get_campaigns
+                        description: Get campaign(s) by ID or list all campaigns
+                        inputSchema:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: Campaign ID (optional)
+                            page_size:
+                              type: string
+                              description: Number of results per page
+                      - name: manage_campaign
+                        description: Create, update, or manage campaigns
+                        inputSchema:
+                          type: object
+                          properties:
+                            action:
+                              type: string
+                              enum:
+                              - create
+                              - update
+                              - delete
+                          required:
+                          - action
+                tools_call_response:
+                  summary: 'Response from tools/call (get_campaigns) - Note: all tool results are returned as plain text (JSON serialized as a string in the text field)'
+                  value:
+                    jsonrpc: '2.0'
+                    id: 2
+                    result:
+                      content:
+                      - type: text
+                        text: '{"campaigns": [{"id": "123", "name": "Summer Campaign", "status": "active"}]}'
+        '400':
+          description: Bad Request - Invalid JSON-RPC format or parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPError'
+              example:
+                jsonrpc: '2.0'
+                id: 1
+                error:
+                  code: -32602
+                  message: Invalid params
+        '401':
+          description: Unauthorized - Invalid or missing access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApigeeError'
+              example:
+                fault:
+                  faultstring: Invalid access token
+                  detail:
+                    errorcode: oauth.v2.InvalidAccessToken
+        '404':
+          description: Not Found - Method or tool not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPError'
+              example:
+                jsonrpc: '2.0'
+                id: 1
+                error:
+                  code: -32601
+                  message: Method not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPError'
+              example:
+                jsonrpc: '2.0'
+                id: 1
+                error:
+                  code: -32603
+                  message: Internal error
+      security:
+      - OAuth2: []
+    get:
+      tags:
+      - MCP Protocol
+      summary: MCP SSE Streaming Endpoint
+      description: Server-Sent Events (SSE) streaming endpoint for real-time MCP protocol communication. Provides streaming responses for long-running operations.
+      operationId: mcpSse
+      responses:
+        '200':
+          description: SSE stream established
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-Sent Events stream
+        '401':
+          description: Unauthorized - Invalid or missing access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApigeeError'
+      security:
+      - OAuth2: []
+components:
+  schemas:
+    MCPResponse:
+      type: object
+      description: MCP JSON-RPC 2.0 success response
+      required:
+      - jsonrpc
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+          description: JSON-RPC version
+        id:
+          type: integer
+          description: Request ID matching the request
+          example: 1
+        result:
+          type: object
+          description: Response result
+          additionalProperties: true
+    ApigeeError:
+      type: object
+      properties:
+        fault:
+          type: object
+          properties:
+            faultstring:
+              type: string
+              description: Error description
+            detail:
+              type: object
+              properties:
+                errorcode:
+                  type: string
+                  description: Apigee error code
+                reason:
+                  type: string
+                  description: Error reason
+    MCPError:
+      type: object
+      description: MCP JSON-RPC 2.0 error response
+      required:
+      - jsonrpc
+      - error
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+          description: JSON-RPC version
+        id:
+          type: integer
+          description: Request ID matching the request
+          example: 1
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: integer
+              description: JSON-RPC error code
+              enum:
+              - -32700
+              - -32600
+              - -32601
+              - -32602
+              - -32603
+              example: -32601
+            message:
+              type: string
+              description: Error message
+              example: Method not found
+            data:
+              type: object
+              description: Additional error information
+    MCPRequest:
+      type: object
+      description: MCP JSON-RPC 2.0 request
+      required:
+      - jsonrpc
+      - method
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+          description: JSON-RPC version
+        id:
+          type: integer
+          description: Request ID for matching responses
+          example: 1
+        method:
+          type: string
+          enum:
+          - tools/list
+          - tools/call
+          description: MCP method to call
+        params:
+          type: object
+          description: Method parameters
+          properties:
+            name:
+              type: string
+              description: Tool name (for tools/call)
+              example: get_campaigns
+            arguments:
+              type: object
+              description: Tool-specific arguments (for tools/call)
+              additionalProperties: true
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      description: OAuth 2.0 authentication using client credentials grant
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}

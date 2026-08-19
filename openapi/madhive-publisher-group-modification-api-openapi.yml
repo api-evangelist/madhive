@@ -1,0 +1,341 @@
+openapi: 3.2.0
+info:
+  title: Madhive publisher group modification API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: publisher group modification
+paths:
+  /v1/publishergroups/{id}:
+    put:
+      tags:
+      - publisher group modification
+      summary: Ability to edit an existing publisher group. This includes editing the name and re-uploading a list of publishers and its weights.
+      description: Ability to edit an existing publisher group. This includes editing the name and re-uploading a list of publishers and its weights.
+      operationId: updatePublisherGroupById
+      parameters:
+      - name: id
+        in: path
+        description: publisher group id
+        required: true
+        x-oapi-codegen-extra-tags:
+          validate: required,min=28,max=28
+        schema:
+          type: string
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublisherGroupRequest'
+        description: publisher group update
+        required: true
+      responses:
+        '200':
+          description: publisher group updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublisherGroupResponse'
+              examples:
+                response:
+                  value:
+                    id: 5KWVy4nd3WCbMsatgltq1ac4MSGc
+                    name: my first publisher group
+                    mediaType: VIDEO
+                    productId: 5KWVy4nd3WCbMsatgltq1ac4MSGc
+                    publishers:
+                    - id: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+                      name: my first publisher
+                      cap: 12
+                    status: READY
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      created: '2030-11-02T15:04:00Z'
+        '400':
+          $ref: '#/components/responses/400InvalidID'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+components:
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  schemas:
+    PublisherGroupRequestPublisher:
+      x-isnullable: false
+      type: object
+      required:
+      - id
+      - cap
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive publisher id
+          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+        cap:
+          type: integer
+          format: uint32
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,max=10000
+          description: publisher cap
+          example: 12
+    PublisherGroup:
+      type: object
+      required:
+      - id
+      - name
+      - mediaType
+      - productId
+      - publishers
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive publisher group id
+          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-isnullable: false
+          x-omitempty: false
+          description: publisher group name
+          example: my first publisher group
+        mediaType:
+          $ref: '#/components/schemas/MediaType'
+        productId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          x-isnullable: false
+          x-omitempty: false
+          description: product id
+          example: jao1gnhIUchSxQekAKyh6FZLCXjJ
+        publishers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublisherGroupPublisher'
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,dive
+          description: list of publishers
+          example:
+          - id: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+            name: my first publisher
+            cap: 12
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    Name:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: 'required,min=2,max=128,ne= '
+      description: resource name
+      example: name of resource
+    MediaType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: required,oneof=NONE VIDEO AUDIO DISPLAY
+      example: VIDEO
+      enum:
+      - NONE
+      - VIDEO
+      - AUDIO
+      - DISPLAY
+    PublisherGroupPublisher:
+      x-isnullable: false
+      type: object
+      required:
+      - id
+      - name
+      - cap
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive publisher id
+          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          description: publisher name
+          example: my first publisher
+        cap:
+          type: integer
+          format: uint32
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,max=10000
+          description: publisher cap
+          example: 12
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    PublisherGroupRequest:
+      type: object
+      required:
+      - name
+      - mediaType
+      - productId
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+        mediaType:
+          $ref: '#/components/schemas/MediaType'
+        productId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          x-isnullable: false
+          x-omitempty: false
+          description: product id
+          example: jao1gnhIUchSxQekAKyh6FZLCXjJ
+        publishers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublisherGroupRequestPublisher'
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,dive
+          x-go-type-skip-optional-pointer: true
+          description: list of publishers
+          example:
+          - id: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+            cap: 12
+    PublisherGroupResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublisherGroup'
+      - type: object
+        required:
+        - transaction
+        - status
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          status:
+            $ref: '#/components/schemas/Status'
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

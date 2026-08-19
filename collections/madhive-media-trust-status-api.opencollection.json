@@ -1,0 +1,48 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive media trust status API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "media trust status",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Batch-check the Media Trust (malware scan) status of creatives.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api2.madhive.com/api/v1/creatives/media-trust-status",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Given a batch of MadHive creative IDs, returns each creative's Media Trust malware-scan verdict. Creatives are scanned automatically once pushed to the MadHive Creative Library; this is a read-only status check over that scan result, not a submission endpoint."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,48 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive retargeting tracking pixel API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "retargeting tracking pixel",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ability to create a tracking pixel for retargeting",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api2.madhive.com/api/v1/retargeting/trackingpixels",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Ability to create a tracking pixel retargeting segment with ability to add a custom name and notes. The inputs include advertiser and tracking pixel IDs. If the advertiser do not match the tracking pixel ID’s it will return an error"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

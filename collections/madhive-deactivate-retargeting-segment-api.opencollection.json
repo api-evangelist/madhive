@@ -1,0 +1,46 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive deactivate retargeting segment API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "deactivate retargeting segment",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ability to archive a retargeting segment. This removes the retargeting segment from being added to line items moving forward and does not remove an retargeting from any associated line items.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api2.madhive.com/api/v1/retargeting/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "segment id"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Ability to archive a retargeting segment. This removes the retargeting segment from being added to line items moving forward and does not remove an retargeting from any associated line items."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

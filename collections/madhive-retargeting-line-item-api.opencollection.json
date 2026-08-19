@@ -1,0 +1,48 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive retargeting line item API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "retargeting line item",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ability to create a line item for retargeting",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api2.madhive.com/api/v1/retargeting/lineitems",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Ability to create a line item retargeting segment with ability to add a custom name and notes. The inputs include advertiser, line item start/end dates and line item IDs. If the advertiser or start/end date do not match the line item ID’s it will return an error."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

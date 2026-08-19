@@ -1,0 +1,50 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive Update Audience API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "update_audience",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ability to edit a custom audience and the boolean logic. Edits to custom audiences will apply to all line items that have that audience.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api2.madhive.com/api/v1/audiences/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "audience id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Ability to edit a custom audience and the boolean logic. Edits to custom audiences will apply to all line items that have that audience."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

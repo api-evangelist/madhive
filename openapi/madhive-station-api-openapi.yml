@@ -1,0 +1,256 @@
+openapi: 3.2.0
+info:
+  title: Madhive Station API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: station
+paths:
+  /v1/stations:
+    get:
+      tags:
+      - station
+      summary: Receive the list of stations (call letters, IDs, DMA) for your org.
+      description: Receive the list of stations for your org, each with its madhive station ID, call letters and DMA. Use this to resolve a station's call letters (e.g. MHBND) to the 28-char station ID required by the campaign API. Optionally filter by call_letters to narrow the results.
+      operationId: getStations
+      parameters:
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      - in: query
+        name: page_size
+        description: number of stations per page (default 100, max 10000)
+        required: false
+        schema:
+          type: integer
+          default: 100
+          maximum: 10000
+      - in: query
+        name: offset
+        description: page number for pagination (0-based)
+        required: false
+        schema:
+          type: integer
+      - in: query
+        name: page_token
+        description: token for cursor-based pagination
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: call_letters
+        description: filter by station call letters (exact match, case-sensitive)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationListResponse'
+              examples:
+                response:
+                  value:
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      taskId: '14158884487309867565'
+                    stations:
+                    - id: R3CjYmYo54MuZGuXgv4sqyalXCMB
+                      name: MHBND Station
+                      callLetters: MHBND
+                      dmaId: 501
+                      status: READY
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+components:
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+  schemas:
+    StationListResponse:
+      type: object
+      required:
+      - transaction
+      - stations
+      properties:
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        stations:
+          type: array
+          items:
+            $ref: '#/components/schemas/StationListItem'
+          description: list of stations
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    Pagination:
+      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      readOnly: true
+      required:
+      - pageSize
+      - offset
+      - pageToken
+      - totalRecords
+      type: object
+      properties:
+        pageSize:
+          type: integer
+          format: int32
+          description: Number of items per page
+          example: 100
+        offset:
+          type: integer
+          format: int32
+          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
+
+            '
+          example: 1
+        pageToken:
+          type: string
+          description: Opaque token for retrieving the next page of results
+          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
+        totalRecords:
+          type: integer
+          format: int32
+          description: Total number of records available
+          example: 500
+    StationListItem:
+      type: object
+      required:
+      - id
+      - callLetters
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          description: madhive station id (28-char key required by the campaign API)
+          example: R3CjYmYo54MuZGuXgv4sqyalXCMB
+        name:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: station name
+          example: MHBND Station
+        callLetters:
+          type: string
+          description: station call letters
+          example: MHBND
+        dmaId:
+          type: integer
+          format: int64
+          x-go-type-skip-optional-pointer: true
+          description: DMA (designated market area) id for the station
+          example: 501
+        status:
+          $ref: '#/components/schemas/Status'
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  responses:
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

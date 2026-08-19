@@ -1,0 +1,42 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive Search Audiences API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "search_audiences",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ability to search for segments and audiences by expression for creating a custom audience. Returns back active segments and audiences related to that search.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api2.madhive.com/api/v1/audiences/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Ability to search for segments and audiences by expression for creating a custom audience. Returns back active segments and audiences related to that search."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,52 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive Get Agency By ID API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "get_agency_by_id",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Send an Agency ID and receive back agency details including name and external ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api2.madhive.com/api/v1/agencies/:id",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "resource id"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Send an Agency ID and receive back agency details including name and external ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

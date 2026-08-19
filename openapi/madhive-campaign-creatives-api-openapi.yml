@@ -1,0 +1,223 @@
+openapi: 3.2.0
+info:
+  title: Madhive campaign creatives API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: campaign creatives
+paths:
+  /v1/campaigns/{id}/creatives:
+    get:
+      tags:
+      - campaign creatives
+      summary: Receive all creative flights for a campaign
+      description: Get all creative flights associated with line items under a campaign
+      operationId: getCreativesByCampaignId
+      parameters:
+      - name: id
+        in: path
+        description: campaign id
+        required: true
+        x-oapi-codegen-extra-tags:
+          validate: required,min=28,max=28
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CampaignCreativeFlightResponse'
+              examples:
+                response:
+                  value:
+                  - creativeId: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+                    lineItemId: pdzKDktfwIV3FI7R6gHEbg32tpgl
+                    startDate: '2030-01-02T15:04:00Z'
+                    endDate: '2030-10-02T15:04:00Z'
+                    weight: 50
+                    status: READY
+                  - creativeId: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+                    lineitemId: pdzKDktfwIV3FI7R6gHEbg32tpgl
+                    startDate: '2030-01-02T15:04:00Z'
+                    endDate: '2030-10-02T15:04:00Z'
+                    weight: 50
+                    status: READY
+        '400':
+          $ref: '#/components/responses/400InvalidID'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+components:
+  schemas:
+    Date:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: required,datetime=2006-01-02T15:04:05Z07:00
+      description: 2020-06-18T17:24:53Z is a basic example of an RFC 3339 timestamp, which refers to June 18, 2020 5:24:53 PM in UTC
+      example: '2030-01-10T23:00:00Z'
+    CampaignCreativeFlightResponse:
+      type: object
+      required:
+      - creativeId
+      - lineItemId
+      - startDate
+      - endDate
+      - weight
+      - status
+      properties:
+        creativeId:
+          type: string
+          description: madhive creative id
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+        lineItemId:
+          type: string
+          description: madhive line item id
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+        startDate:
+          $ref: '#/components/schemas/Date'
+        endDate:
+          $ref: '#/components/schemas/Date'
+        weight:
+          type: integer
+          format: uint32
+          description: percentage weight of the creative
+          minimum: 1
+          maximum: 10000
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,max=10000
+        status:
+          $ref: '#/components/schemas/Status'
+          description: status of the entity
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+        companionBannerIds:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          items:
+            type: string
+          description: List of display creative IDs attached as companion banners on this flight. Only present for audio creative flights with companion banners.
+          example:
+          - HPAKbbHX1IZFeeAh1K7dSogRUvgF
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

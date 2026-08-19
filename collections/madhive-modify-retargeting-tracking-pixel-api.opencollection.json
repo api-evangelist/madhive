@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive modify retargeting tracking pixel API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "modify retargeting tracking pixel",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ability to edit tracking pixel retargeting segments inclusive of the name, notes and tracking pixel IDs.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api2.madhive.com/api/v1/retargeting/trackingpixels/:id",
+            "headers": [
+              {
+                "name": "X-Cloud-Trace-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "retargeting tracking pixel id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Ability to edit tracking pixel retargeting segments inclusive of the name, notes and tracking pixel IDs."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

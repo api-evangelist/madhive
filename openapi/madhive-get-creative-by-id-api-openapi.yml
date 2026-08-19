@@ -1,0 +1,490 @@
+openapi: 3.2.0
+info:
+  title: Madhive Get Creative By ID API
+  version: 1.0.0
+  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+servers:
+- url: https://api2.madhive.com/api
+  description: apigee
+tags:
+- name: get_creative_by_id
+paths:
+  /v1/creatives/{id}:
+    get:
+      tags:
+      - get_creative_by_id
+      summary: Send creative ID and receive details
+      description: Send creative ID and receive details
+      operationId: getCreativeById
+      parameters:
+      - name: id
+        in: path
+        description: creative id
+        required: true
+        x-oapi-codegen-extra-tags:
+          validate: required,min=28,max=28
+        schema:
+          type: string
+      - $ref: '#/components/parameters/X-Cloud-Trace-Context'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreativeResponse'
+              examples:
+                response:
+                  value:
+                    id: HPAKbbHX1IZFeeAh1K7dSogRUvgF
+                    name: my first creative
+                    advertiserId: fwpObxzCpvITV2GspiUc3C5YfprJ
+                    type: CDN
+                    iabCategory: IAB5-5
+                    url: https://api2.madhive.com/api
+                    status: READY
+                    creativeType: VIDEO
+                    previewUrl: https://madhive.com/creative.mp4
+                    transaction:
+                      id: 4af459ff8e1a36b6bb74fb88f1a02477
+                      created: '2030-11-02T15:04:00Z'
+        '400':
+          $ref: '#/components/responses/400InvalidID'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+      security:
+      - oauth2: []
+components:
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+  schemas:
+    CompanionBannerMetadata:
+      type: object
+      description: Read-only metadata for a companion banner attached to an audio creative.
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: madhive creative id of the companion banner
+          example: HPAKbbHX1IZFeeAh1K7dSogRUvgF
+        name:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          description: companion banner creative name
+          example: my banner 300x250
+        width:
+          type: integer
+          format: int32
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          description: banner width in pixels
+          example: 300
+        height:
+          type: integer
+          format: int32
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          description: banner height in pixels
+          example: 250
+        mime:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          description: mime content type of the banner asset
+          example: image/png
+        fileSize:
+          type: integer
+          format: int64
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          description: banner asset file size in bytes
+          example: 123456
+    Creative:
+      type: object
+      required:
+      - name
+      - advertiserId
+      - type
+      - url
+      - iabCategory
+      - updatedBy
+      - lastUpdated
+      - clickThrough
+      properties:
+        id:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: required_with=Status,omitempty,min=28,max=28
+          description: madhive creative id
+          example: HPAKbbHX1IZFeeAh1K7dSogRUvgF
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-isnullable: false
+          x-omitempty: false
+          description: creative name
+          example: my first creative
+        advertiserId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          x-isnullable: false
+          description: advertiser id
+          example: fwpObxzCpvITV2GspiUc3C5YfprJ
+        type:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,oneof=VAST CDN DISPLAY
+          x-isnullable: false
+          x-omitempty: false
+          description: creative type
+          example: CDN
+        iabCategory:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-isnullable: false
+          x-omitempty: false
+          description: taxonomy for advertising
+          example: IAB5-5
+        url:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required_without=DisplayTag
+          x-isnullable: false
+          x-omitempty: false
+          description: vast or cdn location
+          example: https://madhive.com/creative.mp4
+        displayTag:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: required_without=Url
+          description: display tag
+          example: <div style="width:300px;height:250px;">Ad Tag</div>
+        adId:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: ' Ad-ID replaced (ISCI Code) Industry Standard Coding Identification'
+          example: '123456'
+        updatedBy:
+          type: string
+          format: byte
+          description: The id of the user who last modified the creative
+          example: ABcDefghiJKl7812312MnoPQrstU
+        lastUpdated:
+          type: integer
+          format: int64
+          description: The number of seconds in UTC time since Unix epoch
+          example: 1726191001
+        clickThrough:
+          type: string
+          format: uri
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,http_url
+          description: A web link that, when clicked, directs a user to a specific webpage or resource
+          example: https://www.clickthru.com
+        assetValidations:
+          type: array
+          description: list of creative specifications/attributes and validations
+          x-go-type-skip-optional-pointer: true
+          items:
+            $ref: '#/components/schemas/AssetValidation'
+        sendToAcr:
+          type: boolean
+          x-omitempty: false
+          x-go-type-skip-optional-pointer: true
+          description: indicates whether the creative should be sent to ACR (Automatic Content Recognition) like Inscape
+          example: false
+        previewUrl:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          description: Preview link to view the creative without logging into the native platform. Derived from asset_url, vast_url, or h5validator preview. Not stored in database.
+          example: https://preview.madhive.com/creative/HPAKbbHX1IZFeeAh1K7dSogRUvgF
+        creativeType:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          description: Media type derived from creative renditions. Computed at read time, not stored in database. Values - NONE, VIDEO, AUDIO, DISPLAY
+          example: VIDEO
+          enum:
+          - NONE
+          - VIDEO
+          - AUDIO
+          - DISPLAY
+        companionBannerIds:
+          type: array
+          maxItems: 6
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          items:
+            type: string
+            minLength: 28
+            maxLength: 28
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,max=6,unique,dive,min=28,max=28
+          description: List of display creative IDs attached as companion banners. Only applicable to audio creatives. Maximum 6 allowed. Each ID references a display creative belonging to the same advertiser as the audio creative, and no two companion banners share the same dimensions.
+          example:
+          - HPAKbbHX1IZFeeAh1K7dSogRUvgF
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    CreativeLineItemEvent:
+      x-isnullable: false
+      type: object
+      required:
+      - eventType
+      - urls
+      properties:
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        urls:
+          type: array
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,dive,http_url
+          items:
+            type: string
+          description: list of creatives
+          example:
+          - http://www.google.com
+          - http://click.com
+    CreativeResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Creative'
+      - type: object
+        required:
+        - events
+        - transaction
+        - status
+        properties:
+          events:
+            type: array
+            items:
+              $ref: '#/components/schemas/CreativeLineItemEvent'
+            x-oapi-codegen-extra-tags:
+              validate: omitempty,min=1,dive
+            x-omitempty: true
+            description: list of events
+            example:
+            - eventType: IMPRESSION
+              urls:
+              - http://www.google.com
+              - http://click.com
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          status:
+            $ref: '#/components/schemas/Status'
+          companionBannerMetadata:
+            type: array
+            x-go-type-skip-optional-pointer: true
+            x-omitempty: true
+            items:
+              $ref: '#/components/schemas/CompanionBannerMetadata'
+            description: Read-only metadata for attached companion banners. Present only for audio creatives with companion banners.
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    AssetValidation:
+      type: object
+      required:
+      - attribute
+      - validations
+      properties:
+        attribute:
+          $ref: '#/components/schemas/AssetValidationAttribute'
+        validations:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetValidationResult'
+    AssetValidationResult:
+      type: object
+      required:
+      - publisher
+      - valid
+      - message
+      - detailsShort
+      - detailsLong
+      properties:
+        publisher:
+          type: string
+          description: The publisher setting the criteria for these validations
+          example: HULU
+        valid:
+          type: boolean
+          description: indicates whether this asset is valid given the publisher's criteria
+        message:
+          type: string
+          description: human-readable message
+          example: Asset Validations Standards acceptable durations 15, 30 or 60 seconds
+        detailsShort:
+          type: string
+          description: short human-readable message
+          example: Exceeds 30s
+        detailsLong:
+          type: string
+          description: long human-readable message
+          example: Your creative may not be considered as a 30s asset by some publishers, which may impact cost and scale.
+    AssetValidationAttribute:
+      type: object
+      required:
+      - id
+      - name
+      - value
+      - required
+      properties:
+        id:
+          type: string
+          description: id of the asset
+          example: DURATION
+        name:
+          type: string
+          description: name of the asset
+          example: duration
+        value:
+          type: string
+          description: value of the asset
+          example: 15.00s
+        required:
+          type: boolean
+          description: indicates whether or not this is a required asset
+    EventType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: required,oneof=IMPRESSION CLICK_TRACKER CLICK_THROUGH START FIRST_QUARTILE MIDPOINT_QUARTILE THIRD_QUARTILE COMPLETE
+      enum:
+      - IMPRESSION
+      - CLICK_TRACKER
+      - CLICK_THROUGH
+      - START
+      - FIRST_QUARTILE
+      - MIDPOINT_QUARTILE
+      - THIRD_QUARTILE
+      - COMPLETE
+      description: event type for creative
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api2.madhive.com/oauth/token
+          scopes: {}
+    basicAuth:
+      type: http
+      description: Basic Authentication Not Implemented
+      scheme: basic
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: jwt access token for authentication

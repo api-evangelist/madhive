@@ -1,0 +1,46 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Madhive deactivate publisher group API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "deactivate publisher group",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Archiving a publisher group. Archived publisher groups will not be automatically removed from existing line items, but they will be removed from publisher group lists and can no longer be applied to line items.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api2.madhive.com/api/v1/publishergroups/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "publisher group id"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api2.madhive.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Archiving a publisher group. Archived publisher groups will not be automatically removed from existing line items, but they will be removed from publisher group lists and can no longer be applied to line items."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,493 @@
+{
+  "item": [
+    {
+      "id": "5e127f0f-46e5-4f15-a783-45bf198d2f90",
+      "name": "MCP Protocol",
+      "description": {
+        "content": "Model Context Protocol JSON-RPC endpoints",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5aae8739-e6f5-4419-8830-bc4d51f106e0",
+          "name": "MCP JSON-RPC Endpoint",
+          "request": {
+            "name": "MCP JSON-RPC Endpoint",
+            "description": {
+              "content": "Main endpoint for Model Context Protocol JSON-RPC requests. Supports `tools/list` to discover available tools and `tools/call` to execute specific tools.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api2.madhive.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"<string>\",\n  \"method\": \"<string>\",\n  \"id\": \"<integer>\",\n  \"params\": {\n    \"name\": \"<string>\",\n    \"arguments\": {\n      \"key_0\": false\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "36bdb2ce-14c8-41a3-828c-14335ad1612f",
+              "name": "Successful MCP response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"tools\": [\n      {\n        \"name\": \"get_campaigns\",\n        \"description\": \"Get campaign(s) by ID or list all campaigns\",\n        \"inputSchema\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"id\": {\n              \"type\": \"string\",\n              \"description\": \"Campaign ID (optional)\"\n            },\n            \"page_size\": {\n              \"type\": \"string\",\n              \"description\": \"Number of results per page\"\n            }\n          }\n        }\n      },\n      {\n        \"name\": \"manage_campaign\",\n        \"description\": \"Create, update, or manage campaigns\",\n        \"inputSchema\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"action\": {\n              \"type\": \"string\",\n              \"enum\": [\n                \"create\",\n                \"update\",\n                \"delete\"\n              ]\n            }\n          },\n          \"required\": [\n            \"action\"\n          ]\n        }\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d0521cda-f567-402d-a887-c67c8f434bd1",
+              "name": "Bad Request - Invalid JSON-RPC format or parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"error\": {\n    \"code\": -32602,\n    \"message\": \"Invalid params\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bbe726ff-2c3a-42cc-9dd5-50242a1d49ba",
+              "name": "Unauthorized - Invalid or missing access token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"fault\": {\n    \"faultstring\": \"Invalid access token\",\n    \"detail\": {\n      \"errorcode\": \"oauth.v2.InvalidAccessToken\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a939fb30-d08f-40bd-b88d-af6f27370942",
+              "name": "Not Found - Method or tool not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"error\": {\n    \"code\": -32601,\n    \"message\": \"Method not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "27c7b977-244c-42d7-a317-f9a25f146904",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"error\": {\n    \"code\": -32603,\n    \"message\": \"Internal error\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8bfd0a7a-0e46-4679-ac27-e096c0f66b5c",
+          "name": "MCP SSE Streaming Endpoint",
+          "request": {
+            "name": "MCP SSE Streaming Endpoint",
+            "description": {
+              "content": "Server-Sent Events (SSE) streaming endpoint for real-time MCP protocol communication. Provides streaming responses for long-running operations.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api2.madhive.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "0855e5ef-09e3-4890-acdb-5d1e4534d57c",
+              "name": "SSE stream established",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/event-stream"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/event-stream"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7708d6cb-c09a-4e81-8826-d70f289b8c7f",
+              "name": "Unauthorized - Invalid or missing access token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"fault\": {\n    \"faultstring\": \"string\",\n    \"detail\": {\n      \"errorcode\": \"string\",\n      \"reason\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api2.madhive.com/mcp",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "accessTokenUrl",
+        "value": "https://api2.madhive.com/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "5254e776-f4fc-47ca-a1f7-d9b4b6f8e886",
+    "name": "Madhive MCP MCP Protocol API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Model Context Protocol (MCP) API for programmatic campaign management via Apigee Gateway.\n\n## Authentication\n\nThis API uses **OAuth 2.0** authentication with client credentials grant.\n\n### Getting an Access Token\n\nFirst, obtain an OAuth access token:\n```bash\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials\" \\\n  -d \"client_id=YOUR_CLIENT_ID\" \\\n  -d \"client_secret=YOUR_CLIENT_SECRET\"\n```\n\nResponse:\n```json\n{\n  \"access_token\": \"YOUR_ACCESS_TOKEN\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 1799\n}\n```\n\n### Using the Access Token\n\nInclude the access token in the Authorization header:\n```bash\ncurl -X POST \"https://api2.madhive.com/mcp\" \\\n  -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/list\",\"params\":{}}'\n```\n\n### MCP Protocol\n\nThis API implements the **Model Context Protocol (MCP)** using JSON-RPC 2.0:\n- All requests use JSON-RPC 2.0 format with `jsonrpc`, `id`, `method`, and `params` fields\n- Responses include `jsonrpc`, `id`, and either `result` or `error` fields\n- Primary methods: `tools/list` (discover available tools) and `tools/call` (execute tools)\n\n### Available Tools\n\nThe service provides **22 MCP tools** for campaign management:\n\n**Campaign Management:**\n- `get_campaigns` - List all campaigns or get a specific campaign by ID\n- `get_campaign_details` - Get detailed campaign information including line items and creatives\n- `manage_campaign` - Create, update, or archive campaigns and line items\n\n**Advertiser Management:**\n- `get_advertisers` - List all advertisers or get a specific advertiser by ID\n- `manage_advertiser` - Create, update, or archive advertisers\n\n**Agency Management:**\n- `get_agencies` - List all agencies or get a specific agency by ID\n- `manage_agency` - Create, update, or archive agencies\n\n**Creative Management:**\n- `get_creatives` - List all creatives or get a specific creative by ID\n- `manage_creative` - Create, update, or archive creative assets\n\n**Audience Management:**\n- `get_audiences` - Get audience by ID, search by text query, or list all with optional standard audiences\n- `manage_audience` - Create, update, or archive audience segments\n\n**Publisher Management:**\n- `list_publishers` - List all available publishers\n- `get_publisher_groups` - List all publisher groups or get a specific group by ID\n- `manage_publisher_group` - Create, update, or archive publisher whitelists/groups\n\n**Segment & Retargeting:**\n- `list_segments` - List all segments with pagination support\n- `get_retargeting` - Get retargeting segment information by ID\n\n**Other Tools:**\n- `get_lineitem_info` - Get line item details by ID\n- `get_pixel` - Get pixel tracking information by ID\n- `manage_pixel` - Create or update tracking pixels\n- `list_orgs` - List all organizations\n- `list_metros` - List metro/DMA codes for geographic targeting\n- `list_products` - List available ad products\n\nContact Support:\n Name: API Platform Team\n Email: api-platform@madhive.com",
+      "type": "text/plain"
+    }
+  }
+}
