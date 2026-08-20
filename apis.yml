@@ -31,6 +31,20 @@ tags:
 - Marketing
 - Audiences
 - Campaign Management
+- MCP
+tags_raw:
+- Company
+- Advertising
+- AdTech
+- Connected TV
+- CTV
+- OTT
+- Demand-Side Platform
+- Programmatic Advertising
+- Media
+- Marketing
+- Audiences
+- Campaign Management
 - Model Context Protocol
 apis:
 - aid: >-
@@ -42,7 +56,8 @@ apis:
     — 1 operation(s) for ability to pause a campaign and all of its associated line items and creatives.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags:
+  tags: []
+  tags_raw:
   - Ability to pause a campaign and all of its associated line items and creatives
   properties:
   - type: OpenAPI
@@ -79,6 +94,8 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
+  - Advertiser
+  tags_raw:
   - advertiser
   properties:
   - type: OpenAPI
@@ -95,6 +112,8 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
+  - Agency
+  tags_raw:
   - agency
   properties:
   - type: OpenAPI
@@ -175,6 +194,8 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
+  - Audiences
+  tags_raw:
   - audiences
   properties:
   - type: OpenAPI
@@ -207,6 +228,8 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
+  - Campaign
+  tags_raw:
   - campaign
   properties:
   - type: OpenAPI
@@ -287,6 +310,8 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
+  - Creative
+  tags_raw:
   - creative
   properties:
   - type: OpenAPI
@@ -319,7 +344,8 @@ apis:
   description: The creative_line_item API from MadHive — 1 operation(s) for creative_line_item.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags:
+  tags: []
+  tags_raw:
   - creative_line_item
   properties:
   - type: OpenAPI
@@ -466,7 +492,8 @@ apis:
   description: The get_advertiser_by_id API from MadHive — 1 operation(s) for get_advertiser_by_id.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags:
+  tags: []
+  tags_raw:
   - get_advertiser_by_id
   properties:
   - type: OpenAPI
@@ -482,7 +509,8 @@ apis:
   description: The get_agency_by_id API from MadHive — 1 operation(s) for get_agency_by_id.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags:
+  tags: []
+  tags_raw:
   - get_agency_by_id
   properties:
   - type: OpenAPI
@@ -498,7 +526,8 @@ apis:
   description: The get_audience_by_id API from MadHive — 1 operation(s) for get_audience_by_id.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags:
+  tags: []
+  tags_raw:
   - get_audience_by_id
   properties:
   - type: OpenAPI
@@ -514,7 +543,8 @@ apis:
   description: The get_creative_by_id API from MadHive — 1 operation(s) for get_creative_by_id.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags:
+  tags: []
+  tags_raw:
   - get_creative_by_id
   properties:
   - type: OpenAPI
@@ -530,7 +560,8 @@ apis:
   description: The get_pixel_by_id API from MadHive — 1 operation(s) for get_pixel_by_id.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags:
+  tags: []
+  tags_raw:
   - get_pixel_by_id
   properties:
   - type: OpenAPI
@@ -547,6 +578,8 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
+  - Health
+  tags_raw:
   - health
   properties:
   - type: OpenAPI
@@ -611,6 +644,8 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
+  - Metros
+  tags_raw:
   - metros
   properties:
   - type: OpenAPI
@@ -809,6 +844,8 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
+  - Organization
+  tags_raw:
   - organizations
   properties:
   - type: OpenAPI
@@ -825,6 +862,8 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
+  - Pixel
+  tags_raw:
   - pixel
   properties:
   - type: OpenAPI
@@ -974,7 +1013,8 @@ apis:
     campaign by its unique identifier.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags:
+  tags: []
+  tags_raw:
   - retrieve a campaign by its unique identifier
   properties:
   - type: OpenAPI
@@ -992,7 +1032,8 @@ apis:
     line item by its unique identifier.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags:
+  tags: []
+  tags_raw:
   - retrieve a line item by its unique identifier
   properties:
   - type: OpenAPI
@@ -1008,7 +1049,8 @@ apis:
   description: The search_audiences API from MadHive — 1 operation(s) for search_audiences.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags:
+  tags: []
+  tags_raw:
   - search_audiences
   properties:
   - type: OpenAPI
@@ -1025,6 +1067,8 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
+  - Segments
+  tags_raw:
   - segments
   properties:
   - type: OpenAPI
@@ -1041,6 +1085,8 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
+  - Station
+  tags_raw:
   - station
   properties:
   - type: OpenAPI
@@ -1056,7 +1102,8 @@ apis:
   description: The update_audience API from MadHive — 1 operation(s) for update_audience.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags:
+  tags: []
+  tags_raw:
   - update_audience
   properties:
   - type: OpenAPI
