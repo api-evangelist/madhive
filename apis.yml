@@ -11,6 +11,18 @@ description: 'Madhive is a New York-based advertising technology company that op
   publisher groups, tracking pixels, products, metros and optimization templates —
   alongside a hosted Model Context Protocol (MCP) server that exposes the same campaign-management
   surface to AI assistants such as Claude and Gemini over JSON-RPC 2.0 with OAuth 2.0.'
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://cdn.prod.website-files.com/66f4642913b966635efd9666/675750501cfd31ca8779c1a9_og%20image.jpg
 url: https://raw.githubusercontent.com/api-evangelist/madhive/refs/heads/main/apis.yml
 x-type: company
@@ -1171,6 +1183,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/madhive-capability-edges.yml
+  name: MadHive Business Capability Map
 - type: AgenticAccess
   url: agentic-access/madhive-agentic-access.yml
 - type: DomainSecurity
