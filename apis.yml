@@ -240,7 +240,7 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
-  - campaign
+  - Campaign
   tags_raw:
   - campaign
   properties:
@@ -322,7 +322,7 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
-  - creative
+  - Creative
   tags_raw:
   - creative
   properties:
@@ -356,7 +356,8 @@ apis:
   description: The creative_line_item API from MadHive — 1 operation(s) for creative_line_item.
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
-  tags: []
+  tags:
+  - Creative Line Item
   tags_raw:
   - creative_line_item
   properties:
@@ -656,7 +657,7 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
-  - metros
+  - Metros
   tags_raw:
   - metros
   properties:
@@ -1097,7 +1098,7 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
-  - station
+  - Station
   tags_raw:
   - station
   properties:
