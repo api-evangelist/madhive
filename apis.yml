@@ -121,7 +121,7 @@ apis:
   humanURL: https://developer.madhive.com/
   baseURL: https://api2.madhive.com/api
   tags:
-  - Advertiser
+  - Advertisers
   tags_raw:
   - advertiser
   properties:
