@@ -1,0 +1,154 @@
+slug: madhive
+provider: MadHive
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Media, Entertainment & Telecom Content
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 14
+edges:
+- tag: creative
+  spec_file: madhive-creative-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.85
+  evidence: POST /v1/creatives createCreative  "Uploading a creative via VAST and CDN. Ability to add
+    in a clickthrough."
+  reason: Uploading and listing ad creatives (VAST) is squarely creative onboarding within Ad Trafficking
+    & Operations.
+- tag: creative_line_item
+  spec_file: madhive-creative-line-item-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.85
+  evidence: createCreativeLineItem  "Assigning a creative to a line item and adding flight date, weights
+    and third party tracking pixels."
+  reason: Assigning creatives to line items with flight dates, weights and tracking pixels is classic
+    ad trafficking.
+- tag: campaign
+  spec_file: madhive-campaign-api-openapi.yml
+  capability_id: BC-3760.20
+  capability_id_l1: BC-3760
+  capability_name: Direct Ad Sales Management
+  confidence: 0.8
+  evidence: POST /v1/campaigns createCampaign  "Creating a campaign inclusive of Campaign Name, Advertiser,
+    Agency and Station (if applicable)."
+  reason: Madhive is a CTV DSP; the campaign object with advertiser/agency/station and line items is advertising
+    sales/campaign management. Best fit is Advertising Sales & Operations; direct-sales/insertion-order
+    style campaign setup, though trafficking is also plausible — hence 0.8.
+- tag: campaign creatives
+  spec_file: madhive-campaign-creatives-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.8
+  evidence: GET /v1/campaigns/{id}/creatives  "Receive all creative flights for a campaign"
+  reason: Creative flights on a campaign are ad trafficking artefacts (creative onboarding and scheduling
+    across break streams).
+- tag: creative flight activation
+  spec_file: madhive-creative-flight-activation-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.8
+  evidence: POST /v1/creatives/{cId}/lineitems/{id}/activation  "Ability to activate a single creative
+    flight on a line item."
+  reason: Activating a creative flight on a line item is ad trafficking/creative scheduling.
+- tag: campaign activation
+  spec_file: madhive-campaign-activation-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.75
+  evidence: POST /v1/campaigns/{id}/activation  "Ability to set a campaign/line items live. If the start
+    date is in the past it will start with the current time + 10 minutes."
+  reason: Setting a campaign/line items live is ad trafficking and operations — activating delivery of
+    ad inventory.
+- tag: campaign line items
+  spec_file: madhive-campaign-line-items-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.75
+  evidence: GET /v1/campaigns/{id}/lineitems  "Receive all campaign or line item details..."; schemas
+    Targeting, FrequencyCap, GeoFence, LineItemPace, ExcludeDayparting
+  reason: Line items with targeting, frequency caps, dayparting and pacing are ad decisioning/trafficking
+    configuration within advertising operations.
+- tag: create new line item
+  spec_file: madhive-create-new-line-item-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.75
+  evidence: POST /v1/lineitems  "Creating a line item inclusive of overview and targeting parameters...
+    Start/End Dates, Product, Impressions/Budget, eCPM"
+  reason: Creating line items with impressions/budget, eCPM and targeting is advertising inventory booking
+    and trafficking within ad sales operations.
+- tag: deactivate creative
+  spec_file: madhive-deactivate-creative-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.75
+  evidence: deleteCreativeById — "Ability to archive a creative. This removes the creatives from being
+    added to line items moving forward"
+  reason: Creative asset lifecycle tied to ad line items maps directly to Ad Trafficking & Operations,
+    which covers onboarding of creatives and their scheduling into break structures.
+- tag: get_creative_by_id
+  spec_file: madhive-get-creative-by-id-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.75
+  evidence: getCreativeById — "Send creative ID and receive details"; schemas Creative, CreativeLineItemEvent,
+    AssetValidation, CompanionBannerMetadata
+  reason: Creative records with asset validation and line-item events are the creative onboarding/trafficking
+    surface described by Ad Trafficking & Operations.
+- tag: deactivate creative line item
+  spec_file: madhive-deactivate-creative-line-item-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.72
+  evidence: DELETE /v1/creatives/{cId}/lineitems/{id}/activation — "Ability to pause a single creative
+    flight on a line item"
+  reason: Pausing a creative flight on a line item is ad trafficking/flighting control within the ad operations
+    capability.
+- tag: modify creative
+  spec_file: madhive-modify-creative-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.72
+  evidence: PATCH /v1/creatives/{id} — "update creative name, advertiser, category, ISCI code, click through,
+    and if uploaded via third party can update the tag"
+  reason: Creative record maintenance including ISCI code and third-party ad tags is squarely creative
+    onboarding within ad trafficking and operations.
+- tag: modify creative line item
+  spec_file: madhive-modify-creative-line-item-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.72
+  evidence: PUT /v1/creatives/{cId}/lineitems/{id} — "Editing creative scheduling. Unable to edit the
+    start date if it's live and in the past."
+  reason: Scheduling of creatives against line items is spot scheduling / creative flighting, i.e. ad
+    trafficking and operations.
+- tag: line item activation
+  spec_file: madhive-line-item-activation-api-openapi.yml
+  capability_id: BC-3760.40
+  capability_id_l1: BC-3760
+  capability_name: Ad Trafficking & Operations
+  confidence: 0.7
+  evidence: POST /v1/campaigns/{cid}/lineitems/{id}/activation — "Ability to set a line items live. If
+    the start date is in the past it will start with the current time + 10 minutes."
+  reason: Setting an ad line item live is flight activation/scheduling of ad delivery, which is ad trafficking
+    and operations.
