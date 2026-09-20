@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 14
+edge_count: 37
 edges:
 - tag: creative
   spec_file: madhive-creative-api-openapi.yml
@@ -33,6 +33,28 @@ edges:
     and third party tracking pixels."
   reason: Assigning creatives to line items with flight dates, weights and tracking pixels is classic
     ad trafficking.
+- tag: modify campaign
+  spec_file: madhive-modify-campaign-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.85
+  evidence: PUT /v1/campaigns/{id} — 'Editing any attribute of a campaign. Unable to edit if the campaign
+    is completed.'
+  reason: Editing advertising campaigns on a CTV/OTT demand-side platform is paid-media/digital marketing
+    campaign management.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: modify line item
+  spec_file: madhive-modify-line-item-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.85
+  evidence: PUT /v1/lineitems/{id} — 'Editing any attribute of a line item... Unable to edit targeting
+    if the campaign is completed.' with schemas GeoFence, FrequencyCap, Targeting
+  reason: Line-item targeting, frequency caps and geofencing are core paid-media buying controls, i.e.
+    digital marketing management.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: campaign
   spec_file: madhive-campaign-api-openapi.yml
   capability_id: BC-3760.20
@@ -62,6 +84,47 @@ edges:
   evidence: POST /v1/creatives/{cId}/lineitems/{id}/activation  "Ability to activate a single creative
     flight on a line item."
   reason: Activating a creative flight on a line item is ad trafficking/creative scheduling.
+- tag: deactivate campaign
+  spec_file: madhive-deactivate-campaign-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.8
+  evidence: DELETE /v1/campaigns/{id} — 'Ability to archive a campaign'
+  reason: Campaign lifecycle management on a CTV/OTT demand-side platform is paid-media campaign execution,
+    squarely digital marketing management.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: deactivate retargeting segment
+  spec_file: madhive-deactivate-retargeting-segment-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.8
+  evidence: DELETE /v1/retargeting/{id} — 'Ability to archive a retargeting segment. This removes the
+    retargeting segment from being added to line items moving forward'
+  reason: Retargeting segments are an explicitly digital paid-media targeting construct applied to line
+    items, clearly digital marketing management.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: modify retargeting campaign
+  spec_file: madhive-modify-retargeting-campaign-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.8
+  evidence: PUT /v1/retargeting/campaigns/{id} — 'Ability to edit campaign retargeting segments inclusive
+    of the name, notes and campaign IDs.'
+  reason: Managing retargeting segments for advertising campaigns is a digital/paid-media marketing capability.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: modify retargeting creative
+  spec_file: madhive-modify-retargeting-creative-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.8
+  evidence: PUT /v1/retargeting/creatives/{id} — 'Ability to edit creative retargeting segments inclusive
+    of the name, notes and creative IDs.'
+  reason: Creative-level retargeting segment configuration is digital marketing/paid-media audience targeting.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: campaign activation
   spec_file: madhive-campaign-activation-api-openapi.yml
   capability_id: BC-3760.40
@@ -112,6 +175,98 @@ edges:
     AssetValidation, CompanionBannerMetadata
   reason: Creative records with asset validation and line-item events are the creative onboarding/trafficking
     surface described by Ad Trafficking & Operations.
+- tag: modify retargeting line item
+  spec_file: madhive-modify-retargeting-line-item-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: PUT /v1/retargeting/lineitems/{id} — "Ability to edit a line item retargeting segment inclusive
+    of name, notes and line item IDs."
+  reason: Editing retargeting audience segments tied to ad line items in a CTV demand-side platform is
+    paid-media/digital advertising execution, which maps to Digital Marketing Management. No ambiguity
+    that this is advertising rather than a technical utility.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: modify retargeting tracking pixel
+  spec_file: madhive-modify-retargeting-tracking-pixel-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: updateRetargetingTrackingPixel — "Ability to edit tracking pixel retargeting segments inclusive
+    of the name, notes and tracking pixel IDs."
+  reason: Tracking-pixel-based retargeting segments are digital advertising audience mechanics (paid media
+    / marketing automation), so Digital Marketing Management is the honest mapping.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: retargeting campaign
+  spec_file: madhive-retargeting-campaign-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: POST /v1/retargeting/campaigns createRetargetingCampaign — "Ability to create a campaign retargeting"
+  reason: Creating campaign-based retargeting audiences in a DSP is digital advertising campaign execution,
+    mapping to Digital Marketing Management.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: retargeting line item
+  spec_file: madhive-retargeting-line-item-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: POST /v1/retargeting/lineitems createRetargetingLineItem — "Ability to create a line item
+    for retargeting"
+  reason: Line-item retargeting segment creation in an ad DSP is paid-media/digital advertising execution
+    → Digital Marketing Management.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: retargeting tracking pixel
+  spec_file: madhive-retargeting-tracking-pixel-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: POST /v1/retargeting/trackingpixels — "Ability to create a tracking pixel for retargeting"
+  reason: Creating retargeting tracking pixels is paid-media/digital advertising instrumentation used
+    to build retargeting audiences — squarely digital marketing execution rather than any technical plumbing.
+    Mapped to Digital Marketing Management (paid media, marketing automation); not product telemetry,
+    since the pixel serves ad retargeting, not the vendor's own product analytics.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: retrieve a campaign by its unique identifier
+  spec_file: madhive-retrieve-a-campaign-by-its-unique-identifier-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: GET /v1/campaigns/{id} getCampaignById — "Send campaign ID and receive campaign details";
+    schema Campaign
+  reason: Advertising campaign records in a CTV/OTT demand-side platform; retrieving campaign details
+    is media campaign management, i.e. digital/paid-media marketing execution. Some ambiguity between
+    Demand Generation and Digital Marketing, so confidence held below 0.8.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: Ability to pause a campaign and all of its associated line items and creatives
+  spec_file: madhive-ability-to-pause-a-campaign-and-all-of-its-associated-line-items-and-creatives-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.72
+  evidence: DELETE /v1/campaigns/{id}/activation deactivateCampaignById — "Ability to pause a campaign
+    and all of its associated line items and creatives"
+  reason: Runtime control of an advertising campaign's activation state on a CTV demand-side platform
+    — paid media campaign execution, i.e. digital marketing management. Could arguably sit under demand
+    generation campaigns, hence not maximal confidence.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: Ability to pause a line item
+  spec_file: madhive-ability-to-pause-a-line-item-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.72
+  evidence: DELETE /v1/campaigns/{cid}/lineitems/{id}/activation deactivateLineItemById — "Ability to
+    pause a line item and all of its creatives"
+  reason: Pausing a media buy line item and its creatives within a campaign is paid-media execution control
+    on the DSP, mapping to digital marketing management; sub-capability choice between paid media and
+    demand generation is somewhat ambiguous.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: deactivate creative line item
   spec_file: madhive-deactivate-creative-line-item-api-openapi.yml
   capability_id: BC-3760.40
@@ -142,6 +297,84 @@ edges:
     start date if it's live and in the past."
   reason: Scheduling of creatives against line items is spot scheduling / creative flighting, i.e. ad
     trafficking and operations.
+- tag: pixel
+  spec_file: madhive-pixel-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.72
+  evidence: POST /v1/pixels createPixel — "Creating a tracking pixel"
+  reason: Creating and updating advertising tracking pixels is digital marketing instrumentation for conversion/audience
+    tracking in an ad platform, mapping to Digital Marketing Management rather than product telemetry
+    (this is advertiser-side ad tracking, not the vendor's own product analytics).
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: retrieve a line item by its unique identifier
+  spec_file: madhive-retrieve-a-line-item-by-its-unique-identifier-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.72
+  evidence: GET /v1/lineitems/{id} — "Send line item ID and receive line item details"; schemas LineItem,
+    Targeting, FrequencyCap, GeoFence, ExcludeDayparting
+  reason: Line items with targeting, frequency caps, geo-fencing and dayparting are media-buying constructs
+    in an ad platform — paid media execution under Digital Marketing Management. Not sales order/quote
+    management despite the 'line item' homograph, since the schemas are ad-targeting objects.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: audiences
+  spec_file: madhive-audiences-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: '"Using segments and audiences to create a new custom audience with AND/OR/NOT boolean logic.
+    Custom audiences can then be applied to line items"'
+  reason: Audience building for ad targeting within a demand-side platform is paid-media/digital marketing
+    targeting, not customer master data. Mapped to Digital Marketing Management.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: contextual segments
+  spec_file: madhive-contextual-segments-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: '"List available contextual segments for targeting and avoidance"'
+  reason: Contextual targeting segments are used to target/exclude ad inventory in paid media buying;
+    maps to Digital Marketing Management.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: deactivate audience
+  spec_file: madhive-deactivate-audience-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: DELETE /v1/audiences/{id} — 'Ability to archive an audience. The archived audience will not
+    be removed from any line items, just removed from lists moving forward'
+  reason: Audiences here are targeting segments applied to line items in a DSP, so lifecycle management
+    of them is part of paid-media/digital marketing execution. Slight ambiguity with customer segmentation,
+    hence 0.7.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: deactivate publisher group
+  spec_file: madhive-deactivate-publisher-group-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: DELETE /v1/publishergroups/{id} — 'Archiving a publisher group. Archived publisher groups
+    will not be automatically removed from existing line items'
+  reason: Publisher groups define the inventory/supply targeting applied to line items in the DSP, part
+    of paid media buying setup under digital marketing management.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: get_audience_by_id
+  spec_file: madhive-get-audience-by-id-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: GET /v1/audiences/{id} getAudienceById 'Send audience ID and receive details' with schemas
+    Audience, CompositionType, AudienceBoolExp
+  reason: Audience definitions (with composition expressions) are ad-targeting segments used for media
+    activation in the DSP, part of digital/paid media management.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: line item activation
   spec_file: madhive-line-item-activation-api-openapi.yml
   capability_id: BC-3760.40
@@ -152,3 +385,25 @@ edges:
     the start date is in the past it will start with the current time + 10 minutes."
   reason: Setting an ad line item live is flight activation/scheduling of ad delivery, which is ad trafficking
     and operations.
+- tag: retargeting segment retrieval
+  spec_file: madhive-retargeting-segment-retrieval-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: getRetargetingSegById — "Send a retargeting segment ID of any type (campaign, line item, tracking
+    pixel or creative) and retrieve all retargeting segment information."
+  reason: Retrieval of advertising retargeting segments across campaign/line item/pixel/creative types
+    is digital advertising audience management, mapped to Digital Marketing Management.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: update impression goal
+  spec_file: madhive-update-impression-goal-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: PATCH /v1/lineitems/{id}/impression-goal updateLineItemImpression — "Editing line item impression
+    goal amounts"
+  reason: Editing impression goals on ad line items is in-flight media campaign management/pacing within
+    a DSP — digital paid-media execution. Not a subscription or financial capability despite 'goal amounts'.
+  recovered_from: sweep-20260828T235257Z-edges.json
