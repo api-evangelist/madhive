@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Madhive media trust status API
   version: 1.0.0
-  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+  description: The Madhive API provides a comprehensive interface for digital advertising clients and services.
 servers:
 - url: https://api2.madhive.com/api
   description: apigee
@@ -13,7 +13,7 @@ paths:
     post:
       tags:
       - media trust status
-      summary: Batch-check the Media Trust (malware scan) status of creatives.
+      summary: Batch-check the Media Trust (malware scan) status of creatives
       description: Given a batch of MadHive creative IDs, returns each creative's Media Trust malware-scan verdict. Creatives are scanned automatically once pushed to the MadHive Creative Library; this is a read-only status check over that scan result, not a submission endpoint.
       operationId: getCreativesMediaTrustStatus
       parameters:
@@ -61,16 +61,29 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   schemas:
+    MediaTrustStatusResponse:
+      type: object
+      required:
+      - results
+      - transaction
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaTrustStatusResult'
+          description: one result per requested creative id, in request order
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     ErrorResponse:
       type: object
       required:
@@ -94,19 +107,28 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
-    MediaTrustStatusResponse:
+    Transaction:
       type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
       required:
-      - results
-      - transaction
+      - id
+      - taskId
+      - created
       properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MediaTrustStatusResult'
-          description: one result per requested creative id, in request order
-        transaction:
-          $ref: '#/components/schemas/Transaction'
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
     MediaTrustStatusResult:
       type: object
       required:
@@ -143,46 +165,6 @@ components:
           items:
             $ref: '#/components/schemas/MediaTrustProblem'
           description: malware/policy issues detected by Media Trust, if any
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-    MediaTrustProblem:
-      type: object
-      properties:
-        name:
-          type: string
-          description: name of the detected malware/outbreak
-          example: EICAR-Test
-        type:
-          type: string
-          description: type/category of the detected issue
-          example: malware
-        scanId:
-          type: string
-          description: the Media Trust scan id that reported this problem
-        reportedAt:
-          type: string
-          format: date-time
-          description: when this problem was reported
     MediaTrustStatusRequest:
       type: object
       required:
@@ -202,15 +184,33 @@ components:
           example:
           - HPAKbbHX1IZFeeAh1K7dSogRUvgF
           - tfgGrw2ZRrinUTDwAJVW7ygrvoHx
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
+    MediaTrustProblem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of the detected malware/outbreak
+          example: EICAR-Test
+        type:
+          type: string
+          description: type/category of the detected issue
+          example: malware
+        scanId:
+          type: string
+          description: the Media Trust scan id that reported this problem
+        reportedAt:
+          type: string
+          format: date-time
+          description: when this problem was reported
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   responses:
     401Unauthorized:
       description: Unauthorized

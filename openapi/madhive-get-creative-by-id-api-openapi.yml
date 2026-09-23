@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Madhive Get Creative By ID API
   version: 1.0.0
-  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+  description: The Madhive API provides a comprehensive interface for digital advertising clients and services.
 servers:
 - url: https://api2.madhive.com/api
   description: apigee
@@ -14,7 +14,6 @@ paths:
       tags:
       - get_creative_by_id
       summary: Send creative ID and receive details
-      description: Send creative ID and receive details
       operationId: getCreativeById
       parameters:
       - name: id
@@ -74,16 +73,126 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   schemas:
+    CreativeResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Creative'
+      - type: object
+        required:
+        - events
+        - transaction
+        - status
+        properties:
+          events:
+            type: array
+            items:
+              $ref: '#/components/schemas/CreativeLineItemEvent'
+            x-oapi-codegen-extra-tags:
+              validate: omitempty,min=1,dive
+            x-omitempty: true
+            description: list of events
+            example:
+            - eventType: IMPRESSION
+              urls:
+              - http://www.google.com
+              - http://click.com
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          status:
+            $ref: '#/components/schemas/Status'
+          companionBannerMetadata:
+            type: array
+            x-go-type-skip-optional-pointer: true
+            x-omitempty: true
+            items:
+              $ref: '#/components/schemas/CompanionBannerMetadata'
+            description: Read-only metadata for attached companion banners. Present only for audio creatives with companion banners.
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    AssetValidationAttribute:
+      type: object
+      required:
+      - id
+      - name
+      - value
+      - required
+      properties:
+        id:
+          type: string
+          description: id of the asset
+          example: DURATION
+        name:
+          type: string
+          description: name of the asset
+          example: duration
+        value:
+          type: string
+          description: value of the asset
+          example: 15.00s
+        required:
+          type: boolean
+          description: indicates whether or not this is a required asset
     CompanionBannerMetadata:
       type: object
       description: Read-only metadata for a companion banner attached to an audio creative.
@@ -129,6 +238,37 @@ components:
           x-omitempty: true
           description: banner asset file size in bytes
           example: 123456
+    AssetValidation:
+      type: object
+      required:
+      - attribute
+      - validations
+      properties:
+        attribute:
+          $ref: '#/components/schemas/AssetValidationAttribute'
+        validations:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetValidationResult'
+    CreativeLineItemEvent:
+      x-isnullable: false
+      type: object
+      required:
+      - eventType
+      - urls
+      properties:
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        urls:
+          type: array
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,dive,http_url
+          items:
+            type: string
+          description: list of creatives
+          example:
+          - http://www.google.com
+          - http://click.com
     Creative:
       type: object
       required:
@@ -264,130 +404,6 @@ components:
           description: List of display creative IDs attached as companion banners. Only applicable to audio creatives. Maximum 6 allowed. Each ID references a display creative belonging to the same advertiser as the audio creative, and no two companion banners share the same dimensions.
           example:
           - HPAKbbHX1IZFeeAh1K7dSogRUvgF
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    CreativeLineItemEvent:
-      x-isnullable: false
-      type: object
-      required:
-      - eventType
-      - urls
-      properties:
-        eventType:
-          $ref: '#/components/schemas/EventType'
-        urls:
-          type: array
-          x-oapi-codegen-extra-tags:
-            validate: required,min=1,dive,http_url
-          items:
-            type: string
-          description: list of creatives
-          example:
-          - http://www.google.com
-          - http://click.com
-    CreativeResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Creative'
-      - type: object
-        required:
-        - events
-        - transaction
-        - status
-        properties:
-          events:
-            type: array
-            items:
-              $ref: '#/components/schemas/CreativeLineItemEvent'
-            x-oapi-codegen-extra-tags:
-              validate: omitempty,min=1,dive
-            x-omitempty: true
-            description: list of events
-            example:
-            - eventType: IMPRESSION
-              urls:
-              - http://www.google.com
-              - http://click.com
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-          status:
-            $ref: '#/components/schemas/Status'
-          companionBannerMetadata:
-            type: array
-            x-go-type-skip-optional-pointer: true
-            x-omitempty: true
-            items:
-              $ref: '#/components/schemas/CompanionBannerMetadata'
-            description: Read-only metadata for attached companion banners. Present only for audio creatives with companion banners.
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-    AssetValidation:
-      type: object
-      required:
-      - attribute
-      - validations
-      properties:
-        attribute:
-          $ref: '#/components/schemas/AssetValidationAttribute'
-        validations:
-          type: array
-          items:
-            $ref: '#/components/schemas/AssetValidationResult'
     AssetValidationResult:
       type: object
       required:
@@ -416,29 +432,6 @@ components:
           type: string
           description: long human-readable message
           example: Your creative may not be considered as a 30s asset by some publishers, which may impact cost and scale.
-    AssetValidationAttribute:
-      type: object
-      required:
-      - id
-      - name
-      - value
-      - required
-      properties:
-        id:
-          type: string
-          description: id of the asset
-          example: DURATION
-        name:
-          type: string
-          description: name of the asset
-          example: duration
-        value:
-          type: string
-          description: value of the asset
-          example: 15.00s
-        required:
-          type: boolean
-          description: indicates whether or not this is a required asset
     EventType:
       type: string
       x-isnullable: false
@@ -455,23 +448,29 @@ components:
       - THIRD_QUARTILE
       - COMPLETE
       description: event type for creative
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

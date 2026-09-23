@@ -2,19 +2,18 @@ openapi: 3.2.0
 info:
   title: Madhive Audiences API
   version: 1.0.0
-  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+  description: The Madhive API provides a comprehensive interface for digital advertising clients and services.
 servers:
 - url: https://api2.madhive.com/api
   description: apigee
 tags:
-- name: audiences
+- name: Audiences
 paths:
   /v1/audiences:
     get:
       tags:
-      - audiences
+      - Audiences
       summary: Receive the list of custom and standard audiences with IDs
-      description: Receive the list of custom and standard audiences with IDs
       operationId: getAudiencesByOrg
       parameters:
       - $ref: '#/components/parameters/X-Cloud-Trace-Context'
@@ -81,8 +80,8 @@ paths:
       - oauth2: []
     post:
       tags:
-      - audiences
-      summary: Using segments and audiences to create a new custom audience with AND/OR/NOT boolean logic. Custom audiences can then be applied to line items in create/edit line item.
+      - Audiences
+      summary: Using segments and audiences to create a new custom audience with AND/OR/NOT…
       description: Using segments and audiences to create a new custom audience with AND/OR/NOT boolean logic. Custom audiences can then be applied to line items in create/edit line item.
       operationId: createAudience
       requestBody:
@@ -136,95 +135,7 @@ paths:
       security:
       - oauth2: []
 components:
-  responses:
-    400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    AudienceListResponse:
-      x-isnullable: false
-      type: object
-      required:
-      - transaction
-      - audiences
-      properties:
-        audiences:
-          type: array
-          items:
-            $ref: '#/components/schemas/AudienceResponse'
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     Pagination:
       x-go-type-skip-optional-pointer: true
       x-isnullable: false
@@ -257,6 +168,82 @@ components:
           format: int32
           description: Total number of records available
           example: 500
+    AudienceRequest:
+      x-isnullable: false
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          x-isnullable: false
+          type: string
+          description: the name of the audience
+          example: custom Audience Name
+        description:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: a brief description of the audience
+          example: this audience targets users interested in tech products
+        expr:
+          $ref: '#/components/schemas/AudienceBoolExp'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    AudienceResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audience'
+      - type: object
+        required:
+        - transaction
+        - status
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          status:
+            $ref: '#/components/schemas/Status'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     Audience:
       x-isnullable: false
       type: object
@@ -377,18 +364,6 @@ components:
           x-go-type-skip-optional-pointer: true
           description: whether this audience is marked as preferred for the organization
           example: false
-    CompositionType:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=LIVERAMP DIRECT NEITHER
-      description: type of segments that compose an audience
-      example: LIVERAMP
-      enum:
-      - LIVERAMP
-      - DIRECT
-      - NEITHER
     AudienceBoolExp:
       type: object
       required:
@@ -419,37 +394,21 @@ components:
           items:
             $ref: '#/components/schemas/AudienceBoolExp'
           description: Sub-expressions that recursively apply the Boolean operation
-    AudienceRequest:
+    AudienceListResponse:
       x-isnullable: false
       type: object
       required:
-      - name
+      - transaction
+      - audiences
       properties:
-        name:
-          x-isnullable: false
-          type: string
-          description: the name of the audience
-          example: custom Audience Name
-        description:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: a brief description of the audience
-          example: this audience targets users interested in tech products
-        expr:
-          $ref: '#/components/schemas/AudienceBoolExp'
-    AudienceResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Audience'
-      - type: object
-        required:
-        - transaction
-        - status
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-          status:
-            $ref: '#/components/schemas/Status'
+        audiences:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudienceResponse'
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
     Status:
       type: string
       x-isnullable: false
@@ -464,6 +423,18 @@ components:
       - CANCELLED
       - DRAFT
       - PAUSED
+    CompositionType:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=LIVERAMP DIRECT NEITHER
+      description: type of segments that compose an audience
+      example: LIVERAMP
+      enum:
+      - LIVERAMP
+      - DIRECT
+      - NEITHER
   examples:
     401Ex:
       value:
@@ -481,6 +452,34 @@ components:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
           taskId: '14158884487309867565'
           created: '2030-11-02T15:04:00Z'
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

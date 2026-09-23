@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Madhive Get Audience By ID API
   version: 1.0.0
-  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+  description: The Madhive API provides a comprehensive interface for digital advertising clients and services.
 servers:
 - url: https://api2.madhive.com/api
   description: apigee
@@ -14,7 +14,6 @@ paths:
       tags:
       - get_audience_by_id
       summary: Send audience ID and receive details
-      description: Send audience ID and receive details
       operationId: getAudienceById
       parameters:
       - name: id
@@ -72,15 +71,23 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   schemas:
     ErrorResponse:
       type: object
@@ -247,18 +254,6 @@ components:
           x-go-type-skip-optional-pointer: true
           description: whether this audience is marked as preferred for the organization
           example: false
-    CompositionType:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=LIVERAMP DIRECT NEITHER
-      description: type of segments that compose an audience
-      example: LIVERAMP
-      enum:
-      - LIVERAMP
-      - DIRECT
-      - NEITHER
     AudienceBoolExp:
       type: object
       required:
@@ -289,23 +284,27 @@ components:
           items:
             $ref: '#/components/schemas/AudienceBoolExp'
           description: Sub-expressions that recursively apply the Boolean operation
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
+    CompositionType:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=LIVERAMP DIRECT NEITHER
+      description: type of segments that compose an audience
+      example: LIVERAMP
+      enum:
+      - LIVERAMP
+      - DIRECT
+      - NEITHER
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

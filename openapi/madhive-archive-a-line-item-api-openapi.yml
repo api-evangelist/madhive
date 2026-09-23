@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Madhive archive a line item API
   version: 1.0.0
-  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+  description: The Madhive API provides a comprehensive interface for digital advertising clients and services.
 servers:
 - url: https://api2.madhive.com/api
   description: apigee
@@ -47,7 +47,46 @@ paths:
       security:
       - oauth2: []
 components:
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidLI:
+      value:
+        error: invalid line item id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   schemas:
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
     ErrorResponse:
       type: object
       required:
@@ -71,28 +110,6 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     GenericResponse:
       type: object
       required:
@@ -114,33 +131,7 @@ components:
           example: unable to process request
         transaction:
           $ref: '#/components/schemas/Transaction'
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidLI:
-      value:
-        error: invalid line item id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   responses:
-    400InvalidLI:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidLI'
     401Unauthorized:
       description: Unauthorized
       content:
@@ -150,6 +141,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
+    400InvalidLI:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidLI'
   securitySchemes:
     oauth2:
       type: oauth2

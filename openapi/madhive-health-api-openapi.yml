@@ -9,15 +9,12 @@ servers:
 - url: https://api2.madhive.com/mcp
   description: Production (mad-master)
 tags:
-- name: health
+- name: Health
 paths:
   /health:
-    servers:
-    - url: https://api2.madhive.com/api
-      description: apigee
     get:
       tags:
-      - health
+      - Health
       summary: health of the service
       description: health check
       responses:
@@ -39,8 +36,44 @@ paths:
           $ref: '#/components/responses/401Unauthorized'
       security:
       - oauth2: []
+      operationId: getHealth
+      x-operation-id-source: derived
+    servers:
+    - url: https://api2.madhive.com/api
+      description: apigee
 components:
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   schemas:
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
     ErrorResponse:
       type: object
       required:
@@ -64,28 +97,6 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     GenericResponse:
       type: object
       required:
@@ -107,15 +118,6 @@ components:
           example: unable to process request
         transaction:
           $ref: '#/components/schemas/Transaction'
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   responses:
     401Unauthorized:
       description: Unauthorized

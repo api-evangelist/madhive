@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Madhive modify campaign API
   version: 1.0.0
-  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+  description: The Madhive API provides a comprehensive interface for digital advertising clients and services.
 servers:
 - url: https://api2.madhive.com/api
   description: apigee
@@ -13,7 +13,7 @@ paths:
     put:
       tags:
       - modify campaign
-      summary: Editing any attribute of a campaign. Unable to edit if the campaign is completed.
+      summary: Editing any attribute of a campaign. Unable to edit if the campaign is completed
       description: Editing any attribute of a campaign. Unable to edit if the campaign is completed.
       operationId: updateCampaignById
       parameters:
@@ -63,14 +63,60 @@ paths:
       security:
       - oauth2: []
 components:
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
   schemas:
-    Date:
-      type: string
-      x-go-type-skip-optional-pointer: true
-      x-oapi-codegen-extra-tags:
-        validate: required,datetime=2006-01-02T15:04:05Z07:00
-      description: 2020-06-18T17:24:53Z is a basic example of an RFC 3339 timestamp, which refers to June 18, 2020 5:24:53 PM in UTC
-      example: '2030-01-10T23:00:00Z'
+    CampaignResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Campaign'
+      - type: object
+        required:
+        - transaction
+        - statusDetail
+        properties:
+          startDate:
+            $ref: '#/components/schemas/Date'
+          endDate:
+            $ref: '#/components/schemas/Date'
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          statusDetail:
+            $ref: '#/components/schemas/StatusDetail'
     ErrorResponse:
       type: object
       required:
@@ -94,62 +140,6 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
-    CampaignResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Campaign'
-      - type: object
-        required:
-        - transaction
-        - statusDetail
-        properties:
-          startDate:
-            $ref: '#/components/schemas/Date'
-          endDate:
-            $ref: '#/components/schemas/Date'
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-          statusDetail:
-            $ref: '#/components/schemas/StatusDetail'
-    StatusDetail:
-      x-isnullable: false
-      type: object
-      required:
-      - detail
-      - reasons
-      - numberOfInvalidLineItems
-      - status
-      properties:
-        detail:
-          type: string
-          x-isnullable: false
-          x-omitempty: false
-          x-oapi-codegen-extra-tags:
-            validate: 'required,min=2,ne= '
-          description: status detail
-          example: CAMPAIGN_STATUS_MISSING_LINE_ITEM
-        reasons:
-          type: array
-          items:
-            type: string
-            x-oapi-codegen-extra-tags:
-              validate: omitempty,min=1,dive
-          x-omitempty: true
-          description: reasons for status
-          example:
-          - LINE_ITEM_STATUS_INVALID
-          - MISSING_CREATIVE
-        numberOfInvalidLineItems:
-          type: integer
-          format: uint32
-          x-isnullable: false
-          x-omitempty: false
-          x-oapi-codegen-extra-tags:
-            validate: omitempty
-          description: number of line items
-          example: 2
-        status:
-          $ref: '#/components/schemas/Status'
     Transaction:
       type: object
       x-go-type-skip-optional-pointer: true
@@ -241,6 +231,45 @@ components:
           x-omitempty: true
           description: estimate for campaign
           example: 2x 30s spots
+    StatusDetail:
+      x-isnullable: false
+      type: object
+      required:
+      - detail
+      - reasons
+      - numberOfInvalidLineItems
+      - status
+      properties:
+        detail:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          description: status detail
+          example: CAMPAIGN_STATUS_MISSING_LINE_ITEM
+        reasons:
+          type: array
+          items:
+            type: string
+            x-oapi-codegen-extra-tags:
+              validate: omitempty,min=1,dive
+          x-omitempty: true
+          description: reasons for status
+          example:
+          - LINE_ITEM_STATUS_INVALID
+          - MISSING_CREATIVE
+        numberOfInvalidLineItems:
+          type: integer
+          format: uint32
+          x-isnullable: false
+          x-omitempty: false
+          x-oapi-codegen-extra-tags:
+            validate: omitempty
+          description: number of line items
+          example: 2
+        status:
+          $ref: '#/components/schemas/Status'
     CampaignRequest:
       type: object
       required:
@@ -300,6 +329,13 @@ components:
           x-omitempty: true
           description: estimate for campaign
           example: 2x 30s spots
+    Date:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: required,datetime=2006-01-02T15:04:05Z07:00
+      description: 2020-06-18T17:24:53Z is a basic example of an RFC 3339 timestamp, which refers to June 18, 2020 5:24:53 PM in UTC
+      example: '2030-01-10T23:00:00Z'
     Status:
       type: string
       x-isnullable: false
@@ -323,42 +359,6 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
-  responses:
-    400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

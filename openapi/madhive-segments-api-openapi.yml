@@ -2,18 +2,18 @@ openapi: 3.2.0
 info:
   title: Madhive Segments API
   version: 1.0.0
-  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+  description: The Madhive API provides a comprehensive interface for digital advertising clients and services.
 servers:
 - url: https://api2.madhive.com/api
   description: apigee
 tags:
-- name: segments
+- name: Segments
 paths:
   /v1/segments:
     get:
       tags:
-      - segments
-      summary: Receive the list of segments and their IDs. Includes retargeting, third party and first party segment types. When third party segments are selected it includes data companies as well.
+      - Segments
+      summary: Receive the list of segments and their IDs.
       description: Receive the list of segments and their IDs. Includes retargeting, third party and first party segment types. When third party segments are selected it includes data companies as well.
       operationId: getSegmentsByOrg
       parameters:
@@ -95,16 +95,91 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
+    SegmentType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=RETARGETING FIRST_PARTY THIRD_PARTY
+      enum:
+      - RETARGETING
+      - FIRST_PARTY
+      - THIRD_PARTY
+      description: segment type
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    SegmentListResponse:
+      x-isnullable: false
+      type: object
+      required:
+      - segments
+      - transaction
+      properties:
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentResponse'
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,dive
+          description: list of segments
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    SegmentResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Segment'
+      - type: object
+        required:
+        - transaction
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
     Segment:
       x-isnullable: false
       type: object
@@ -174,51 +249,6 @@ components:
           type: string
           x-omitempty: false
           x-go-type-skip-optional-pointer: true
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     Pagination:
       x-go-type-skip-optional-pointer: true
       x-isnullable: false
@@ -251,45 +281,6 @@ components:
           format: int32
           description: Total number of records available
           example: 500
-    SegmentListResponse:
-      x-isnullable: false
-      type: object
-      required:
-      - segments
-      - transaction
-      properties:
-        segments:
-          type: array
-          items:
-            $ref: '#/components/schemas/SegmentResponse'
-          x-oapi-codegen-extra-tags:
-            validate: omitempty,min=1,dive
-          description: list of segments
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    SegmentType:
-      type: string
-      x-isnullable: false
-      x-omitempty: true
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=RETARGETING FIRST_PARTY THIRD_PARTY
-      enum:
-      - RETARGETING
-      - FIRST_PARTY
-      - THIRD_PARTY
-      description: segment type
-    SegmentResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Segment'
-      - type: object
-        required:
-        - transaction
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
   examples:
     401Ex:
       value:
@@ -307,6 +298,15 @@ components:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
           taskId: '14158884487309867565'
           created: '2030-11-02T15:04:00Z'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

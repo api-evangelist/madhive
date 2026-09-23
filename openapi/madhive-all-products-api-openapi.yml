@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Madhive all products API
   version: 1.0.0
-  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+  description: The Madhive API provides a comprehensive interface for digital advertising clients and services.
 servers:
 - url: https://api2.madhive.com/api
   description: apigee
@@ -14,7 +14,6 @@ paths:
       tags:
       - all products
       summary: Receive the list of products and their IDs
-      description: Receive the list of products and their IDs
       operationId: getProductsByOrg
       parameters:
       - $ref: '#/components/parameters/X-Cloud-Trace-Context'
@@ -65,16 +64,108 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   schemas:
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    ProductResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Product'
+      - type: object
+        required:
+        - transaction
+        - status
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          status:
+            $ref: '#/components/schemas/Status'
+    MediaType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: required,oneof=NONE VIDEO AUDIO DISPLAY
+      example: VIDEO
+      enum:
+      - NONE
+      - VIDEO
+      - AUDIO
+      - DISPLAY
+    ProductListResponse:
+      x-isnullable: false
+      type: object
+      required:
+      - transaction
+      - products
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductResponse'
+          description: list of products
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     DeviceCap:
       x-isnullable: false
       type: object
@@ -115,29 +206,6 @@ components:
           x-omitempty: true
           description: tablet device cap
           example: 0
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
     Product:
       x-isnullable: false
       type: object
@@ -194,67 +262,6 @@ components:
           $ref: '#/components/schemas/MediaType'
         status:
           $ref: '#/components/schemas/Status'
-    MediaType:
-      type: string
-      x-isnullable: false
-      x-omitempty: true
-      x-oapi-codegen-extra-tags:
-        validate: required,oneof=NONE VIDEO AUDIO DISPLAY
-      example: VIDEO
-      enum:
-      - NONE
-      - VIDEO
-      - AUDIO
-      - DISPLAY
-    ProductResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Product'
-      - type: object
-        required:
-        - transaction
-        - status
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-          status:
-            $ref: '#/components/schemas/Status'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-    ProductListResponse:
-      x-isnullable: false
-      type: object
-      required:
-      - transaction
-      - products
-      properties:
-        products:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProductResponse'
-          description: list of products
-        transaction:
-          $ref: '#/components/schemas/Transaction'
     Status:
       type: string
       x-isnullable: false
@@ -269,23 +276,15 @@ components:
       - CANCELLED
       - DRAFT
       - PAUSED
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

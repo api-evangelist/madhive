@@ -2,18 +2,18 @@ openapi: 3.2.0
 info:
   title: Madhive Agency API
   version: 1.0.0
-  description: "The Madhive API provides a comprehensive interface for digital advertising clients and services.\n\n## Authentication\nThis API uses OAuth 2.0 client credentials flow for authentication. To access protected endpoints:\n\n1. **Obtain an access token** using the `/oauth/token` endpoint with your client credentials\n2. **Include the token** in subsequent API requests using the `Authorization` header:\n   ```\n   Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\n   ```\n\n### Token Usage Example\n```bash\n# Get access token\ncurl -X POST \"https://api2.madhive.com/oauth/token\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET\"\n\n# Use token in API requests\ncurl -H \"Authorization: Bearer YOUR_ACCESS_TOKEN_HERE\" \\\n  \"https://api2.madhive.com/v1/campaigns\"\n```\n\n**Note:** Access tokens have an expiration time. You should handle token refresh in your application logic.\n"
+  description: The Madhive API provides a comprehensive interface for digital advertising clients and services.
 servers:
 - url: https://api2.madhive.com/api
   description: apigee
 tags:
-- name: agency
+- name: Agency
 paths:
   /v1/agencies:
     get:
       tags:
-      - agency
-      summary: Receive the list of agencies and their IDs.
+      - Agency
+      summary: Receive the list of agencies and their IDs
       description: Receive the list of agencies and their IDs.
       operationId: getAgencies
       parameters:
@@ -70,8 +70,8 @@ paths:
       - oauth2: []
     post:
       tags:
-      - agency
-      summary: Creating an agency with inputs for Name and an optional field for external ID.
+      - Agency
+      summary: Creating an agency with inputs for Name and an optional field for external ID
       description: Creating an agency with inputs for Name and an optional field for external ID.
       operationId: createAgency
       parameters:
@@ -118,39 +118,16 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
-  schemas:
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
         transaction:
-          $ref: '#/components/schemas/Transaction'
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  schemas:
     AgencyResponse:
       type: object
       allOf:
@@ -183,38 +160,62 @@ components:
           type: string
           description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
           example: '2030-11-02T15:04:00Z'
-    Pagination:
-      x-go-type-skip-optional-pointer: true
-      x-isnullable: false
-      readOnly: true
-      required:
-      - pageSize
-      - offset
-      - pageToken
-      - totalRecords
+    ErrorResponse:
       type: object
+      required:
+      - transaction
       properties:
-        pageSize:
-          type: integer
-          format: int32
-          description: Number of items per page
-          example: 100
-        offset:
-          type: integer
-          format: int32
-          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
-
-            '
-          example: 1
-        pageToken:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
           type: string
-          description: Opaque token for retrieving the next page of results
-          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
-        totalRecords:
-          type: integer
-          format: int32
-          description: Total number of records available
-          example: 500
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    AgencyListResponse:
+      type: object
+      required:
+      - transaction
+      - agencies
+      properties:
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        agencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgencyListItem'
+          description: list of agencies
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    AgencyListItem:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: madhive agency id
+          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
+        name:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: agency name
+          example: Madhive
     Agency:
       type: object
       required:
@@ -246,24 +247,6 @@ components:
           example: Madhive
         status:
           $ref: '#/components/schemas/Status'
-    AgencyListItem:
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: string
-          x-isnullable: false
-          x-omitempty: false
-          description: madhive agency id
-          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
-        name:
-          type: string
-          x-isnullable: false
-          x-omitempty: false
-          description: agency name
-          example: Madhive
     AgencyRequest:
       type: object
       required:
@@ -299,30 +282,47 @@ components:
       - CANCELLED
       - DRAFT
       - PAUSED
-    AgencyListResponse:
-      type: object
+    Pagination:
+      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      readOnly: true
       required:
-      - transaction
-      - agencies
+      - pageSize
+      - offset
+      - pageToken
+      - totalRecords
+      type: object
       properties:
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        agencies:
-          type: array
-          items:
-            $ref: '#/components/schemas/AgencyListItem'
-          description: list of agencies
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
+        pageSize:
+          type: integer
+          format: int32
+          description: Number of items per page
+          example: 100
+        offset:
+          type: integer
+          format: int32
+          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
+
+            '
+          example: 1
+        pageToken:
+          type: string
+          description: Opaque token for retrieving the next page of results
+          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
+        totalRecords:
+          type: integer
+          format: int32
+          description: Total number of records available
+          example: 500
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   responses:
     401Unauthorized:
       description: Unauthorized
