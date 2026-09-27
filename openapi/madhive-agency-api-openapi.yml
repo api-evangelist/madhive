@@ -118,16 +118,86 @@ paths:
       security:
       - oauth2: []
 components:
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   schemas:
+    Pagination:
+      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      readOnly: true
+      required:
+      - pageSize
+      - offset
+      - pageToken
+      - totalRecords
+      type: object
+      properties:
+        pageSize:
+          type: integer
+          format: int32
+          description: Number of items per page
+          example: 100
+        offset:
+          type: integer
+          format: int32
+          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
+
+            '
+          example: 1
+        pageToken:
+          type: string
+          description: Opaque token for retrieving the next page of results
+          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
+        totalRecords:
+          type: integer
+          format: int32
+          description: Total number of records available
+          example: 500
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    AgencyListItem:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: madhive agency id
+          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
+        name:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: agency name
+          example: Madhive
+    AgencyListResponse:
+      type: object
+      required:
+      - transaction
+      - agencies
+      properties:
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        agencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgencyListItem'
+          description: list of agencies
+        pagination:
+          $ref: '#/components/schemas/Pagination'
     AgencyResponse:
       type: object
       allOf:
@@ -138,28 +208,6 @@ components:
         properties:
           transaction:
             $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     ErrorResponse:
       type: object
       required:
@@ -183,39 +231,28 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
-    AgencyListResponse:
+    Transaction:
       type: object
-      required:
-      - transaction
-      - agencies
-      properties:
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        agencies:
-          type: array
-          items:
-            $ref: '#/components/schemas/AgencyListItem'
-          description: list of agencies
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    AgencyListItem:
-      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
       required:
       - id
-      - name
+      - taskId
+      - created
       properties:
         id:
           type: string
-          x-isnullable: false
-          x-omitempty: false
-          description: madhive agency id
-          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
-        name:
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
           type: string
-          x-isnullable: false
-          x-omitempty: false
-          description: agency name
-          example: Madhive
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
     Agency:
       type: object
       required:
@@ -268,52 +305,6 @@ components:
           x-omitempty: false
           description: agency name
           example: Madhive
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    Pagination:
-      x-go-type-skip-optional-pointer: true
-      x-isnullable: false
-      readOnly: true
-      required:
-      - pageSize
-      - offset
-      - pageToken
-      - totalRecords
-      type: object
-      properties:
-        pageSize:
-          type: integer
-          format: int32
-          description: Number of items per page
-          example: 100
-        offset:
-          type: integer
-          format: int32
-          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
-
-            '
-          example: 1
-        pageToken:
-          type: string
-          description: Opaque token for retrieving the next page of results
-          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
-        totalRecords:
-          type: integer
-          format: int32
-          description: Total number of records available
-          example: 500
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -333,6 +324,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

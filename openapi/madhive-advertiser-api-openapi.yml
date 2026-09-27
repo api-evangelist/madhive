@@ -124,16 +124,161 @@ paths:
       security:
       - oauth2: []
 components:
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   schemas:
+    Pagination:
+      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      readOnly: true
+      required:
+      - pageSize
+      - offset
+      - pageToken
+      - totalRecords
+      type: object
+      properties:
+        pageSize:
+          type: integer
+          format: int32
+          description: Number of items per page
+          example: 100
+        offset:
+          type: integer
+          format: int32
+          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
+
+            '
+          example: 1
+        pageToken:
+          type: string
+          description: Opaque token for retrieving the next page of results
+          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
+        totalRecords:
+          type: integer
+          format: int32
+          description: Total number of records available
+          example: 500
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    AdvertiserListResponse:
+      type: object
+      required:
+      - transaction
+      - advertisers
+      properties:
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        advertisers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdvertiserListItem'
+          description: list of advertisers
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    AdvertiserListItem:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          description: madhive advertiser id
+          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
+      allOf:
+      - $ref: '#/components/schemas/Advertiser'
+    AdvertiserRequest:
+      type: object
+      required:
+      - name
+      - domain
+      - iabCategory
+      properties:
+        customerExternalId:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: external id of the advertiser
+          example: adv-123456
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-isnullable: false
+          x-omitempty: false
+          description: advertiser name
+          example: Madhive
+        domain:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required
+          x-omitempty: false
+          x-isnullable: false
+          description: advertiser domain
+          example: madhive.com
+        iabCategory:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-omitempty: false
+          x-isnullable: false
+          description: iab category
+          example: IAB1
+        associatedAgency:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: advertiser's associated agency
+          example: fake agency name
+    AdvertiserResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Advertiser'
+      - type: object
+        required:
+        - transaction
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     Transaction:
       type: object
       x-go-type-skip-optional-pointer: true
@@ -213,160 +358,6 @@ components:
           example: fake agency name
         status:
           $ref: '#/components/schemas/Status'
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    AdvertiserListResponse:
-      type: object
-      required:
-      - transaction
-      - advertisers
-      properties:
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        advertisers:
-          type: array
-          items:
-            $ref: '#/components/schemas/AdvertiserListItem'
-          description: list of advertisers
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    AdvertiserRequest:
-      type: object
-      required:
-      - name
-      - domain
-      - iabCategory
-      properties:
-        customerExternalId:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          x-oapi-codegen-extra-tags:
-            validate: 'omitempty,min=2,ne= '
-          x-omitempty: true
-          description: external id of the advertiser
-          example: adv-123456
-        name:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: 'required,min=2,ne= '
-          x-isnullable: false
-          x-omitempty: false
-          description: advertiser name
-          example: Madhive
-        domain:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: required
-          x-omitempty: false
-          x-isnullable: false
-          description: advertiser domain
-          example: madhive.com
-        iabCategory:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: 'required,min=2,ne= '
-          x-omitempty: false
-          x-isnullable: false
-          description: iab category
-          example: IAB1
-        associatedAgency:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          x-oapi-codegen-extra-tags:
-            validate: 'omitempty,min=2,ne= '
-          x-omitempty: true
-          description: advertiser's associated agency
-          example: fake agency name
-    AdvertiserResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Advertiser'
-      - type: object
-        required:
-        - transaction
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-    AdvertiserListItem:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: required,min=28,max=28
-          description: madhive advertiser id
-          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
-      allOf:
-      - $ref: '#/components/schemas/Advertiser'
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    Pagination:
-      x-go-type-skip-optional-pointer: true
-      x-isnullable: false
-      readOnly: true
-      required:
-      - pageSize
-      - offset
-      - pageToken
-      - totalRecords
-      type: object
-      properties:
-        pageSize:
-          type: integer
-          format: int32
-          description: Number of items per page
-          example: 100
-        offset:
-          type: integer
-          format: int32
-          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
-
-            '
-          example: 1
-        pageToken:
-          type: string
-          description: Opaque token for retrieving the next page of results
-          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
-        totalRecords:
-          type: integer
-          format: int32
-          description: Total number of records available
-          example: 500
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -386,6 +377,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

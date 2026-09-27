@@ -168,46 +168,47 @@ components:
           format: int32
           description: Total number of records available
           example: 500
-    AudienceRequest:
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    AudienceListResponse:
       x-isnullable: false
       type: object
       required:
-      - name
+      - transaction
+      - audiences
       properties:
-        name:
-          x-isnullable: false
-          type: string
-          description: the name of the audience
-          example: custom Audience Name
-        description:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: a brief description of the audience
-          example: this audience targets users interested in tech products
-        expr:
-          $ref: '#/components/schemas/AudienceBoolExp'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
+        audiences:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudienceResponse'
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    CompositionType:
+      type: string
+      x-isnullable: false
       x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=LIVERAMP DIRECT NEITHER
+      description: type of segments that compose an audience
+      example: LIVERAMP
+      enum:
+      - LIVERAMP
+      - DIRECT
+      - NEITHER
     AudienceResponse:
       type: object
       allOf:
@@ -244,6 +245,58 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    AudienceBoolExp:
+      type: object
+      required:
+      - op
+      - ids
+      - children
+      properties:
+        op:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,oneof=IDENTITY AND OR NOT
+          enum:
+          - IDENTITY
+          - AND
+          - OR
+          - NOT
+          description: Boolean operation to apply across segment IDs and children
+          example: AND
+        ids:
+          type: array
+          items:
+            type: string
+            format: byte
+            description: Segment IDs
+            example: U29tZUJ5dGVBcnJheQ==
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudienceBoolExp'
+          description: Sub-expressions that recursively apply the Boolean operation
     Audience:
       x-isnullable: false
       type: object
@@ -364,94 +417,24 @@ components:
           x-go-type-skip-optional-pointer: true
           description: whether this audience is marked as preferred for the organization
           example: false
-    AudienceBoolExp:
+    AudienceRequest:
+      x-isnullable: false
       type: object
       required:
-      - op
-      - ids
-      - children
+      - name
       properties:
-        op:
+        name:
+          x-isnullable: false
           type: string
-          x-oapi-codegen-extra-tags:
-            validate: required,oneof=IDENTITY AND OR NOT
-          enum:
-          - IDENTITY
-          - AND
-          - OR
-          - NOT
-          description: Boolean operation to apply across segment IDs and children
-          example: AND
-        ids:
-          type: array
-          items:
-            type: string
-            format: byte
-            description: Segment IDs
-            example: U29tZUJ5dGVBcnJheQ==
-        children:
-          type: array
-          items:
-            $ref: '#/components/schemas/AudienceBoolExp'
-          description: Sub-expressions that recursively apply the Boolean operation
-    AudienceListResponse:
-      x-isnullable: false
-      type: object
-      required:
-      - transaction
-      - audiences
-      properties:
-        audiences:
-          type: array
-          items:
-            $ref: '#/components/schemas/AudienceResponse'
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    CompositionType:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=LIVERAMP DIRECT NEITHER
-      description: type of segments that compose an audience
-      example: LIVERAMP
-      enum:
-      - LIVERAMP
-      - DIRECT
-      - NEITHER
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
+          description: the name of the audience
+          example: custom Audience Name
+        description:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: a brief description of the audience
+          example: this audience targets users interested in tech products
+        expr:
+          $ref: '#/components/schemas/AudienceBoolExp'
   responses:
     400InvalidID:
       description: Invalid input
@@ -480,6 +463,23 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

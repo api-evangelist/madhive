@@ -40,29 +40,29 @@ paths:
       security:
       - oauth2: []
 components:
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
-    Transaction:
+    MetroListResponse:
       type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
       required:
-      - id
-      - taskId
-      - created
+      - metros
+      - transaction
       properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
+        metros:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metro'
+          description: List of metro codes
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     ErrorResponse:
       type: object
       required:
@@ -101,28 +101,28 @@ components:
           type: string
           description: The metro name
           example: New York, NY
-    MetroListResponse:
+    Transaction:
       type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
       required:
-      - metros
-      - transaction
+      - id
+      - taskId
+      - created
       properties:
-        metros:
-          type: array
-          items:
-            $ref: '#/components/schemas/Metro'
-          description: List of metro codes
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

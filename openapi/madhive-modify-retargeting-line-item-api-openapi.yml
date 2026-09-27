@@ -46,99 +46,21 @@ paths:
       security:
       - oauth2: []
 components:
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-  responses:
-    400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
   schemas:
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    RetargetingLineItemRequest:
-      allOf:
-      - $ref: '#/components/schemas/RetargetingCampaignRequest'
-    ID:
+    RetargetingType:
       type: string
-      x-go-name: ID
       x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      x-omitempty: false
       x-oapi-codegen-extra-tags:
-        validate: omitempty,min=28,max=28
-      description: resource id
-      example: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+        validate: required,oneof=RETARGETING_CAMPAIGN RETARGETING_LINE_ITEM RETARGETING_TRACKING_PIXEL RETARGETING_CREATIVE
+      enum:
+      - RETARGETING_CAMPAIGN
+      - RETARGETING_LINE_ITEM
+      - RETARGETING_TRACKING_PIXEL
+      - RETARGETING_CREATIVE
+      description: retargeting type
+      example: RETARGETING_CAMPAIGN
     RetargetingRequest:
       type: object
       x-isnullable: false
@@ -182,6 +104,14 @@ components:
           pattern: ^([1-9][0-9]* (DAY|MONTH))?$
           description: retargeting window interval (e.g., "7 DAY", "3 MONTH")
           example: 7 DAY
+    ID:
+      type: string
+      x-go-name: ID
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,min=28,max=28
+      description: resource id
+      example: a8MWQ2v4ZceGhsku2P5amaOXCnwe
     RetargetingResponse:
       type: object
       x-isnullable: false
@@ -200,6 +130,37 @@ components:
             $ref: '#/components/schemas/Date'
           endDate:
             $ref: '#/components/schemas/Date'
+    Name:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: 'required,min=2,max=128,ne= '
+      description: resource name
+      example: name of resource
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     Date:
       type: string
       x-go-type-skip-optional-pointer: true
@@ -219,28 +180,50 @@ components:
             $ref: '#/components/schemas/Date'
           endDate:
             $ref: '#/components/schemas/Date'
-    Name:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: 'required,min=2,max=128,ne= '
-      description: resource name
-      example: name of resource
-    RetargetingType:
-      type: string
+    Transaction:
+      type: object
       x-go-type-skip-optional-pointer: true
-      x-isnullable: false
       x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: required,oneof=RETARGETING_CAMPAIGN RETARGETING_LINE_ITEM RETARGETING_TRACKING_PIXEL RETARGETING_CREATIVE
-      enum:
-      - RETARGETING_CAMPAIGN
-      - RETARGETING_LINE_ITEM
-      - RETARGETING_TRACKING_PIXEL
-      - RETARGETING_CREATIVE
-      description: retargeting type
-      example: RETARGETING_CAMPAIGN
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    RetargetingLineItemRequest:
+      allOf:
+      - $ref: '#/components/schemas/RetargetingCampaignRequest'
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -250,6 +233,23 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

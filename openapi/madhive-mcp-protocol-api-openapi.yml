@@ -408,24 +408,6 @@ paths:
       - OAuth2: []
 components:
   schemas:
-    ApigeeError:
-      type: object
-      properties:
-        fault:
-          type: object
-          properties:
-            faultstring:
-              type: string
-              description: Error description
-            detail:
-              type: object
-              properties:
-                errorcode:
-                  type: string
-                  description: Apigee error code
-                reason:
-                  type: string
-                  description: Error reason
     MCPError:
       type: object
       description: MCP JSON-RPC 2.0 error response
@@ -484,6 +466,24 @@ components:
           type: object
           description: Response result
           additionalProperties: true
+    ApigeeError:
+      type: object
+      properties:
+        fault:
+          type: object
+          properties:
+            faultstring:
+              type: string
+              description: Error description
+            detail:
+              type: object
+              properties:
+                errorcode:
+                  type: string
+                  description: Apigee error code
+                reason:
+                  type: string
+                  description: Error reason
     MCPRequest:
       type: object
       description: MCP JSON-RPC 2.0 request

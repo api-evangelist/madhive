@@ -61,110 +61,7 @@ paths:
       security:
       - oauth2: []
 components:
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   schemas:
-    MediaTrustStatusResponse:
-      type: object
-      required:
-      - results
-      - transaction
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MediaTrustStatusResult'
-          description: one result per requested creative id, in request order
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-    MediaTrustStatusResult:
-      type: object
-      required:
-      - creativeId
-      properties:
-        creativeId:
-          type: string
-          description: madhive creative id, echoed back from the request
-          example: HPAKbbHX1IZFeeAh1K7dSogRUvgF
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          x-omitempty: true
-          description: IN_REVIEW while queued or awaiting a scan result, UPLOAD_FAILED if the creative never reached Media Trust (a transient upload problem, distinct from a completed scan), APPROVED once scanned with no issues found, REJECTED if malware was detected, NOT_FOUND if the id is unrecognized or not a creative id.
-          example: APPROVED
-          enum:
-          - IN_REVIEW
-          - UPLOAD_FAILED
-          - APPROVED
-          - REJECTED
-          - NOT_FOUND
-        scannedAt:
-          type: string
-          format: date-time
-          description: timestamp of the most recent Media Trust scan, if any
-        uploadedAt:
-          type: string
-          format: date-time
-          description: timestamp of the last upload attempt to Media Trust; set when status is UPLOAD_FAILED
-        problems:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          x-omitempty: true
-          items:
-            $ref: '#/components/schemas/MediaTrustProblem'
-          description: malware/policy issues detected by Media Trust, if any
     MediaTrustStatusRequest:
       type: object
       required:
@@ -202,6 +99,100 @@ components:
           type: string
           format: date-time
           description: when this problem was reported
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    MediaTrustStatusResult:
+      type: object
+      required:
+      - creativeId
+      properties:
+        creativeId:
+          type: string
+          description: madhive creative id, echoed back from the request
+          example: HPAKbbHX1IZFeeAh1K7dSogRUvgF
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          description: IN_REVIEW while queued or awaiting a scan result, UPLOAD_FAILED if the creative never reached Media Trust (a transient upload problem, distinct from a completed scan), APPROVED once scanned with no issues found, REJECTED if malware was detected, NOT_FOUND if the id is unrecognized or not a creative id.
+          example: APPROVED
+          enum:
+          - IN_REVIEW
+          - UPLOAD_FAILED
+          - APPROVED
+          - REJECTED
+          - NOT_FOUND
+        scannedAt:
+          type: string
+          format: date-time
+          description: timestamp of the most recent Media Trust scan, if any
+        uploadedAt:
+          type: string
+          format: date-time
+          description: timestamp of the last upload attempt to Media Trust; set when status is UPLOAD_FAILED
+        problems:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          x-omitempty: true
+          items:
+            $ref: '#/components/schemas/MediaTrustProblem'
+          description: malware/policy issues detected by Media Trust, if any
+    MediaTrustStatusResponse:
+      type: object
+      required:
+      - results
+      - transaction
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaTrustStatusResult'
+          description: one result per requested creative id, in request order
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -211,6 +202,15 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   responses:
     401Unauthorized:
       description: Unauthorized

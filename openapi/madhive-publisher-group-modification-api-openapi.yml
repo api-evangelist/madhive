@@ -62,88 +62,7 @@ paths:
       security:
       - oauth2: []
 components:
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-  responses:
-    400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
   schemas:
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     PublisherGroupRequestPublisher:
       x-isnullable: false
       type: object
@@ -165,34 +84,20 @@ components:
             validate: required,min=1,max=10000
           description: publisher cap
           example: 12
-    PublisherGroupPublisher:
+    Status:
+      type: string
       x-isnullable: false
-      type: object
-      required:
-      - id
-      - name
-      - cap
-      properties:
-        id:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: omitempty,min=28,max=28
-          description: madhive publisher id
-          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
-        name:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: 'omitempty,min=2,ne= '
-          description: publisher name
-          example: my first publisher
-        cap:
-          type: integer
-          format: uint32
-          x-isnullable: false
-          x-oapi-codegen-extra-tags:
-            validate: required,min=1,max=10000
-          description: publisher cap
-          example: 12
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
     PublisherGroupResponse:
       type: object
       allOf:
@@ -206,6 +111,36 @@ components:
             $ref: '#/components/schemas/Transaction'
           status:
             $ref: '#/components/schemas/Status'
+    PublisherGroupRequest:
+      type: object
+      required:
+      - name
+      - mediaType
+      - productId
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+        mediaType:
+          $ref: '#/components/schemas/MediaType'
+        productId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          x-isnullable: false
+          x-omitempty: false
+          description: product id
+          example: jao1gnhIUchSxQekAKyh6FZLCXjJ
+        publishers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublisherGroupRequestPublisher'
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,dive
+          x-go-type-skip-optional-pointer: true
+          description: list of publishers
+          example:
+          - id: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+            cap: 12
     MediaType:
       type: string
       x-isnullable: false
@@ -270,50 +205,98 @@ components:
         validate: 'required,min=2,max=128,ne= '
       description: resource name
       example: name of resource
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    PublisherGroupRequest:
+    ErrorResponse:
       type: object
       required:
-      - name
-      - mediaType
-      - productId
+      - transaction
       properties:
-        name:
-          $ref: '#/components/schemas/Name'
-        mediaType:
-          $ref: '#/components/schemas/MediaType'
-        productId:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    PublisherGroupPublisher:
+      x-isnullable: false
+      type: object
+      required:
+      - id
+      - name
+      - cap
+      properties:
+        id:
           type: string
           x-oapi-codegen-extra-tags:
-            validate: required,min=28,max=28
-          x-isnullable: false
-          x-omitempty: false
-          description: product id
-          example: jao1gnhIUchSxQekAKyh6FZLCXjJ
-        publishers:
-          type: array
-          items:
-            $ref: '#/components/schemas/PublisherGroupRequestPublisher'
+            validate: omitempty,min=28,max=28
+          description: madhive publisher id
+          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+        name:
+          type: string
           x-oapi-codegen-extra-tags:
-            validate: required,min=1,dive
-          x-go-type-skip-optional-pointer: true
-          description: list of publishers
-          example:
-          - id: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
-            cap: 12
+            validate: 'omitempty,min=2,ne= '
+          description: publisher name
+          example: my first publisher
+        cap:
+          type: integer
+          format: uint32
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,max=10000
+          description: publisher cap
+          example: 12
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -323,6 +306,23 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

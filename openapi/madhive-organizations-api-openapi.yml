@@ -39,38 +39,37 @@ paths:
       security:
       - oauth2: []
 components:
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   schemas:
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
+    Status:
+      type: string
+      x-isnullable: false
       x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    ID:
+      type: string
+      x-go-name: ID
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,min=28,max=28
+      description: resource id
+      example: a8MWQ2v4ZceGhsku2P5amaOXCnwe
+    Name:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: 'required,min=2,max=128,ne= '
+      description: resource name
+      example: name of resource
     ErrorResponse:
       type: object
       required:
@@ -94,35 +93,6 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
-    ID:
-      type: string
-      x-go-name: ID
-      x-go-type-skip-optional-pointer: true
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,min=28,max=28
-      description: resource id
-      example: a8MWQ2v4ZceGhsku2P5amaOXCnwe
-    OrgListResponse:
-      type: object
-      x-isnullable: false
-      description: response for organization list
-      properties:
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        orgs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Org'
-          x-go-type-skip-optional-pointer: true
-          description: list of organizations
-    Name:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: 'required,min=2,max=128,ne= '
-      description: resource name
-      example: name of resource
     Org:
       type: object
       required:
@@ -157,20 +127,41 @@ components:
           type: string
           x-go-type-skip-optional-pointer: true
           description: default publisher group id
-    Status:
-      type: string
+    OrgListResponse:
+      type: object
       x-isnullable: false
+      description: response for organization list
+      properties:
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        orgs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Org'
+          x-go-type-skip-optional-pointer: true
+          description: list of organizations
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
       x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -180,6 +171,15 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   responses:
     401Unauthorized:
       description: Unauthorized
