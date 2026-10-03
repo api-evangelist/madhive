@@ -50,35 +50,7 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
-    PublisherResponse:
-      type: object
-      required:
-      - transaction
-      - publishers
-      properties:
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        publishers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Publisher'
-          x-oapi-codegen-extra-tags:
-            validate: omitempty,min=28,max=28
-          description: list of publishers
-          example:
-          - id: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
-            name: my first publisher
-            cap: 12
     ErrorResponse:
       type: object
       required:
@@ -102,6 +74,47 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    PublisherResponse:
+      type: object
+      required:
+      - transaction
+      - publishers
+      properties:
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        publishers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Publisher'
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: list of publishers
+          example:
+          - id: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+            name: my first publisher
+            cap: 12
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
     Publisher:
       x-isnullable: false
       type: object
@@ -132,37 +145,7 @@ components:
           - video
           - display
           - audio
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
   examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
     400InvalidID:
       value:
         error: invalid resource id
@@ -171,6 +154,23 @@ components:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
           taskId: '14158884487309867565'
           created: '2030-11-02T15:04:00Z'
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

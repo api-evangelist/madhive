@@ -73,90 +73,6 @@ paths:
       - oauth2: []
 components:
   schemas:
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    CompositionType:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=LIVERAMP DIRECT NEITHER
-      description: type of segments that compose an audience
-      example: LIVERAMP
-      enum:
-      - LIVERAMP
-      - DIRECT
-      - NEITHER
-    AudienceResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Audience'
-      - type: object
-        required:
-        - transaction
-        - status
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-          status:
-            $ref: '#/components/schemas/Status'
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     AudienceBoolExp:
       type: object
       required:
@@ -307,6 +223,68 @@ components:
           x-go-type-skip-optional-pointer: true
           description: whether this audience is marked as preferred for the organization
           example: false
+    CompositionType:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=LIVERAMP DIRECT NEITHER
+      description: type of segments that compose an audience
+      example: LIVERAMP
+      enum:
+      - LIVERAMP
+      - DIRECT
+      - NEITHER
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    AudienceResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audience'
+      - type: object
+        required:
+        - transaction
+        - status
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          status:
+            $ref: '#/components/schemas/Status'
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
     AudienceRequest:
       x-isnullable: false
       type: object
@@ -325,6 +303,28 @@ components:
           example: this audience targets users interested in tech products
         expr:
           $ref: '#/components/schemas/AudienceBoolExp'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   responses:
     400InvalidID:
       description: Invalid input
@@ -345,17 +345,17 @@ components:
             response:
               $ref: '#/components/examples/401Ex'
   examples:
-    401Ex:
+    400InvalidID:
       value:
-        error: unauthorized
+        error: invalid resource id
         status: ERROR
         transaction:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
           taskId: '14158884487309867565'
           created: '2030-11-02T15:04:00Z'
-    400InvalidID:
+    401Ex:
       value:
-        error: invalid resource id
+        error: unauthorized
         status: ERROR
         transaction:
           id: 4af459ff8e1a36b6bb74fb88f1a02477

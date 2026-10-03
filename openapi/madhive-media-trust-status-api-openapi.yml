@@ -61,44 +61,17 @@ paths:
       security:
       - oauth2: []
 components:
+  responses:
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
   schemas:
-    MediaTrustStatusRequest:
-      type: object
-      required:
-      - creativeIds
-      properties:
-        creativeIds:
-          type: array
-          minItems: 1
-          maxItems: 500
-          items:
-            type: string
-            minLength: 28
-            maxLength: 28
-          x-oapi-codegen-extra-tags:
-            validate: required,min=1,max=500,dive,min=28,max=28
-          description: batch of madhive creative ids to check (max 500 per request)
-          example:
-          - HPAKbbHX1IZFeeAh1K7dSogRUvgF
-          - tfgGrw2ZRrinUTDwAJVW7ygrvoHx
-    MediaTrustProblem:
-      type: object
-      properties:
-        name:
-          type: string
-          description: name of the detected malware/outbreak
-          example: EICAR-Test
-        type:
-          type: string
-          description: type/category of the detected issue
-          example: malware
-        scanId:
-          type: string
-          description: the Media Trust scan id that reported this problem
-        reportedAt:
-          type: string
-          format: date-time
-          description: when this problem was reported
     ErrorResponse:
       type: object
       required:
@@ -122,6 +95,59 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    MediaTrustStatusResponse:
+      type: object
+      required:
+      - results
+      - transaction
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaTrustStatusResult'
+          description: one result per requested creative id, in request order
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    MediaTrustProblem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of the detected malware/outbreak
+          example: EICAR-Test
+        type:
+          type: string
+          description: type/category of the detected issue
+          example: malware
+        scanId:
+          type: string
+          description: the Media Trust scan id that reported this problem
+        reportedAt:
+          type: string
+          format: date-time
+          description: when this problem was reported
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
     MediaTrustStatusResult:
       type: object
       required:
@@ -158,50 +184,25 @@ components:
           items:
             $ref: '#/components/schemas/MediaTrustProblem'
           description: malware/policy issues detected by Media Trust, if any
-    MediaTrustStatusResponse:
+    MediaTrustStatusRequest:
       type: object
       required:
-      - results
-      - transaction
+      - creativeIds
       properties:
-        results:
+        creativeIds:
           type: array
+          minItems: 1
+          maxItems: 500
           items:
-            $ref: '#/components/schemas/MediaTrustStatusResult'
-          description: one result per requested creative id, in request order
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+            type: string
+            minLength: 28
+            maxLength: 28
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,max=500,dive,min=28,max=28
+          description: batch of madhive creative ids to check (max 500 per request)
+          example:
+          - HPAKbbHX1IZFeeAh1K7dSogRUvgF
+          - tfgGrw2ZRrinUTDwAJVW7ygrvoHx
   examples:
     401Ex:
       value:
@@ -211,16 +212,15 @@ components:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
           taskId: '14158884487309867565'
           created: '2030-11-02T15:04:00Z'
-  responses:
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

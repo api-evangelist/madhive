@@ -40,28 +40,6 @@ paths:
       - oauth2: []
 components:
   schemas:
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    ID:
-      type: string
-      x-go-name: ID
-      x-go-type-skip-optional-pointer: true
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,min=28,max=28
-      description: resource id
-      example: a8MWQ2v4ZceGhsku2P5amaOXCnwe
     Name:
       type: string
       x-isnullable: false
@@ -93,6 +71,33 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    OrgListResponse:
+      type: object
+      x-isnullable: false
+      description: response for organization list
+      properties:
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        orgs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Org'
+          x-go-type-skip-optional-pointer: true
+          description: list of organizations
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
     Org:
       type: object
       required:
@@ -127,19 +132,6 @@ components:
           type: string
           x-go-type-skip-optional-pointer: true
           description: default publisher group id
-    OrgListResponse:
-      type: object
-      x-isnullable: false
-      description: response for organization list
-      properties:
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        orgs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Org'
-          x-go-type-skip-optional-pointer: true
-          description: list of organizations
     Transaction:
       type: object
       x-go-type-skip-optional-pointer: true
@@ -162,24 +154,14 @@ components:
           type: string
           description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
           example: '2030-11-02T15:04:00Z'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
+    ID:
+      type: string
+      x-go-name: ID
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,min=28,max=28
+      description: resource id
+      example: a8MWQ2v4ZceGhsku2P5amaOXCnwe
   responses:
     401Unauthorized:
       description: Unauthorized
@@ -190,6 +172,24 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

@@ -63,21 +63,66 @@ paths:
       security:
       - oauth2: []
 components:
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+  examples:
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   schemas:
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     CreativeLineItemRequest:
       type: object
       required:
@@ -137,48 +182,20 @@ components:
           description: List of display creative IDs to attach as companion banners on this flight. Only applicable to audio creatives. Maximum 6 allowed. Each ID must match the audio creative's current companion banners (or an existing flight's). Omit to attach none.
           example:
           - HPAKbbHX1IZFeeAh1K7dSogRUvgF
-    CreativeLineItemEvent:
+    Status:
+      type: string
       x-isnullable: false
-      type: object
-      required:
-      - eventType
-      - urls
-      properties:
-        eventType:
-          $ref: '#/components/schemas/EventType'
-        urls:
-          type: array
-          x-oapi-codegen-extra-tags:
-            validate: required,min=1,dive,http_url
-          items:
-            type: string
-          description: list of creatives
-          example:
-          - http://www.google.com
-          - http://click.com
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
     CreativeLineItem:
       type: object
       required:
@@ -306,25 +323,25 @@ components:
       - THIRD_QUARTILE
       - COMPLETE
       description: event type for creative
-  responses:
-    400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
+    CreativeLineItemEvent:
+      x-isnullable: false
+      type: object
+      required:
+      - eventType
+      - urls
+      properties:
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        urls:
+          type: array
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,dive,http_url
+          items:
+            type: string
+          description: list of creatives
+          example:
+          - http://www.google.com
+          - http://click.com
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -334,23 +351,6 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

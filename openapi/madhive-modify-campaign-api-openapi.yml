@@ -63,60 +63,26 @@ paths:
       security:
       - oauth2: []
 components:
+  responses:
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
   schemas:
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    StatusDetail:
-      x-isnullable: false
-      type: object
-      required:
-      - detail
-      - reasons
-      - numberOfInvalidLineItems
-      - status
-      properties:
-        detail:
-          type: string
-          x-isnullable: false
-          x-omitempty: false
-          x-oapi-codegen-extra-tags:
-            validate: 'required,min=2,ne= '
-          description: status detail
-          example: CAMPAIGN_STATUS_MISSING_LINE_ITEM
-        reasons:
-          type: array
-          items:
-            type: string
-            x-oapi-codegen-extra-tags:
-              validate: omitempty,min=1,dive
-          x-omitempty: true
-          description: reasons for status
-          example:
-          - LINE_ITEM_STATUS_INVALID
-          - MISSING_CREATIVE
-        numberOfInvalidLineItems:
-          type: integer
-          format: uint32
-          x-isnullable: false
-          x-omitempty: false
-          x-oapi-codegen-extra-tags:
-            validate: omitempty
-          description: number of line items
-          example: 2
-        status:
-          $ref: '#/components/schemas/Status'
     ErrorResponse:
       type: object
       required:
@@ -140,6 +106,23 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    CampaignResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Campaign'
+      - type: object
+        required:
+        - transaction
+        - statusDetail
+        properties:
+          startDate:
+            $ref: '#/components/schemas/Date'
+          endDate:
+            $ref: '#/components/schemas/Date'
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          statusDetail:
+            $ref: '#/components/schemas/StatusDetail'
     Campaign:
       type: object
       required:
@@ -209,6 +192,13 @@ components:
           x-omitempty: true
           description: estimate for campaign
           example: 2x 30s spots
+    Date:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: required,datetime=2006-01-02T15:04:05Z07:00
+      description: 2020-06-18T17:24:53Z is a basic example of an RFC 3339 timestamp, which refers to June 18, 2020 5:24:53 PM in UTC
+      example: '2030-01-10T23:00:00Z'
     Transaction:
       type: object
       x-go-type-skip-optional-pointer: true
@@ -231,13 +221,59 @@ components:
           type: string
           description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
           example: '2030-11-02T15:04:00Z'
-    Date:
+    Status:
       type: string
-      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      x-omitempty: false
       x-oapi-codegen-extra-tags:
-        validate: required,datetime=2006-01-02T15:04:05Z07:00
-      description: 2020-06-18T17:24:53Z is a basic example of an RFC 3339 timestamp, which refers to June 18, 2020 5:24:53 PM in UTC
-      example: '2030-01-10T23:00:00Z'
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    StatusDetail:
+      x-isnullable: false
+      type: object
+      required:
+      - detail
+      - reasons
+      - numberOfInvalidLineItems
+      - status
+      properties:
+        detail:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          description: status detail
+          example: CAMPAIGN_STATUS_MISSING_LINE_ITEM
+        reasons:
+          type: array
+          items:
+            type: string
+            x-oapi-codegen-extra-tags:
+              validate: omitempty,min=1,dive
+          x-omitempty: true
+          description: reasons for status
+          example:
+          - LINE_ITEM_STATUS_INVALID
+          - MISSING_CREATIVE
+        numberOfInvalidLineItems:
+          type: integer
+          format: uint32
+          x-isnullable: false
+          x-omitempty: false
+          x-oapi-codegen-extra-tags:
+            validate: omitempty
+          description: number of line items
+          example: 2
+        status:
+          $ref: '#/components/schemas/Status'
     CampaignRequest:
       type: object
       required:
@@ -297,42 +333,23 @@ components:
           x-omitempty: true
           description: estimate for campaign
           example: 2x 30s spots
-    CampaignResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Campaign'
-      - type: object
-        required:
-        - transaction
-        - statusDetail
-        properties:
-          startDate:
-            $ref: '#/components/schemas/Date'
-          endDate:
-            $ref: '#/components/schemas/Date'
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-          statusDetail:
-            $ref: '#/components/schemas/StatusDetail'
-  responses:
+  examples:
     400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -342,23 +359,6 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

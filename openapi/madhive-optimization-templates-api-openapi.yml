@@ -405,6 +405,26 @@ paths:
       - oauth2: []
 components:
   schemas:
+    PatchOptimizationTemplateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Template name
+          example: Updated Video Template
+        mediaType:
+          type: string
+          description: Media type (VIDEO, AUDIO, DISPLAY)
+          enum:
+          - VIDEO
+          - AUDIO
+          - DISPLAY
+          example: VIDEO
+        pubSettings:
+          type: array
+          description: Publisher-specific settings — replaces all existing settings when provided
+          items:
+            $ref: '#/components/schemas/PubSetting'
     Pagination:
       x-go-type-skip-optional-pointer: true
       x-isnullable: false
@@ -437,18 +457,29 @@ components:
           format: int32
           description: Total number of records available
           example: 500
-    PubCap:
+    ErrorResponse:
       type: object
       required:
-      - pubCapPct
+      - transaction
       properties:
-        pubCapPct:
-          type: number
-          format: double
-          description: Publisher cap percentage (0-100, supports decimals like 75.5)
-          minimum: 0
-          maximum: 100
-          example: 75.5
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     OptimizationTemplateListItem:
       type: object
       required:
@@ -507,6 +538,48 @@ components:
           type: string
           description: Email of user who last updated the template
           example: admin@madhive.com
+    PubCap:
+      type: object
+      required:
+      - pubCapPct
+      properties:
+        pubCapPct:
+          type: number
+          format: double
+          description: Publisher cap percentage (0-100, supports decimals like 75.5)
+          minimum: 0
+          maximum: 100
+          example: 75.5
+    BundleRule:
+      type: object
+      required:
+      - bundleId
+      - excluded
+      properties:
+        bundleId:
+          type: string
+          description: Bundle identifier
+          example: bundle123
+        excluded:
+          type: boolean
+          description: Whether the bundle is excluded (true) or included (false)
+          example: false
+    OptimizationTemplatesListResponse:
+      type: object
+      required:
+      - data
+      - pagination
+      - transaction
+      properties:
+        data:
+          type: array
+          description: List of optimization templates (basic info only, excludes pubSettings and transaction)
+          items:
+            $ref: '#/components/schemas/OptimizationTemplateListItem'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     CreateOptimizationTemplateRequest:
       type: object
       required:
@@ -530,70 +603,42 @@ components:
           description: Optional publisher-specific settings (caps, bundle rules, channel rules)
           items:
             $ref: '#/components/schemas/PubSetting'
-    PubSetting:
+    ChannelRule:
       type: object
       required:
-      - pubId
+      - channelName
+      - excluded
       properties:
-        pubId:
+        channelName:
           type: string
-          description: Publisher ID
-          example: pub123abc456def789ghi012jkl3
-        pubCap:
-          $ref: '#/components/schemas/PubCap'
-        bundleRules:
-          type: array
-          description: Bundle inclusion/exclusion rules
-          items:
-            $ref: '#/components/schemas/BundleRule'
-        channelRules:
-          type: array
-          description: Channel inclusion/exclusion rules
-          items:
-            $ref: '#/components/schemas/ChannelRule'
-    ErrorResponse:
+          description: Channel name
+          example: ESPN
+        excluded:
+          type: boolean
+          description: Whether the channel is excluded (true) or included (false)
+          example: true
+    Transaction:
       type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
       required:
-      - transaction
+      - id
+      - taskId
+      - created
       properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
+        id:
           type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
           type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    PatchOptimizationTemplateRequest:
-      type: object
-      properties:
-        name:
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
           type: string
-          description: Template name
-          example: Updated Video Template
-        mediaType:
-          type: string
-          description: Media type (VIDEO, AUDIO, DISPLAY)
-          enum:
-          - VIDEO
-          - AUDIO
-          - DISPLAY
-          example: VIDEO
-        pubSettings:
-          type: array
-          description: Publisher-specific settings — replaces all existing settings when provided
-          items:
-            $ref: '#/components/schemas/PubSetting'
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
     OptimizationTemplateResponse:
       type: object
       required:
@@ -660,82 +705,28 @@ components:
             $ref: '#/components/schemas/PubSetting'
         transaction:
           $ref: '#/components/schemas/Transaction'
-    ChannelRule:
+    PubSetting:
       type: object
       required:
-      - channelName
-      - excluded
+      - pubId
       properties:
-        channelName:
+        pubId:
           type: string
-          description: Channel name
-          example: ESPN
-        excluded:
-          type: boolean
-          description: Whether the channel is excluded (true) or included (false)
-          example: true
-    BundleRule:
-      type: object
-      required:
-      - bundleId
-      - excluded
-      properties:
-        bundleId:
-          type: string
-          description: Bundle identifier
-          example: bundle123
-        excluded:
-          type: boolean
-          description: Whether the bundle is excluded (true) or included (false)
-          example: false
-    OptimizationTemplatesListResponse:
-      type: object
-      required:
-      - data
-      - pagination
-      - transaction
-      properties:
-        data:
+          description: Publisher ID
+          example: pub123abc456def789ghi012jkl3
+        pubCap:
+          $ref: '#/components/schemas/PubCap'
+        bundleRules:
           type: array
-          description: List of optimization templates (basic info only, excludes pubSettings and transaction)
+          description: Bundle inclusion/exclusion rules
           items:
-            $ref: '#/components/schemas/OptimizationTemplateListItem'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
+            $ref: '#/components/schemas/BundleRule'
+        channelRules:
+          type: array
+          description: Channel inclusion/exclusion rules
+          items:
+            $ref: '#/components/schemas/ChannelRule'
   responses:
-    400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
     401Unauthorized:
       description: Unauthorized
       content:
@@ -745,6 +736,32 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+  examples:
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -754,23 +771,6 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

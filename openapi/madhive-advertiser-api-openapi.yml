@@ -157,20 +157,29 @@ components:
           format: int32
           description: Total number of records available
           example: 500
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     AdvertiserListResponse:
       type: object
       required:
@@ -186,6 +195,109 @@ components:
           description: list of advertisers
         pagination:
           $ref: '#/components/schemas/Pagination'
+    Advertiser:
+      type: object
+      required:
+      - name
+      - domain
+      - iabCategory
+      - status
+      properties:
+        id:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: required_with=Status,omitempty,min=28,max=28
+          description: madhive advertiser id
+          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
+        customerExternalId:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: external id of the advertiser
+          example: adv-123456
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-isnullable: false
+          x-omitempty: false
+          description: advertiser name
+          example: Madhive
+        domain:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,url_badformat,url_invalidprefix,url_denylist,url_notexist
+          x-omitempty: false
+          x-isnullable: false
+          description: advertiser domain
+          example: madhive.com
+        iabCategory:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-omitempty: false
+          x-isnullable: false
+          description: iab category
+          example: IAB1
+        associatedAgency:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: advertiser's associated agency
+          example: fake agency name
+        status:
+          $ref: '#/components/schemas/Status'
+    AdvertiserResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Advertiser'
+      - type: object
+        required:
+        - transaction
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
     AdvertiserListItem:
       type: object
       required:
@@ -246,127 +358,6 @@ components:
           x-omitempty: true
           description: advertiser's associated agency
           example: fake agency name
-    AdvertiserResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Advertiser'
-      - type: object
-        required:
-        - transaction
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-    Advertiser:
-      type: object
-      required:
-      - name
-      - domain
-      - iabCategory
-      - status
-      properties:
-        id:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          x-oapi-codegen-extra-tags:
-            validate: required_with=Status,omitempty,min=28,max=28
-          description: madhive advertiser id
-          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
-        customerExternalId:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          x-oapi-codegen-extra-tags:
-            validate: 'omitempty,min=2,ne= '
-          x-omitempty: true
-          description: external id of the advertiser
-          example: adv-123456
-        name:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: 'required,min=2,ne= '
-          x-isnullable: false
-          x-omitempty: false
-          description: advertiser name
-          example: Madhive
-        domain:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: required,url_badformat,url_invalidprefix,url_denylist,url_notexist
-          x-omitempty: false
-          x-isnullable: false
-          description: advertiser domain
-          example: madhive.com
-        iabCategory:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: 'required,min=2,ne= '
-          x-omitempty: false
-          x-isnullable: false
-          description: iab category
-          example: IAB1
-        associatedAgency:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          x-oapi-codegen-extra-tags:
-            validate: 'omitempty,min=2,ne= '
-          x-omitempty: true
-          description: advertiser's associated agency
-          example: fake agency name
-        status:
-          $ref: '#/components/schemas/Status'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   responses:
     401Unauthorized:
       description: Unauthorized
@@ -386,6 +377,15 @@ components:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
           taskId: '14158884487309867565'
           created: '2030-11-02T15:04:00Z'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

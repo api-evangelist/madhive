@@ -408,6 +408,25 @@ paths:
       - OAuth2: []
 components:
   schemas:
+    MCPResponse:
+      type: object
+      description: MCP JSON-RPC 2.0 success response
+      required:
+      - jsonrpc
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+          description: JSON-RPC version
+        id:
+          type: integer
+          description: Request ID matching the request
+          example: 1
+        result:
+          type: object
+          description: Response result
+          additionalProperties: true
     MCPError:
       type: object
       description: MCP JSON-RPC 2.0 error response
@@ -447,25 +466,6 @@ components:
             data:
               type: object
               description: Additional error information
-    MCPResponse:
-      type: object
-      description: MCP JSON-RPC 2.0 success response
-      required:
-      - jsonrpc
-      properties:
-        jsonrpc:
-          type: string
-          enum:
-          - '2.0'
-          description: JSON-RPC version
-        id:
-          type: integer
-          description: Request ID matching the request
-          example: 1
-        result:
-          type: object
-          description: Response result
-          additionalProperties: true
     ApigeeError:
       type: object
       properties:

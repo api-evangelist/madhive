@@ -119,6 +119,21 @@ paths:
       - oauth2: []
 components:
   schemas:
+    AgencyListResponse:
+      type: object
+      required:
+      - transaction
+      - agencies
+      properties:
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        agencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgencyListItem'
+          description: list of agencies
+        pagination:
+          $ref: '#/components/schemas/Pagination'
     Pagination:
       x-go-type-skip-optional-pointer: true
       x-isnullable: false
@@ -151,63 +166,6 @@ components:
           format: int32
           description: Total number of records available
           example: 500
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    AgencyListItem:
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: string
-          x-isnullable: false
-          x-omitempty: false
-          description: madhive agency id
-          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
-        name:
-          type: string
-          x-isnullable: false
-          x-omitempty: false
-          description: agency name
-          example: Madhive
-    AgencyListResponse:
-      type: object
-      required:
-      - transaction
-      - agencies
-      properties:
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        agencies:
-          type: array
-          items:
-            $ref: '#/components/schemas/AgencyListItem'
-          description: list of agencies
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    AgencyResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Agency'
-      - type: object
-        required:
-        - transaction
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
     ErrorResponse:
       type: object
       required:
@@ -231,28 +189,6 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     Agency:
       type: object
       required:
@@ -284,6 +220,34 @@ components:
           example: Madhive
         status:
           $ref: '#/components/schemas/Status'
+    AgencyListItem:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: madhive agency id
+          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
+        name:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: agency name
+          example: Madhive
+    AgencyResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Agency'
+      - type: object
+        required:
+        - transaction
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
     AgencyRequest:
       type: object
       required:
@@ -305,15 +269,42 @@ components:
           x-omitempty: false
           description: agency name
           example: Madhive
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   responses:
     401Unauthorized:
       description: Unauthorized
@@ -333,6 +324,15 @@ components:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
           taskId: '14158884487309867565'
           created: '2030-11-02T15:04:00Z'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

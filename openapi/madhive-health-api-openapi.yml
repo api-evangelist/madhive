@@ -43,6 +43,27 @@ paths:
       description: apigee
 components:
   schemas:
+    GenericResponse:
+      type: object
+      required:
+      - id
+      - message
+      - transaction
+      properties:
+        id:
+          type: string
+          description: resource id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        message:
+          type: string
+          description: response message
+          example: success
+        error:
+          type: string
+          description: error message
+          example: unable to process request
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     ErrorResponse:
       type: object
       required:
@@ -88,27 +109,6 @@ components:
           type: string
           description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
           example: '2030-11-02T15:04:00Z'
-    GenericResponse:
-      type: object
-      required:
-      - id
-      - message
-      - transaction
-      properties:
-        id:
-          type: string
-          description: resource id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        message:
-          type: string
-          description: response message
-          example: success
-        error:
-          type: string
-          description: error message
-          example: unable to process request
-        transaction:
-          $ref: '#/components/schemas/Transaction'
   responses:
     401Unauthorized:
       description: Unauthorized

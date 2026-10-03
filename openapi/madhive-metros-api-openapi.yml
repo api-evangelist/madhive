@@ -40,29 +40,7 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
-    MetroListResponse:
-      type: object
-      required:
-      - metros
-      - transaction
-      properties:
-        metros:
-          type: array
-          items:
-            $ref: '#/components/schemas/Metro'
-          description: List of metro codes
-        transaction:
-          $ref: '#/components/schemas/Transaction'
     ErrorResponse:
       type: object
       required:
@@ -86,21 +64,19 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
-    Metro:
+    MetroListResponse:
       type: object
       required:
-      - code
-      - name
+      - metros
+      - transaction
       properties:
-        code:
-          type: integer
-          format: int64
-          description: The metro code
-          example: 501
-        name:
-          type: string
-          description: The metro name
-          example: New York, NY
+        metros:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metro'
+          description: List of metro codes
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     Transaction:
       type: object
       x-go-type-skip-optional-pointer: true
@@ -123,6 +99,30 @@ components:
           type: string
           description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
           example: '2030-11-02T15:04:00Z'
+    Metro:
+      type: object
+      required:
+      - code
+      - name
+      properties:
+        code:
+          type: integer
+          format: int64
+          description: The metro code
+          example: 501
+        name:
+          type: string
+          description: The metro name
+          example: New York, NY
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

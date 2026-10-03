@@ -54,21 +54,49 @@ paths:
       security:
       - oauth2: []
 components:
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
   schemas:
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     AssetValidation:
       type: object
       required:
@@ -81,29 +109,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AssetValidationResult'
-    AssetValidationAttribute:
-      type: object
-      required:
-      - id
-      - name
-      - value
-      - required
-      properties:
-        id:
-          type: string
-          description: id of the asset
-          example: DURATION
-        name:
-          type: string
-          description: name of the asset
-          example: duration
-        value:
-          type: string
-          description: value of the asset
-          example: 15.00s
-        required:
-          type: boolean
-          description: indicates whether or not this is a required asset
     CompanionBannerMetadata:
       type: object
       description: Read-only metadata for a companion banner attached to an audio creative.
@@ -149,48 +154,6 @@ components:
           x-omitempty: true
           description: banner asset file size in bytes
           example: 123456
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    CreativeLineItemEvent:
-      x-isnullable: false
-      type: object
-      required:
-      - eventType
-      - urls
-      properties:
-        eventType:
-          $ref: '#/components/schemas/EventType'
-        urls:
-          type: array
-          x-oapi-codegen-extra-tags:
-            validate: required,min=1,dive,http_url
-          items:
-            type: string
-          description: list of creatives
-          example:
-          - http://www.google.com
-          - http://click.com
     AssetValidationResult:
       type: object
       required:
@@ -219,28 +182,29 @@ components:
           type: string
           description: long human-readable message
           example: Your creative may not be considered as a 30s asset by some publishers, which may impact cost and scale.
-    Transaction:
+    AssetValidationAttribute:
       type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
       required:
       - id
-      - taskId
-      - created
+      - name
+      - value
+      - required
       properties:
         id:
           type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
+          description: id of the asset
+          example: DURATION
+        name:
           type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
+          description: name of the asset
+          example: duration
+        value:
           type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
+          description: value of the asset
+          example: 15.00s
+        required:
+          type: boolean
+          description: indicates whether or not this is a required asset
     CreativeResponse:
       type: object
       allOf:
@@ -275,6 +239,42 @@ components:
             items:
               $ref: '#/components/schemas/CompanionBannerMetadata'
             description: Read-only metadata for attached companion banners. Present only for audio creatives with companion banners.
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
     Creative:
       type: object
       required:
@@ -426,25 +426,42 @@ components:
       - THIRD_QUARTILE
       - COMPLETE
       description: event type for creative
-  responses:
+    CreativeLineItemEvent:
+      x-isnullable: false
+      type: object
+      required:
+      - eventType
+      - urls
+      properties:
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        urls:
+          type: array
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,dive,http_url
+          items:
+            type: string
+          description: list of creatives
+          example:
+          - http://www.google.com
+          - http://click.com
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
     400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -454,23 +471,6 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
-  examples:
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

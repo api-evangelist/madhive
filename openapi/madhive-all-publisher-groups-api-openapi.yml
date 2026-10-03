@@ -43,41 +43,6 @@ paths:
       - oauth2: []
 components:
   schemas:
-    PublisherGroupListResponse:
-      x-isnullable: false
-      type: object
-      required:
-      - transaction
-      - publisherGroups
-      properties:
-        publisherGroups:
-          type: array
-          items:
-            $ref: '#/components/schemas/PublisherGroupListItem'
-          description: list of publisher groups
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    PublisherGroupListItem:
-      type: object
-      required:
-      - id
-      - name
-      - mediaType
-      properties:
-        id:
-          type: string
-          x-isnullable: false
-          x-omitempty: false
-          description: madhive publisher group id
-          example: HPAKbbHX1IZFeeAh1K7dSogRUvgF
-        name:
-          type: string
-          x-isnullable: false
-          x-omitempty: false
-          description: publisher group name
-          example: my first publisher group
-        mediaType:
-          $ref: '#/components/schemas/MediaType'
     MediaType:
       type: string
       x-isnullable: false
@@ -113,6 +78,41 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    PublisherGroupListResponse:
+      x-isnullable: false
+      type: object
+      required:
+      - transaction
+      - publisherGroups
+      properties:
+        publisherGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublisherGroupListItem'
+          description: list of publisher groups
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    PublisherGroupListItem:
+      type: object
+      required:
+      - id
+      - name
+      - mediaType
+      properties:
+        id:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: madhive publisher group id
+          example: HPAKbbHX1IZFeeAh1K7dSogRUvgF
+        name:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          description: publisher group name
+          example: my first publisher group
+        mediaType:
+          $ref: '#/components/schemas/MediaType'
     Transaction:
       type: object
       x-go-type-skip-optional-pointer: true
@@ -154,6 +154,23 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
+  examples:
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -163,23 +180,6 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

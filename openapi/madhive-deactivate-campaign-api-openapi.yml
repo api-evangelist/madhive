@@ -46,26 +46,28 @@ paths:
       security:
       - oauth2: []
 components:
-  responses:
-    400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
   schemas:
+    GenericResponse:
+      type: object
+      required:
+      - id
+      - message
+      - transaction
+      properties:
+        id:
+          type: string
+          description: resource id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        message:
+          type: string
+          description: response message
+          example: success
+        error:
+          type: string
+          description: error message
+          example: unable to process request
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     ErrorResponse:
       type: object
       required:
@@ -111,39 +113,37 @@ components:
           type: string
           description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
           example: '2030-11-02T15:04:00Z'
-    GenericResponse:
-      type: object
-      required:
-      - id
-      - message
-      - transaction
-      properties:
-        id:
-          type: string
-          description: resource id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        message:
-          type: string
-          description: response message
-          example: success
-        error:
-          type: string
-          description: error message
-          example: unable to process request
-        transaction:
-          $ref: '#/components/schemas/Transaction'
+  responses:
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
   examples:
-    401Ex:
+    400InvalidID:
       value:
-        error: unauthorized
+        error: invalid resource id
         status: ERROR
         transaction:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
           taskId: '14158884487309867565'
           created: '2030-11-02T15:04:00Z'
-    400InvalidID:
+    401Ex:
       value:
-        error: invalid resource id
+        error: unauthorized
         status: ERROR
         transaction:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
