@@ -50,6 +50,41 @@ paths:
       security:
       - oauth2: []
 components:
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+    PathID:
+      name: id
+      in: path
+      description: resource id
+      required: true
+      schema:
+        type: string
+        x-oapi-codegen-extra-tags:
+          validate: required,min=28,max=28
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   responses:
     401Unauthorized:
       description: Unauthorized
@@ -70,29 +105,6 @@ components:
             response:
               $ref: '#/components/examples/400InvalidID'
   schemas:
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
     Agency:
       type: object
       required:
@@ -124,51 +136,6 @@ components:
           example: Madhive
         status:
           $ref: '#/components/schemas/Status'
-    AgencyRequest:
-      type: object
-      required:
-      - name
-      properties:
-        customerExternalId:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          x-oapi-codegen-extra-tags:
-            validate: 'omitempty,min=2,ne= '
-          x-omitempty: true
-          description: external id of the agency
-          example: agency-123456
-        name:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: 'required,min=2,ne= '
-          x-isnullable: false
-          x-omitempty: false
-          description: agency name
-          example: Madhive
-    AgencyResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Agency'
-      - type: object
-        required:
-        - transaction
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
     Transaction:
       type: object
       x-go-type-skip-optional-pointer: true
@@ -191,41 +158,74 @@ components:
           type: string
           description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
           example: '2030-11-02T15:04:00Z'
-  examples:
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    AgencyResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Agency'
+      - type: object
+        required:
+        - transaction
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+    AgencyRequest:
+      type: object
+      required:
+      - name
+      properties:
+        customerExternalId:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-omitempty: true
+          description: external id of the agency
+          example: agency-123456
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-isnullable: false
+          x-omitempty: false
+          description: agency name
+          example: Madhive
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
         transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
-    PathID:
-      name: id
-      in: path
-      description: resource id
-      required: true
-      schema:
-        type: string
-        x-oapi-codegen-extra-tags:
-          validate: required,min=28,max=28
+          $ref: '#/components/schemas/Transaction'
   securitySchemes:
     oauth2:
       type: oauth2

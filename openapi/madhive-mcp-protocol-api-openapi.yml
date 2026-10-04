@@ -408,11 +408,12 @@ paths:
       - OAuth2: []
 components:
   schemas:
-    MCPResponse:
+    MCPRequest:
       type: object
-      description: MCP JSON-RPC 2.0 success response
+      description: MCP JSON-RPC 2.0 request
       required:
       - jsonrpc
+      - method
       properties:
         jsonrpc:
           type: string
@@ -421,12 +422,26 @@ components:
           description: JSON-RPC version
         id:
           type: integer
-          description: Request ID matching the request
+          description: Request ID for matching responses
           example: 1
-        result:
+        method:
+          type: string
+          enum:
+          - tools/list
+          - tools/call
+          description: MCP method to call
+        params:
           type: object
-          description: Response result
-          additionalProperties: true
+          description: Method parameters
+          properties:
+            name:
+              type: string
+              description: Tool name (for tools/call)
+              example: get_campaigns
+            arguments:
+              type: object
+              description: Tool-specific arguments (for tools/call)
+              additionalProperties: true
     MCPError:
       type: object
       description: MCP JSON-RPC 2.0 error response
@@ -484,12 +499,11 @@ components:
                 reason:
                   type: string
                   description: Error reason
-    MCPRequest:
+    MCPResponse:
       type: object
-      description: MCP JSON-RPC 2.0 request
+      description: MCP JSON-RPC 2.0 success response
       required:
       - jsonrpc
-      - method
       properties:
         jsonrpc:
           type: string
@@ -498,26 +512,12 @@ components:
           description: JSON-RPC version
         id:
           type: integer
-          description: Request ID for matching responses
+          description: Request ID matching the request
           example: 1
-        method:
-          type: string
-          enum:
-          - tools/list
-          - tools/call
-          description: MCP method to call
-        params:
+        result:
           type: object
-          description: Method parameters
-          properties:
-            name:
-              type: string
-              description: Tool name (for tools/call)
-              example: get_campaigns
-            arguments:
-              type: object
-              description: Tool-specific arguments (for tools/call)
-              additionalProperties: true
+          description: Response result
+          additionalProperties: true
   securitySchemes:
     OAuth2:
       type: oauth2

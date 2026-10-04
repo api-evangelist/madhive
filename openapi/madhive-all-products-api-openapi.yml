@@ -45,42 +45,16 @@ paths:
       security:
       - oauth2: []
 components:
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
-    MediaType:
-      type: string
-      x-isnullable: false
-      x-omitempty: true
-      x-oapi-codegen-extra-tags:
-        validate: required,oneof=NONE VIDEO AUDIO DISPLAY
-      example: VIDEO
-      enum:
-      - NONE
-      - VIDEO
-      - AUDIO
-      - DISPLAY
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
     ProductResponse:
       type: object
       allOf:
@@ -94,46 +68,6 @@ components:
             $ref: '#/components/schemas/Transaction'
           status:
             $ref: '#/components/schemas/Status'
-    DeviceCap:
-      x-isnullable: false
-      type: object
-      required:
-      - tv
-      - mobile
-      - desktop
-      - tablet
-      properties:
-        tv:
-          type: integer
-          format: uint32
-          x-oapi-codegen-extra-tags:
-            validate: omitempty,min=1,max=100
-          description: tv device cap
-          example: 40
-        mobile:
-          type: integer
-          format: uint32
-          x-oapi-codegen-extra-tags:
-            validate: omitempty,min=1,max=100
-          x-omitempty: true
-          description: mobile device cap
-          example: 40
-        desktop:
-          type: integer
-          format: uint32
-          x-oapi-codegen-extra-tags:
-            validate: omitempty,min=1,max=100
-          x-omitempty: true
-          description: desktop device cap
-          example: 20
-        tablet:
-          type: integer
-          format: uint32
-          x-oapi-codegen-extra-tags:
-            validate: omitempty,min=1,max=100
-          x-omitempty: true
-          description: tablet device cap
-          example: 0
     Product:
       x-isnullable: false
       type: object
@@ -190,20 +124,18 @@ components:
           $ref: '#/components/schemas/MediaType'
         status:
           $ref: '#/components/schemas/Status'
-    Status:
+    MediaType:
       type: string
       x-isnullable: false
-      x-omitempty: false
+      x-omitempty: true
       x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
+        validate: required,oneof=NONE VIDEO AUDIO DISPLAY
+      example: VIDEO
       enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
+      - NONE
+      - VIDEO
+      - AUDIO
+      - DISPLAY
     Transaction:
       type: object
       x-go-type-skip-optional-pointer: true
@@ -240,16 +172,101 @@ components:
           description: list of products
         transaction:
           $ref: '#/components/schemas/Transaction'
-  responses:
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    DeviceCap:
+      x-isnullable: false
+      type: object
+      required:
+      - tv
+      - mobile
+      - desktop
+      - tablet
+      properties:
+        tv:
+          type: integer
+          format: uint32
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,max=100
+          description: tv device cap
+          example: 40
+        mobile:
+          type: integer
+          format: uint32
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,max=100
+          x-omitempty: true
+          description: mobile device cap
+          example: 40
+        desktop:
+          type: integer
+          format: uint32
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,max=100
+          x-omitempty: true
+          description: desktop device cap
+          example: 20
+        tablet:
+          type: integer
+          format: uint32
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,max=100
+          x-omitempty: true
+          description: tablet device cap
+          example: 0
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
     400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  responses:
     401Unauthorized:
       description: Unauthorized
       content:
@@ -259,32 +276,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
-  examples:
     400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
   securitySchemes:
     oauth2:
       type: oauth2

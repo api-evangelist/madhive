@@ -61,53 +61,16 @@ paths:
       security:
       - oauth2: []
 components:
-  responses:
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    MediaTrustStatusResponse:
-      type: object
-      required:
-      - results
-      - transaction
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MediaTrustStatusResult'
-          description: one result per requested creative id, in request order
-        transaction:
-          $ref: '#/components/schemas/Transaction'
     MediaTrustProblem:
       type: object
       properties:
@@ -126,28 +89,6 @@ components:
           type: string
           format: date-time
           description: when this problem was reported
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     MediaTrustStatusResult:
       type: object
       required:
@@ -184,6 +125,51 @@ components:
           items:
             $ref: '#/components/schemas/MediaTrustProblem'
           description: malware/policy issues detected by Media Trust, if any
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
     MediaTrustStatusRequest:
       type: object
       required:
@@ -203,6 +189,19 @@ components:
           example:
           - HPAKbbHX1IZFeeAh1K7dSogRUvgF
           - tfgGrw2ZRrinUTDwAJVW7ygrvoHx
+    MediaTrustStatusResponse:
+      type: object
+      required:
+      - results
+      - transaction
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaTrustStatusResult'
+          description: one result per requested creative id, in request order
+        transaction:
+          $ref: '#/components/schemas/Transaction'
   examples:
     401Ex:
       value:
@@ -212,15 +211,16 @@ components:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
           taskId: '14158884487309867565'
           created: '2030-11-02T15:04:00Z'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+  responses:
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
   securitySchemes:
     oauth2:
       type: oauth2

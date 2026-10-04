@@ -58,17 +58,21 @@ paths:
       security:
       - oauth2: []
 components:
-  responses:
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
   schemas:
+    ContextualSegmentListResponse:
+      type: object
+      x-isnullable: false
+      required:
+      - segments
+      - transaction
+      properties:
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalSegment'
+          description: list of contextual segments
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     ExternalSegment:
       type: object
       x-isnullable: false
@@ -149,29 +153,6 @@ components:
           type: string
           description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
           example: '2030-11-02T15:04:00Z'
-    ContextualSegmentListResponse:
-      type: object
-      x-isnullable: false
-      required:
-      - segments
-      - transaction
-      properties:
-        segments:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExternalSegment'
-          description: list of contextual segments
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   parameters:
     X-Cloud-Trace-Context:
       name: X-Cloud-Trace-Context
@@ -181,6 +162,25 @@ components:
       schema:
         type: string
         default: 91f9f012dc7c7ffc13604c77f12a8931
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  responses:
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
   securitySchemes:
     oauth2:
       type: oauth2

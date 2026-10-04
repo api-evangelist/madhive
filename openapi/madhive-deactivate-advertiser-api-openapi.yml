@@ -29,6 +29,48 @@ paths:
       security:
       - oauth2: []
 components:
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+    PathID:
+      name: id
+      in: path
+      description: resource id
+      required: true
+      schema:
+        type: string
+        x-oapi-codegen-extra-tags:
+          validate: required,min=28,max=28
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    200DeleteResource:
+      value:
+        id: UoMlEJ6pH6tcSOKgnERrWH7lWfwL
+        message: resource successfully archived
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   schemas:
     GenericResponse:
       type: object
@@ -49,29 +91,6 @@ components:
           type: string
           description: error message
           example: unable to process request
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
     Transaction:
@@ -96,6 +115,29 @@ components:
           type: string
           description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
           example: '2030-11-02T15:04:00Z'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
   responses:
     401Unauthorized:
       description: Unauthorized
@@ -106,15 +148,6 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
-    200DeleteResource:
-      description: successful delete operation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GenericResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/200DeleteResource'
     400InvalidID:
       description: Invalid input
       content:
@@ -124,48 +157,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/400InvalidID'
-  examples:
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
     200DeleteResource:
-      value:
-        id: UoMlEJ6pH6tcSOKgnERrWH7lWfwL
-        message: resource successfully archived
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
-    PathID:
-      name: id
-      in: path
-      description: resource id
-      required: true
-      schema:
-        type: string
-        x-oapi-codegen-extra-tags:
-          validate: required,min=28,max=28
+      description: successful delete operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenericResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/200DeleteResource'
   securitySchemes:
     oauth2:
       type: oauth2

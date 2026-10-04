@@ -54,61 +54,46 @@ paths:
       security:
       - oauth2: []
 components:
-  responses:
-    400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
   schemas:
-    ErrorResponse:
+    EventType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: required,oneof=IMPRESSION CLICK_TRACKER CLICK_THROUGH START FIRST_QUARTILE MIDPOINT_QUARTILE THIRD_QUARTILE COMPLETE
+      enum:
+      - IMPRESSION
+      - CLICK_TRACKER
+      - CLICK_THROUGH
+      - START
+      - FIRST_QUARTILE
+      - MIDPOINT_QUARTILE
+      - THIRD_QUARTILE
+      - COMPLETE
+      description: event type for creative
+    AssetValidationAttribute:
       type: object
       required:
-      - transaction
+      - id
+      - name
+      - value
+      - required
       properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
+        id:
           type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
+          description: id of the asset
+          example: DURATION
+        name:
           type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    AssetValidation:
-      type: object
-      required:
-      - attribute
-      - validations
-      properties:
-        attribute:
-          $ref: '#/components/schemas/AssetValidationAttribute'
-        validations:
-          type: array
-          items:
-            $ref: '#/components/schemas/AssetValidationResult'
+          description: name of the asset
+          example: duration
+        value:
+          type: string
+          description: value of the asset
+          example: 15.00s
+        required:
+          type: boolean
+          description: indicates whether or not this is a required asset
     CompanionBannerMetadata:
       type: object
       description: Read-only metadata for a companion banner attached to an audio creative.
@@ -154,105 +139,6 @@ components:
           x-omitempty: true
           description: banner asset file size in bytes
           example: 123456
-    AssetValidationResult:
-      type: object
-      required:
-      - publisher
-      - valid
-      - message
-      - detailsShort
-      - detailsLong
-      properties:
-        publisher:
-          type: string
-          description: The publisher setting the criteria for these validations
-          example: HULU
-        valid:
-          type: boolean
-          description: indicates whether this asset is valid given the publisher's criteria
-        message:
-          type: string
-          description: human-readable message
-          example: Asset Validations Standards acceptable durations 15, 30 or 60 seconds
-        detailsShort:
-          type: string
-          description: short human-readable message
-          example: Exceeds 30s
-        detailsLong:
-          type: string
-          description: long human-readable message
-          example: Your creative may not be considered as a 30s asset by some publishers, which may impact cost and scale.
-    AssetValidationAttribute:
-      type: object
-      required:
-      - id
-      - name
-      - value
-      - required
-      properties:
-        id:
-          type: string
-          description: id of the asset
-          example: DURATION
-        name:
-          type: string
-          description: name of the asset
-          example: duration
-        value:
-          type: string
-          description: value of the asset
-          example: 15.00s
-        required:
-          type: boolean
-          description: indicates whether or not this is a required asset
-    CreativeResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Creative'
-      - type: object
-        required:
-        - events
-        - transaction
-        - status
-        properties:
-          events:
-            type: array
-            items:
-              $ref: '#/components/schemas/CreativeLineItemEvent'
-            x-oapi-codegen-extra-tags:
-              validate: omitempty,min=1,dive
-            x-omitempty: true
-            description: list of events
-            example:
-            - eventType: IMPRESSION
-              urls:
-              - http://www.google.com
-              - http://click.com
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-          status:
-            $ref: '#/components/schemas/Status'
-          companionBannerMetadata:
-            type: array
-            x-go-type-skip-optional-pointer: true
-            x-omitempty: true
-            items:
-              $ref: '#/components/schemas/CompanionBannerMetadata'
-            description: Read-only metadata for attached companion banners. Present only for audio creatives with companion banners.
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
     Transaction:
       type: object
       x-go-type-skip-optional-pointer: true
@@ -410,22 +296,60 @@ components:
           description: List of display creative IDs attached as companion banners. Only applicable to audio creatives. Maximum 6 allowed. Each ID references a display creative belonging to the same advertiser as the audio creative, and no two companion banners share the same dimensions.
           example:
           - HPAKbbHX1IZFeeAh1K7dSogRUvgF
-    EventType:
+    AssetValidation:
+      type: object
+      required:
+      - attribute
+      - validations
+      properties:
+        attribute:
+          $ref: '#/components/schemas/AssetValidationAttribute'
+        validations:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetValidationResult'
+    Status:
       type: string
       x-isnullable: false
-      x-omitempty: true
+      x-omitempty: false
       x-oapi-codegen-extra-tags:
-        validate: required,oneof=IMPRESSION CLICK_TRACKER CLICK_THROUGH START FIRST_QUARTILE MIDPOINT_QUARTILE THIRD_QUARTILE COMPLETE
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
       enum:
-      - IMPRESSION
-      - CLICK_TRACKER
-      - CLICK_THROUGH
-      - START
-      - FIRST_QUARTILE
-      - MIDPOINT_QUARTILE
-      - THIRD_QUARTILE
-      - COMPLETE
-      description: event type for creative
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    AssetValidationResult:
+      type: object
+      required:
+      - publisher
+      - valid
+      - message
+      - detailsShort
+      - detailsLong
+      properties:
+        publisher:
+          type: string
+          description: The publisher setting the criteria for these validations
+          example: HULU
+        valid:
+          type: boolean
+          description: indicates whether this asset is valid given the publisher's criteria
+        message:
+          type: string
+          description: human-readable message
+          example: Asset Validations Standards acceptable durations 15, 30 or 60 seconds
+        detailsShort:
+          type: string
+          description: short human-readable message
+          example: Exceeds 30s
+        detailsLong:
+          type: string
+          description: long human-readable message
+          example: Your creative may not be considered as a 30s asset by some publishers, which may impact cost and scale.
     CreativeLineItemEvent:
       x-isnullable: false
       type: object
@@ -445,6 +369,72 @@ components:
           example:
           - http://www.google.com
           - http://click.com
+    CreativeResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Creative'
+      - type: object
+        required:
+        - events
+        - transaction
+        - status
+        properties:
+          events:
+            type: array
+            items:
+              $ref: '#/components/schemas/CreativeLineItemEvent'
+            x-oapi-codegen-extra-tags:
+              validate: omitempty,min=1,dive
+            x-omitempty: true
+            description: list of events
+            example:
+            - eventType: IMPRESSION
+              urls:
+              - http://www.google.com
+              - http://click.com
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          status:
+            $ref: '#/components/schemas/Status'
+          companionBannerMetadata:
+            type: array
+            x-go-type-skip-optional-pointer: true
+            x-omitempty: true
+            items:
+              $ref: '#/components/schemas/CompanionBannerMetadata'
+            description: Read-only metadata for attached companion banners. Present only for audio creatives with companion banners.
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   examples:
     401Ex:
       value:
@@ -462,15 +452,25 @@ components:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
           taskId: '14158884487309867565'
           created: '2030-11-02T15:04:00Z'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+  responses:
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
   securitySchemes:
     oauth2:
       type: oauth2
