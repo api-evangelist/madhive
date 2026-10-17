@@ -135,130 +135,7 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-  responses:
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/401Ex'
-    400InvalidID:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              $ref: '#/components/examples/400InvalidID'
   schemas:
-    CompositionType:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=LIVERAMP DIRECT NEITHER
-      description: type of segments that compose an audience
-      example: LIVERAMP
-      enum:
-      - LIVERAMP
-      - DIRECT
-      - NEITHER
-    AudienceBoolExp:
-      type: object
-      required:
-      - op
-      - ids
-      - children
-      properties:
-        op:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: required,oneof=IDENTITY AND OR NOT
-          enum:
-          - IDENTITY
-          - AND
-          - OR
-          - NOT
-          description: Boolean operation to apply across segment IDs and children
-          example: AND
-        ids:
-          type: array
-          items:
-            type: string
-            format: byte
-            description: Segment IDs
-            example: U29tZUJ5dGVBcnJheQ==
-        children:
-          type: array
-          items:
-            $ref: '#/components/schemas/AudienceBoolExp'
-          description: Sub-expressions that recursively apply the Boolean operation
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
     Pagination:
       x-go-type-skip-optional-pointer: true
       x-isnullable: false
@@ -291,52 +168,50 @@ components:
           format: int32
           description: Total number of records available
           example: 500
-    AudienceRequest:
+    Status:
+      type: string
       x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    AudienceBoolExp:
       type: object
       required:
-      - name
+      - op
+      - ids
+      - children
       properties:
-        name:
-          x-isnullable: false
+        op:
           type: string
-          description: the name of the audience
-          example: custom Audience Name
-        description:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: a brief description of the audience
-          example: this audience targets users interested in tech products
-        expr:
-          $ref: '#/components/schemas/AudienceBoolExp'
-    AudienceResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Audience'
-      - type: object
-        required:
-        - transaction
-        - status
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-          status:
-            $ref: '#/components/schemas/Status'
-    AudienceListResponse:
-      x-isnullable: false
-      type: object
-      required:
-      - transaction
-      - audiences
-      properties:
-        audiences:
+          x-oapi-codegen-extra-tags:
+            validate: required,oneof=IDENTITY AND OR NOT
+          enum:
+          - IDENTITY
+          - AND
+          - OR
+          - NOT
+          description: Boolean operation to apply across segment IDs and children
+          example: AND
+        ids:
           type: array
           items:
-            $ref: '#/components/schemas/AudienceResponse'
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
+            type: string
+            format: byte
+            description: Segment IDs
+            example: U29tZUJ5dGVBcnJheQ==
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudienceBoolExp'
+          description: Sub-expressions that recursively apply the Boolean operation
     Audience:
       x-isnullable: false
       type: object
@@ -457,6 +332,68 @@ components:
           x-go-type-skip-optional-pointer: true
           description: whether this audience is marked as preferred for the organization
           example: false
+    CompositionType:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=LIVERAMP DIRECT NEITHER
+      description: type of segments that compose an audience
+      example: LIVERAMP
+      enum:
+      - LIVERAMP
+      - DIRECT
+      - NEITHER
+    AudienceListResponse:
+      x-isnullable: false
+      type: object
+      required:
+      - transaction
+      - audiences
+      properties:
+        audiences:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudienceResponse'
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+    AudienceResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audience'
+      - type: object
+        required:
+        - transaction
+        - status
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          status:
+            $ref: '#/components/schemas/Status'
     ErrorResponse:
       type: object
       required:
@@ -480,6 +417,69 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    AudienceRequest:
+      x-isnullable: false
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          x-isnullable: false
+          type: string
+          description: the name of the audience
+          example: custom Audience Name
+        description:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: a brief description of the audience
+          example: this audience targets users interested in tech products
+        expr:
+          $ref: '#/components/schemas/AudienceBoolExp'
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+  responses:
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/401Ex'
+    400InvalidID:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              $ref: '#/components/examples/400InvalidID'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

@@ -76,34 +76,49 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
-    SegmentListResponse:
+    Pagination:
+      x-go-type-skip-optional-pointer: true
       x-isnullable: false
-      type: object
+      readOnly: true
       required:
-      - segments
-      - transaction
+      - pageSize
+      - offset
+      - pageToken
+      - totalRecords
+      type: object
       properties:
-        segments:
-          type: array
-          items:
-            $ref: '#/components/schemas/SegmentResponse'
-          x-oapi-codegen-extra-tags:
-            validate: omitempty,min=1,dive
-          description: list of segments
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
+        pageSize:
+          type: integer
+          format: int32
+          description: Number of items per page
+          example: 100
+        offset:
+          type: integer
+          format: int32
+          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
+
+            '
+          example: 1
+        pageToken:
+          type: string
+          description: Opaque token for retrieving the next page of results
+          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
+        totalRecords:
+          type: integer
+          format: int32
+          description: Total number of records available
+          example: 500
+    SegmentResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Segment'
+      - type: object
+        required:
+        - transaction
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
     Segment:
       x-isnullable: false
       type: object
@@ -173,81 +188,24 @@ components:
           type: string
           x-omitempty: false
           x-go-type-skip-optional-pointer: true
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-    Pagination:
-      x-go-type-skip-optional-pointer: true
+    SegmentListResponse:
       x-isnullable: false
-      readOnly: true
+      type: object
       required:
-      - pageSize
-      - offset
-      - pageToken
-      - totalRecords
-      type: object
+      - segments
+      - transaction
       properties:
-        pageSize:
-          type: integer
-          format: int32
-          description: Number of items per page
-          example: 100
-        offset:
-          type: integer
-          format: int32
-          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
-
-            '
-          example: 1
-        pageToken:
-          type: string
-          description: Opaque token for retrieving the next page of results
-          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
-        totalRecords:
-          type: integer
-          format: int32
-          description: Total number of records available
-          example: 500
-    SegmentResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Segment'
-      - type: object
-        required:
-        - transaction
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-    SegmentType:
-      type: string
-      x-isnullable: false
-      x-omitempty: true
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=RETARGETING FIRST_PARTY THIRD_PARTY
-      enum:
-      - RETARGETING
-      - FIRST_PARTY
-      - THIRD_PARTY
-      description: segment type
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentResponse'
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=1,dive
+          description: list of segments
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
     ErrorResponse:
       type: object
       required:
@@ -271,6 +229,39 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    SegmentType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=RETARGETING FIRST_PARTY THIRD_PARTY
+      enum:
+      - RETARGETING
+      - FIRST_PARTY
+      - THIRD_PARTY
+      description: segment type
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   examples:
     401Ex:
       value:
@@ -307,6 +298,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/400InvalidID'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

@@ -408,40 +408,6 @@ paths:
       - OAuth2: []
 components:
   schemas:
-    MCPRequest:
-      type: object
-      description: MCP JSON-RPC 2.0 request
-      required:
-      - jsonrpc
-      - method
-      properties:
-        jsonrpc:
-          type: string
-          enum:
-          - '2.0'
-          description: JSON-RPC version
-        id:
-          type: integer
-          description: Request ID for matching responses
-          example: 1
-        method:
-          type: string
-          enum:
-          - tools/list
-          - tools/call
-          description: MCP method to call
-        params:
-          type: object
-          description: Method parameters
-          properties:
-            name:
-              type: string
-              description: Tool name (for tools/call)
-              example: get_campaigns
-            arguments:
-              type: object
-              description: Tool-specific arguments (for tools/call)
-              additionalProperties: true
     MCPError:
       type: object
       description: MCP JSON-RPC 2.0 error response
@@ -518,6 +484,40 @@ components:
           type: object
           description: Response result
           additionalProperties: true
+    MCPRequest:
+      type: object
+      description: MCP JSON-RPC 2.0 request
+      required:
+      - jsonrpc
+      - method
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+          description: JSON-RPC version
+        id:
+          type: integer
+          description: Request ID for matching responses
+          example: 1
+        method:
+          type: string
+          enum:
+          - tools/list
+          - tools/call
+          description: MCP method to call
+        params:
+          type: object
+          description: Method parameters
+          properties:
+            name:
+              type: string
+              description: Tool name (for tools/call)
+              example: get_campaigns
+            arguments:
+              type: object
+              description: Tool-specific arguments (for tools/call)
+              additionalProperties: true
   securitySchemes:
     OAuth2:
       type: oauth2

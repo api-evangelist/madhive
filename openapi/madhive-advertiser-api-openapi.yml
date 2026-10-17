@@ -125,6 +125,65 @@ paths:
       - oauth2: []
 components:
   schemas:
+    Pagination:
+      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      readOnly: true
+      required:
+      - pageSize
+      - offset
+      - pageToken
+      - totalRecords
+      type: object
+      properties:
+        pageSize:
+          type: integer
+          format: int32
+          description: Number of items per page
+          example: 100
+        offset:
+          type: integer
+          format: int32
+          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
+
+            '
+          example: 1
+        pageToken:
+          type: string
+          description: Opaque token for retrieving the next page of results
+          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
+        totalRecords:
+          type: integer
+          format: int32
+          description: Total number of records available
+          example: 500
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    AdvertiserListItem:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          description: madhive advertiser id
+          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
+      allOf:
+      - $ref: '#/components/schemas/Advertiser'
     AdvertiserRequest:
       type: object
       required:
@@ -187,6 +246,39 @@ components:
           description: list of advertisers
         pagination:
           $ref: '#/components/schemas/Pagination'
+    AdvertiserResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Advertiser'
+      - type: object
+        required:
+        - transaction
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     Transaction:
       type: object
       x-go-type-skip-optional-pointer: true
@@ -266,107 +358,6 @@ components:
           example: fake agency name
         status:
           $ref: '#/components/schemas/Status'
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    AdvertiserResponse:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Advertiser'
-      - type: object
-        required:
-        - transaction
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-    Pagination:
-      x-go-type-skip-optional-pointer: true
-      x-isnullable: false
-      readOnly: true
-      required:
-      - pageSize
-      - offset
-      - pageToken
-      - totalRecords
-      type: object
-      properties:
-        pageSize:
-          type: integer
-          format: int32
-          description: Number of items per page
-          example: 100
-        offset:
-          type: integer
-          format: int32
-          description: 'Page position relative to the supplied page_token (1 = next page, -1 = previous page, 0 = current page). Echoes the request''s offset.
-
-            '
-          example: 1
-        pageToken:
-          type: string
-          description: Opaque token for retrieving the next page of results
-          example: eyJuZXh0IjoxMDAsImxhc3QiOiJhYmMxMjMifQ==
-        totalRecords:
-          type: integer
-          format: int32
-          description: Total number of records available
-          example: 500
-    AdvertiserListItem:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: required,min=28,max=28
-          description: madhive advertiser id
-          example: 4gV9KIg6E2kX3d6117OO8rgseJRl
-      allOf:
-      - $ref: '#/components/schemas/Advertiser'
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   examples:
     401Ex:
       value:
@@ -386,6 +377,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

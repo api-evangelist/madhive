@@ -61,34 +61,7 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
-    MediaTrustProblem:
-      type: object
-      properties:
-        name:
-          type: string
-          description: name of the detected malware/outbreak
-          example: EICAR-Test
-        type:
-          type: string
-          description: type/category of the detected issue
-          example: malware
-        scanId:
-          type: string
-          description: the Media Trust scan id that reported this problem
-        reportedAt:
-          type: string
-          format: date-time
-          description: when this problem was reported
     MediaTrustStatusResult:
       type: object
       required:
@@ -125,6 +98,37 @@ components:
           items:
             $ref: '#/components/schemas/MediaTrustProblem'
           description: malware/policy issues detected by Media Trust, if any
+    MediaTrustProblem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of the detected malware/outbreak
+          example: EICAR-Test
+        type:
+          type: string
+          description: type/category of the detected issue
+          example: malware
+        scanId:
+          type: string
+          description: the Media Trust scan id that reported this problem
+        reportedAt:
+          type: string
+          format: date-time
+          description: when this problem was reported
+    MediaTrustStatusResponse:
+      type: object
+      required:
+      - results
+      - transaction
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaTrustStatusResult'
+          description: one result per requested creative id, in request order
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     ErrorResponse:
       type: object
       required:
@@ -189,19 +193,6 @@ components:
           example:
           - HPAKbbHX1IZFeeAh1K7dSogRUvgF
           - tfgGrw2ZRrinUTDwAJVW7ygrvoHx
-    MediaTrustStatusResponse:
-      type: object
-      required:
-      - results
-      - transaction
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MediaTrustStatusResult'
-          description: one result per requested creative id, in request order
-        transaction:
-          $ref: '#/components/schemas/Transaction'
   examples:
     401Ex:
       value:
@@ -221,6 +212,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

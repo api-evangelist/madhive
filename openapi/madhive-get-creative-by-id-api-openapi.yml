@@ -55,45 +55,20 @@ paths:
       - oauth2: []
 components:
   schemas:
-    EventType:
+    Status:
       type: string
       x-isnullable: false
-      x-omitempty: true
+      x-omitempty: false
       x-oapi-codegen-extra-tags:
-        validate: required,oneof=IMPRESSION CLICK_TRACKER CLICK_THROUGH START FIRST_QUARTILE MIDPOINT_QUARTILE THIRD_QUARTILE COMPLETE
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
       enum:
-      - IMPRESSION
-      - CLICK_TRACKER
-      - CLICK_THROUGH
-      - START
-      - FIRST_QUARTILE
-      - MIDPOINT_QUARTILE
-      - THIRD_QUARTILE
-      - COMPLETE
-      description: event type for creative
-    AssetValidationAttribute:
-      type: object
-      required:
-      - id
-      - name
-      - value
-      - required
-      properties:
-        id:
-          type: string
-          description: id of the asset
-          example: DURATION
-        name:
-          type: string
-          description: name of the asset
-          example: duration
-        value:
-          type: string
-          description: value of the asset
-          example: 15.00s
-        required:
-          type: boolean
-          description: indicates whether or not this is a required asset
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
     CompanionBannerMetadata:
       type: object
       description: Read-only metadata for a companion banner attached to an audio creative.
@@ -139,28 +114,6 @@ components:
           x-omitempty: true
           description: banner asset file size in bytes
           example: 123456
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     Creative:
       type: object
       required:
@@ -308,48 +261,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AssetValidationResult'
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    AssetValidationResult:
-      type: object
-      required:
-      - publisher
-      - valid
-      - message
-      - detailsShort
-      - detailsLong
-      properties:
-        publisher:
-          type: string
-          description: The publisher setting the criteria for these validations
-          example: HULU
-        valid:
-          type: boolean
-          description: indicates whether this asset is valid given the publisher's criteria
-        message:
-          type: string
-          description: human-readable message
-          example: Asset Validations Standards acceptable durations 15, 30 or 60 seconds
-        detailsShort:
-          type: string
-          description: short human-readable message
-          example: Exceeds 30s
-        detailsLong:
-          type: string
-          description: long human-readable message
-          example: Your creative may not be considered as a 30s asset by some publishers, which may impact cost and scale.
     CreativeLineItemEvent:
       x-isnullable: false
       type: object
@@ -403,6 +314,50 @@ components:
             items:
               $ref: '#/components/schemas/CompanionBannerMetadata'
             description: Read-only metadata for attached companion banners. Present only for audio creatives with companion banners.
+    EventType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: required,oneof=IMPRESSION CLICK_TRACKER CLICK_THROUGH START FIRST_QUARTILE MIDPOINT_QUARTILE THIRD_QUARTILE COMPLETE
+      enum:
+      - IMPRESSION
+      - CLICK_TRACKER
+      - CLICK_THROUGH
+      - START
+      - FIRST_QUARTILE
+      - MIDPOINT_QUARTILE
+      - THIRD_QUARTILE
+      - COMPLETE
+      description: event type for creative
+    AssetValidationResult:
+      type: object
+      required:
+      - publisher
+      - valid
+      - message
+      - detailsShort
+      - detailsLong
+      properties:
+        publisher:
+          type: string
+          description: The publisher setting the criteria for these validations
+          example: HULU
+        valid:
+          type: boolean
+          description: indicates whether this asset is valid given the publisher's criteria
+        message:
+          type: string
+          description: human-readable message
+          example: Asset Validations Standards acceptable durations 15, 30 or 60 seconds
+        detailsShort:
+          type: string
+          description: short human-readable message
+          example: Exceeds 30s
+        detailsLong:
+          type: string
+          description: long human-readable message
+          example: Your creative may not be considered as a 30s asset by some publishers, which may impact cost and scale.
     ErrorResponse:
       type: object
       required:
@@ -426,15 +381,51 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+    AssetValidationAttribute:
+      type: object
+      required:
+      - id
+      - name
+      - value
+      - required
+      properties:
+        id:
+          type: string
+          description: id of the asset
+          example: DURATION
+        name:
+          type: string
+          description: name of the asset
+          example: duration
+        value:
+          type: string
+          description: value of the asset
+          example: 15.00s
+        required:
+          type: boolean
+          description: indicates whether or not this is a required asset
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   examples:
     401Ex:
       value:
@@ -471,6 +462,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/400InvalidID'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

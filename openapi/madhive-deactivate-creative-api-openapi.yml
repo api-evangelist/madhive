@@ -29,24 +29,6 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
-    PathID:
-      name: id
-      in: path
-      description: resource id
-      required: true
-      schema:
-        type: string
-        x-oapi-codegen-extra-tags:
-          validate: required,min=28,max=28
   examples:
     401Ex:
       value:
@@ -71,73 +53,6 @@ components:
           id: 4af459ff8e1a36b6bb74fb88f1a02477
           taskId: '14158884487309867565'
           created: '2030-11-02T15:04:00Z'
-  schemas:
-    GenericResponse:
-      type: object
-      required:
-      - id
-      - message
-      - transaction
-      properties:
-        id:
-          type: string
-          description: resource id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        message:
-          type: string
-          description: response message
-          example: success
-        error:
-          type: string
-          description: error message
-          example: unable to process request
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-    ErrorResponse:
-      type: object
-      required:
-      - transaction
-      properties:
-        errors:
-          type: array
-          x-go-type-skip-optional-pointer: true
-          items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
   responses:
     401Unauthorized:
       description: Unauthorized
@@ -166,6 +81,91 @@ components:
           examples:
             response:
               $ref: '#/components/examples/200DeleteResource'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
+    PathID:
+      name: id
+      in: path
+      description: resource id
+      required: true
+      schema:
+        type: string
+        x-oapi-codegen-extra-tags:
+          validate: required,min=28,max=28
+  schemas:
+    GenericResponse:
+      type: object
+      required:
+      - id
+      - message
+      - transaction
+      properties:
+        id:
+          type: string
+          description: resource id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        message:
+          type: string
+          description: response message
+          example: success
+        error:
+          type: string
+          description: error message
+          example: unable to process request
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   securitySchemes:
     oauth2:
       type: oauth2

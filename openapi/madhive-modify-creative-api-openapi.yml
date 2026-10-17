@@ -69,61 +69,7 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
-    AssetValidationAttribute:
-      type: object
-      required:
-      - id
-      - name
-      - value
-      - required
-      properties:
-        id:
-          type: string
-          description: id of the asset
-          example: DURATION
-        name:
-          type: string
-          description: name of the asset
-          example: duration
-        value:
-          type: string
-          description: value of the asset
-          example: 15.00s
-        required:
-          type: boolean
-          description: indicates whether or not this is a required asset
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     Creative:
       type: object
       required:
@@ -271,34 +217,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AssetValidationResult'
-    AssetValidationResult:
-      type: object
-      required:
-      - publisher
-      - valid
-      - message
-      - detailsShort
-      - detailsLong
-      properties:
-        publisher:
-          type: string
-          description: The publisher setting the criteria for these validations
-          example: HULU
-        valid:
-          type: boolean
-          description: indicates whether this asset is valid given the publisher's criteria
-        message:
-          type: string
-          description: human-readable message
-          example: Asset Validations Standards acceptable durations 15, 30 or 60 seconds
-        detailsShort:
-          type: string
-          description: short human-readable message
-          example: Exceeds 30s
-        detailsLong:
-          type: string
-          description: long human-readable message
-          example: Your creative may not be considered as a 30s asset by some publishers, which may impact cost and scale.
     CreativeRequest:
       type: object
       required:
@@ -393,6 +311,34 @@ components:
           description: List of display creative IDs to attach as companion banners. Only applicable to audio creatives. Maximum 6 allowed. Each ID must reference a display creative belonging to the same advertiser as the audio creative, and no two companion banners may share the same dimensions.
           example:
           - HPAKbbHX1IZFeeAh1K7dSogRUvgF
+    AssetValidationResult:
+      type: object
+      required:
+      - publisher
+      - valid
+      - message
+      - detailsShort
+      - detailsLong
+      properties:
+        publisher:
+          type: string
+          description: The publisher setting the criteria for these validations
+          example: HULU
+        valid:
+          type: boolean
+          description: indicates whether this asset is valid given the publisher's criteria
+        message:
+          type: string
+          description: human-readable message
+          example: Asset Validations Standards acceptable durations 15, 30 or 60 seconds
+        detailsShort:
+          type: string
+          description: short human-readable message
+          example: Exceeds 30s
+        detailsLong:
+          type: string
+          description: long human-readable message
+          example: Your creative may not be considered as a 30s asset by some publishers, which may impact cost and scale.
     ErrorResponse:
       type: object
       required:
@@ -416,6 +362,51 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    AssetValidationAttribute:
+      type: object
+      required:
+      - id
+      - name
+      - value
+      - required
+      properties:
+        id:
+          type: string
+          description: id of the asset
+          example: DURATION
+        name:
+          type: string
+          description: name of the asset
+          example: duration
+        value:
+          type: string
+          description: value of the asset
+          example: 15.00s
+        required:
+          type: boolean
+          description: indicates whether or not this is a required asset
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   examples:
     401Ex:
       value:
@@ -435,6 +426,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

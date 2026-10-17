@@ -56,31 +56,21 @@ paths:
       security:
       - oauth2: []
 components:
-  examples:
-    401Ex:
-      value:
-        error: unauthorized
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
-    400InvalidID:
-      value:
-        error: invalid resource id
-        status: ERROR
-        transaction:
-          id: 4af459ff8e1a36b6bb74fb88f1a02477
-          taskId: '14158884487309867565'
-          created: '2030-11-02T15:04:00Z'
   schemas:
-    Date:
+    Status:
       type: string
-      x-go-type-skip-optional-pointer: true
+      x-isnullable: false
+      x-omitempty: false
       x-oapi-codegen-extra-tags:
-        validate: required,datetime=2006-01-02T15:04:05Z07:00
-      description: 2020-06-18T17:24:53Z is a basic example of an RFC 3339 timestamp, which refers to June 18, 2020 5:24:53 PM in UTC
-      example: '2030-01-10T23:00:00Z'
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
     CampaignCreativeFlightResponse:
       type: object
       required:
@@ -127,42 +117,6 @@ components:
           description: List of display creative IDs attached as companion banners on this flight. Only present for audio creative flights with companion banners.
           example:
           - HPAKbbHX1IZFeeAh1K7dSogRUvgF
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
     ErrorResponse:
       type: object
       required:
@@ -186,6 +140,52 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    Date:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      x-oapi-codegen-extra-tags:
+        validate: required,datetime=2006-01-02T15:04:05Z07:00
+      description: 2020-06-18T17:24:53Z is a basic example of an RFC 3339 timestamp, which refers to June 18, 2020 5:24:53 PM in UTC
+      example: '2030-01-10T23:00:00Z'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
+  examples:
+    401Ex:
+      value:
+        error: unauthorized
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
+    400InvalidID:
+      value:
+        error: invalid resource id
+        status: ERROR
+        transaction:
+          id: 4af459ff8e1a36b6bb74fb88f1a02477
+          taskId: '14158884487309867565'
+          created: '2030-11-02T15:04:00Z'
   responses:
     401Unauthorized:
       description: Unauthorized

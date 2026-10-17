@@ -64,22 +64,6 @@ paths:
       - oauth2: []
 components:
   schemas:
-    EventType:
-      type: string
-      x-isnullable: false
-      x-omitempty: true
-      x-oapi-codegen-extra-tags:
-        validate: required,oneof=IMPRESSION CLICK_TRACKER CLICK_THROUGH START FIRST_QUARTILE MIDPOINT_QUARTILE THIRD_QUARTILE COMPLETE
-      enum:
-      - IMPRESSION
-      - CLICK_TRACKER
-      - CLICK_THROUGH
-      - START
-      - FIRST_QUARTILE
-      - MIDPOINT_QUARTILE
-      - THIRD_QUARTILE
-      - COMPLETE
-      description: event type for creative
     CreativeLineItemRequest:
       type: object
       required:
@@ -139,28 +123,6 @@ components:
           description: List of display creative IDs to attach as companion banners on this flight. Only applicable to audio creatives. Maximum 6 allowed. Each ID must match the audio creative's current companion banners (or an existing flight's). Omit to attach none.
           example:
           - HPAKbbHX1IZFeeAh1K7dSogRUvgF
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     Status:
       type: string
       x-isnullable: false
@@ -283,6 +245,22 @@ components:
             $ref: '#/components/schemas/Transaction'
           status:
             $ref: '#/components/schemas/Status'
+    EventType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: required,oneof=IMPRESSION CLICK_TRACKER CLICK_THROUGH START FIRST_QUARTILE MIDPOINT_QUARTILE THIRD_QUARTILE COMPLETE
+      enum:
+      - IMPRESSION
+      - CLICK_TRACKER
+      - CLICK_THROUGH
+      - START
+      - FIRST_QUARTILE
+      - MIDPOINT_QUARTILE
+      - THIRD_QUARTILE
+      - COMPLETE
+      description: event type for creative
     ErrorResponse:
       type: object
       required:
@@ -306,15 +284,28 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   examples:
     401Ex:
       value:
@@ -351,6 +342,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/400InvalidID'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

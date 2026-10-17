@@ -45,16 +45,21 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
     ProductResponse:
       type: object
       allOf:
@@ -124,40 +129,6 @@ components:
           $ref: '#/components/schemas/MediaType'
         status:
           $ref: '#/components/schemas/Status'
-    MediaType:
-      type: string
-      x-isnullable: false
-      x-omitempty: true
-      x-oapi-codegen-extra-tags:
-        validate: required,oneof=NONE VIDEO AUDIO DISPLAY
-      example: VIDEO
-      enum:
-      - NONE
-      - VIDEO
-      - AUDIO
-      - DISPLAY
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     ProductListResponse:
       x-isnullable: false
       type: object
@@ -172,20 +143,6 @@ components:
           description: list of products
         transaction:
           $ref: '#/components/schemas/Transaction'
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
     DeviceCap:
       x-isnullable: false
       type: object
@@ -226,6 +183,18 @@ components:
           x-omitempty: true
           description: tablet device cap
           example: 0
+    MediaType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: required,oneof=NONE VIDEO AUDIO DISPLAY
+      example: VIDEO
+      enum:
+      - NONE
+      - VIDEO
+      - AUDIO
+      - DISPLAY
     ErrorResponse:
       type: object
       required:
@@ -249,6 +218,28 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   examples:
     401Ex:
       value:
@@ -285,6 +276,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/400InvalidID'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

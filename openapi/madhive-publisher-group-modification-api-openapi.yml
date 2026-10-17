@@ -62,16 +62,61 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
+    Status:
+      type: string
+      x-isnullable: false
+      x-omitempty: false
+      x-oapi-codegen-extra-tags:
+        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
+      description: status of the entity
+      example: READY
+      enum:
+      - READY
+      - ARCHIVED
+      - CANCELLED
+      - DRAFT
+      - PAUSED
+    MediaType:
+      type: string
+      x-isnullable: false
+      x-omitempty: true
+      x-oapi-codegen-extra-tags:
+        validate: required,oneof=NONE VIDEO AUDIO DISPLAY
+      example: VIDEO
+      enum:
+      - NONE
+      - VIDEO
+      - AUDIO
+      - DISPLAY
+    PublisherGroupPublisher:
+      x-isnullable: false
+      type: object
+      required:
+      - id
+      - name
+      - cap
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive publisher id
+          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          description: publisher name
+          example: my first publisher
+        cap:
+          type: integer
+          format: uint32
+          x-isnullable: false
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,max=10000
+          description: publisher cap
+          example: 12
     PublisherGroupResponse:
       type: object
       allOf:
@@ -85,62 +130,37 @@ components:
             $ref: '#/components/schemas/Transaction'
           status:
             $ref: '#/components/schemas/Status'
-    PublisherGroup:
-      type: object
-      required:
-      - id
-      - name
-      - mediaType
-      - productId
-      - publishers
-      properties:
-        id:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: omitempty,min=28,max=28
-          description: madhive publisher group id
-          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
-        name:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: 'omitempty,min=2,ne= '
-          x-isnullable: false
-          x-omitempty: false
-          description: publisher group name
-          example: my first publisher group
-        mediaType:
-          $ref: '#/components/schemas/MediaType'
-        productId:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: required,min=28,max=28
-          x-isnullable: false
-          x-omitempty: false
-          description: product id
-          example: jao1gnhIUchSxQekAKyh6FZLCXjJ
-        publishers:
-          type: array
-          items:
-            $ref: '#/components/schemas/PublisherGroupPublisher'
-          x-oapi-codegen-extra-tags:
-            validate: required,min=1,dive
-          description: list of publishers
-          example:
-          - id: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
-            name: my first publisher
-            cap: 12
-    MediaType:
+    Name:
       type: string
       x-isnullable: false
-      x-omitempty: true
+      x-omitempty: false
       x-oapi-codegen-extra-tags:
-        validate: required,oneof=NONE VIDEO AUDIO DISPLAY
-      example: VIDEO
-      enum:
-      - NONE
-      - VIDEO
-      - AUDIO
-      - DISPLAY
+        validate: 'required,min=2,max=128,ne= '
+      description: resource name
+      example: name of resource
+    ErrorResponse:
+      type: object
+      required:
+      - transaction
+      properties:
+        errors:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+          description: many error messages
+        error:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: error message
+          example: Unauthorized
+        status:
+          type: string
+          x-go-type-skip-optional-pointer: true
+          description: status of the service
+          example: ERROR
+        transaction:
+          $ref: '#/components/schemas/Transaction'
     PublisherGroupRequest:
       type: object
       required:
@@ -193,56 +213,6 @@ components:
           type: string
           description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
           example: '2030-11-02T15:04:00Z'
-    Name:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: 'required,min=2,max=128,ne= '
-      description: resource name
-      example: name of resource
-    Status:
-      type: string
-      x-isnullable: false
-      x-omitempty: false
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=READY ARCHIVED CANCELLED DRAFT PAUSED
-      description: status of the entity
-      example: READY
-      enum:
-      - READY
-      - ARCHIVED
-      - CANCELLED
-      - DRAFT
-      - PAUSED
-    PublisherGroupPublisher:
-      x-isnullable: false
-      type: object
-      required:
-      - id
-      - name
-      - cap
-      properties:
-        id:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: omitempty,min=28,max=28
-          description: madhive publisher id
-          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
-        name:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: 'omitempty,min=2,ne= '
-          description: publisher name
-          example: my first publisher
-        cap:
-          type: integer
-          format: uint32
-          x-isnullable: false
-          x-oapi-codegen-extra-tags:
-            validate: required,min=1,max=10000
-          description: publisher cap
-          example: 12
     PublisherGroupRequestPublisher:
       x-isnullable: false
       type: object
@@ -264,29 +234,50 @@ components:
             validate: required,min=1,max=10000
           description: publisher cap
           example: 12
-    ErrorResponse:
+    PublisherGroup:
       type: object
       required:
-      - transaction
+      - id
+      - name
+      - mediaType
+      - productId
+      - publishers
       properties:
-        errors:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,min=28,max=28
+          description: madhive publisher group id
+          example: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,min=2,ne= '
+          x-isnullable: false
+          x-omitempty: false
+          description: publisher group name
+          example: my first publisher group
+        mediaType:
+          $ref: '#/components/schemas/MediaType'
+        productId:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          x-isnullable: false
+          x-omitempty: false
+          description: product id
+          example: jao1gnhIUchSxQekAKyh6FZLCXjJ
+        publishers:
           type: array
-          x-go-type-skip-optional-pointer: true
           items:
-            type: string
-          description: many error messages
-        error:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: error message
-          example: Unauthorized
-        status:
-          type: string
-          x-go-type-skip-optional-pointer: true
-          description: status of the service
-          example: ERROR
-        transaction:
-          $ref: '#/components/schemas/Transaction'
+            $ref: '#/components/schemas/PublisherGroupPublisher'
+          x-oapi-codegen-extra-tags:
+            validate: required,min=1,dive
+          description: list of publishers
+          example:
+          - id: 0X4Ue7ELKvMI6cQaPzZ8evrO0XUx
+            name: my first publisher
+            cap: 12
   examples:
     401Ex:
       value:
@@ -323,6 +314,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/400InvalidID'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

@@ -124,60 +124,7 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
-    PixelRequest:
-      type: object
-      required:
-      - name
-      - advertiserId
-      properties:
-        name:
-          type: string
-          x-oapi-codegen-extra-tags:
-            validate: 'required,min=2,ne= '
-          x-isnullable: false
-          x-omitempty: false
-          description: pixel name
-          example: my first pixel
-        advertiserId:
-          type: string
-          x-isnullable: false
-          x-omitempty: false
-          x-oapi-codegen-extra-tags:
-            validate: required,min=28,max=28
-          description: advertiser id
-          example: fwpObxzCpvITV2GspiUc3C5YfprJ
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
     Status:
       type: string
       x-isnullable: false
@@ -192,6 +139,19 @@ components:
       - CANCELLED
       - DRAFT
       - PAUSED
+    PixelResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Pixel'
+      - type: object
+        required:
+        - transaction
+        - status
+        properties:
+          transaction:
+            $ref: '#/components/schemas/Transaction'
+          status:
+            $ref: '#/components/schemas/Status'
     Pixel:
       type: object
       required:
@@ -242,19 +202,28 @@ components:
           x-omitempty: true
           description: html pixel
           example: '<img src="https://jelly.mdhv.io/v1/star.gif?pid=EfwNWX7NdVGxE7pcT5mTte92PxIN&src=mh&evt=hi" style="display: none;" width="0" height="0">'
-    PixelResponse:
+    PixelRequest:
       type: object
-      allOf:
-      - $ref: '#/components/schemas/Pixel'
-      - type: object
-        required:
-        - transaction
-        - status
-        properties:
-          transaction:
-            $ref: '#/components/schemas/Transaction'
-          status:
-            $ref: '#/components/schemas/Status'
+      required:
+      - name
+      - advertiserId
+      properties:
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=2,ne= '
+          x-isnullable: false
+          x-omitempty: false
+          description: pixel name
+          example: my first pixel
+        advertiserId:
+          type: string
+          x-isnullable: false
+          x-omitempty: false
+          x-oapi-codegen-extra-tags:
+            validate: required,min=28,max=28
+          description: advertiser id
+          example: fwpObxzCpvITV2GspiUc3C5YfprJ
     ErrorResponse:
       type: object
       required:
@@ -278,6 +247,28 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
+      required:
+      - id
+      - taskId
+      - created
+      properties:
+        id:
+          type: string
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   examples:
     401Ex:
       value:
@@ -297,6 +288,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/401Ex'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2

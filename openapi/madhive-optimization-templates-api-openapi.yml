@@ -404,137 +404,7 @@ paths:
       security:
       - oauth2: []
 components:
-  parameters:
-    X-Cloud-Trace-Context:
-      name: X-Cloud-Trace-Context
-      in: header
-      description: gcp trace
-      required: false
-      schema:
-        type: string
-        default: 91f9f012dc7c7ffc13604c77f12a8931
   schemas:
-    OptimizationTemplateListItem:
-      type: object
-      required:
-      - id
-      - name
-      - mediaType
-      - status
-      - createdAt
-      - updatedAt
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the optimization template
-          example: abc123def456ghi789jkl012mno3
-        name:
-          type: string
-          description: Template name
-          example: Premium Video Template
-        mediaType:
-          type: string
-          description: Media type (VIDEO, AUDIO, DISPLAY)
-          enum:
-          - NONE
-          - VIDEO
-          - AUDIO
-          - DISPLAY
-          example: VIDEO
-        status:
-          type: string
-          description: Template status (READY, ARCHIVED)
-          enum:
-          - INVALID
-          - DRAFT
-          - READY
-          - PAUSED
-          - CANCELLED
-          - ARCHIVED
-          - TEST
-          - EXPIRED
-          example: READY
-        createdAt:
-          type: string
-          format: date-time
-          description: Timestamp when template was created
-          example: '2025-01-15T10:30:00Z'
-        updatedAt:
-          type: string
-          format: date-time
-          description: Timestamp when template was last updated
-          example: '2025-01-20T14:45:00Z'
-        createdBy:
-          type: string
-          description: Email of user who created the template
-          example: user@madhive.com
-        updatedBy:
-          type: string
-          description: Email of user who last updated the template
-          example: admin@madhive.com
-    PatchOptimizationTemplateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Template name
-          example: Updated Video Template
-        mediaType:
-          type: string
-          description: Media type (VIDEO, AUDIO, DISPLAY)
-          enum:
-          - VIDEO
-          - AUDIO
-          - DISPLAY
-          example: VIDEO
-        pubSettings:
-          type: array
-          description: Publisher-specific settings — replaces all existing settings when provided
-          items:
-            $ref: '#/components/schemas/PubSetting'
-    Transaction:
-      type: object
-      x-go-type-skip-optional-pointer: true
-      x-omitempty: false
-      required:
-      - id
-      - taskId
-      - created
-      properties:
-        id:
-          type: string
-          description: trace id
-          example: 4af459ff8e1a36b6bb74fb88f1a02477
-        taskId:
-          type: string
-          x-omitempty: true
-          description: task id
-          example: '14158884487309867565'
-        created:
-          type: string
-          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
-          example: '2030-11-02T15:04:00Z'
-    PubSetting:
-      type: object
-      required:
-      - pubId
-      properties:
-        pubId:
-          type: string
-          description: Publisher ID
-          example: pub123abc456def789ghi012jkl3
-        pubCap:
-          $ref: '#/components/schemas/PubCap'
-        bundleRules:
-          type: array
-          description: Bundle inclusion/exclusion rules
-          items:
-            $ref: '#/components/schemas/BundleRule'
-        channelRules:
-          type: array
-          description: Channel inclusion/exclusion rules
-          items:
-            $ref: '#/components/schemas/ChannelRule'
     Pagination:
       x-go-type-skip-optional-pointer: true
       x-isnullable: false
@@ -567,59 +437,18 @@ components:
           format: int32
           description: Total number of records available
           example: 500
-    CreateOptimizationTemplateRequest:
+    PubCap:
       type: object
       required:
-      - name
-      - mediaType
+      - pubCapPct
       properties:
-        name:
-          type: string
-          description: Template name
-          example: Premium Video Template
-        mediaType:
-          type: string
-          description: Media type for this template (VIDEO, AUDIO, DISPLAY)
-          enum:
-          - VIDEO
-          - AUDIO
-          - DISPLAY
-          example: VIDEO
-        pubSettings:
-          type: array
-          description: Optional publisher-specific settings (caps, bundle rules, channel rules)
-          items:
-            $ref: '#/components/schemas/PubSetting'
-    BundleRule:
-      type: object
-      required:
-      - bundleId
-      - excluded
-      properties:
-        bundleId:
-          type: string
-          description: Bundle identifier
-          example: bundle123
-        excluded:
-          type: boolean
-          description: Whether the bundle is excluded (true) or included (false)
-          example: false
-    OptimizationTemplatesListResponse:
-      type: object
-      required:
-      - data
-      - pagination
-      - transaction
-      properties:
-        data:
-          type: array
-          description: List of optimization templates (basic info only, excludes pubSettings and transaction)
-          items:
-            $ref: '#/components/schemas/OptimizationTemplateListItem'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        transaction:
-          $ref: '#/components/schemas/Transaction'
+        pubCapPct:
+          type: number
+          format: double
+          description: Publisher cap percentage (0-100, supports decimals like 75.5)
+          minimum: 0
+          maximum: 100
+          example: 75.5
     OptimizationTemplateResponse:
       type: object
       required:
@@ -686,18 +515,172 @@ components:
             $ref: '#/components/schemas/PubSetting'
         transaction:
           $ref: '#/components/schemas/Transaction'
-    PubCap:
+    ChannelRule:
       type: object
       required:
-      - pubCapPct
+      - channelName
+      - excluded
       properties:
-        pubCapPct:
-          type: number
-          format: double
-          description: Publisher cap percentage (0-100, supports decimals like 75.5)
-          minimum: 0
-          maximum: 100
-          example: 75.5
+        channelName:
+          type: string
+          description: Channel name
+          example: ESPN
+        excluded:
+          type: boolean
+          description: Whether the channel is excluded (true) or included (false)
+          example: true
+    OptimizationTemplateListItem:
+      type: object
+      required:
+      - id
+      - name
+      - mediaType
+      - status
+      - createdAt
+      - updatedAt
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the optimization template
+          example: abc123def456ghi789jkl012mno3
+        name:
+          type: string
+          description: Template name
+          example: Premium Video Template
+        mediaType:
+          type: string
+          description: Media type (VIDEO, AUDIO, DISPLAY)
+          enum:
+          - NONE
+          - VIDEO
+          - AUDIO
+          - DISPLAY
+          example: VIDEO
+        status:
+          type: string
+          description: Template status (READY, ARCHIVED)
+          enum:
+          - INVALID
+          - DRAFT
+          - READY
+          - PAUSED
+          - CANCELLED
+          - ARCHIVED
+          - TEST
+          - EXPIRED
+          example: READY
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when template was created
+          example: '2025-01-15T10:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when template was last updated
+          example: '2025-01-20T14:45:00Z'
+        createdBy:
+          type: string
+          description: Email of user who created the template
+          example: user@madhive.com
+        updatedBy:
+          type: string
+          description: Email of user who last updated the template
+          example: admin@madhive.com
+    OptimizationTemplatesListResponse:
+      type: object
+      required:
+      - data
+      - pagination
+      - transaction
+      properties:
+        data:
+          type: array
+          description: List of optimization templates (basic info only, excludes pubSettings and transaction)
+          items:
+            $ref: '#/components/schemas/OptimizationTemplateListItem'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    PubSetting:
+      type: object
+      required:
+      - pubId
+      properties:
+        pubId:
+          type: string
+          description: Publisher ID
+          example: pub123abc456def789ghi012jkl3
+        pubCap:
+          $ref: '#/components/schemas/PubCap'
+        bundleRules:
+          type: array
+          description: Bundle inclusion/exclusion rules
+          items:
+            $ref: '#/components/schemas/BundleRule'
+        channelRules:
+          type: array
+          description: Channel inclusion/exclusion rules
+          items:
+            $ref: '#/components/schemas/ChannelRule'
+    BundleRule:
+      type: object
+      required:
+      - bundleId
+      - excluded
+      properties:
+        bundleId:
+          type: string
+          description: Bundle identifier
+          example: bundle123
+        excluded:
+          type: boolean
+          description: Whether the bundle is excluded (true) or included (false)
+          example: false
+    PatchOptimizationTemplateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Template name
+          example: Updated Video Template
+        mediaType:
+          type: string
+          description: Media type (VIDEO, AUDIO, DISPLAY)
+          enum:
+          - VIDEO
+          - AUDIO
+          - DISPLAY
+          example: VIDEO
+        pubSettings:
+          type: array
+          description: Publisher-specific settings — replaces all existing settings when provided
+          items:
+            $ref: '#/components/schemas/PubSetting'
+    CreateOptimizationTemplateRequest:
+      type: object
+      required:
+      - name
+      - mediaType
+      properties:
+        name:
+          type: string
+          description: Template name
+          example: Premium Video Template
+        mediaType:
+          type: string
+          description: Media type for this template (VIDEO, AUDIO, DISPLAY)
+          enum:
+          - VIDEO
+          - AUDIO
+          - DISPLAY
+          example: VIDEO
+        pubSettings:
+          type: array
+          description: Optional publisher-specific settings (caps, bundle rules, channel rules)
+          items:
+            $ref: '#/components/schemas/PubSetting'
     ErrorResponse:
       type: object
       required:
@@ -721,20 +704,28 @@ components:
           example: ERROR
         transaction:
           $ref: '#/components/schemas/Transaction'
-    ChannelRule:
+    Transaction:
       type: object
+      x-go-type-skip-optional-pointer: true
+      x-omitempty: false
       required:
-      - channelName
-      - excluded
+      - id
+      - taskId
+      - created
       properties:
-        channelName:
+        id:
           type: string
-          description: Channel name
-          example: ESPN
-        excluded:
-          type: boolean
-          description: Whether the channel is excluded (true) or included (false)
-          example: true
+          description: trace id
+          example: 4af459ff8e1a36b6bb74fb88f1a02477
+        taskId:
+          type: string
+          x-omitempty: true
+          description: task id
+          example: '14158884487309867565'
+        created:
+          type: string
+          description: 'order created date, format: yyyy-mm-dd hh:mm:ss'
+          example: '2030-11-02T15:04:00Z'
   examples:
     401Ex:
       value:
@@ -771,6 +762,15 @@ components:
           examples:
             response:
               $ref: '#/components/examples/400InvalidID'
+  parameters:
+    X-Cloud-Trace-Context:
+      name: X-Cloud-Trace-Context
+      in: header
+      description: gcp trace
+      required: false
+      schema:
+        type: string
+        default: 91f9f012dc7c7ffc13604c77f12a8931
   securitySchemes:
     oauth2:
       type: oauth2
